@@ -7,9 +7,13 @@
     "install": "react-native run-android"
   },
   "dependencies": {
+    "@expo/vector-icons": "^15.0.3",
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native/new-app-screen": "0.82.1",
+    "@react-navigation/native-stack": "^7.8.2",
     "react": "19.1.1",
     "react-native": "0.82.1",
-    "@react-native/new-app-screen": "0.82.1",
+    "react-native-bootsplash": "^6.3.11",
     "react-native-safe-area-context": "^5.5.2"
   },
   "devDependencies": {

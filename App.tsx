@@ -1,45 +1,262 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+//import { NewAppScreen } from '@react-native/new-app-screen';
+//import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+// import {
+//   SafeAreaProvider,
+//   useSafeAreaInsets,
+// } from 'react-native-safe-area-context';
+import React, { ReactElement, useEffect, useState, useRef, useLayoutEffect } from "react";
+import {  CommonActions, NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import BootSplash from "react-native-bootsplash";
+import * as Font from 'expo-font';
+import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter,
+  PixelRatio, View, Animated, useAnimatedValue, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from 'react-native-fast-image'
+import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { StackAnimationTypes, enableScreens } from "react-native-screens";
+//import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { dimI, navigationI } from './src/interfaces/interfaces';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+const Stack = createNativeStackNavigator();
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: false,
+        navigationBarColor: tallBar ? 'rgba(0, 0, 0, 0.2)' : 'transparent',
+        animation: animation,
+        statusBarColor: 'transparent',
+        statusBarStyle: 'dark',
+        //contentStyle: { backgroundColor: "red", position: 'absolute' }
+      }}
+      //children={ screens.map((e: ReactElement) => e) }
+      children={ 
+        
+          screens.map((e: ReactElement) => e)
+        
+      }
+    />
+  )
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+// <View style={{backgroundColor: 'red', position: 'absolute', width: '100%', height: '100%'}}>
+
+const App = (): ReactElement => {
+
+  const { MainActivity } = NativeModules;
+
+  let tallBar = useRef<boolean>(false)
+
+  const [ layout, setLayout ] = useState({
+    "window": {"width": 0, "height": 0},
+    "hingeBounds": {"left": 0, "top": 0, "right": 0, "bottom": 0},
+    "insets": {"left": 0, "top": 0, "right": 0, "bottom": 0},
+    "maxVerticalInset": 0,
+    "maxHorizontalInset": 0,
+    "state": "portrait",
+    "vmin": 0,
+    "tallBar": "false" // tallNavigationBar
+  });
+
+  console.log("INSETS ", layout.insets)
+  console.log("STATE ", layout.state)
+
+  const navigationRef = useNavigationContainerRef();
+
+  const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
+
+  let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
+
+  let routes = [
+    { index: 2, routes: allRoutes },
+    { index: 1, routes: allRoutes.slice(0, 2) },
+    { index: 0, routes: allRoutes.slice(0, 1) }
+  ]
+
+  const input = useRef(""); // MAIN DISPLAY (CENTER)
+  const secInput = useRef(""); // SECONDARY DISPLAY (UPPER)
+  const [ _, update ] = useState({}); // DUMMY USESTATE FOR DISPLAY UPDATE
+
+  // API: Home:      Overview:                        StatusBar:
+  // 36   background active                           active
+  // 34   background active                           active
+  // 31   background active                           active
+  // 30   background background                       active
+  // 29   background background                       active
+  // 28   background background                       active
+  // 26   background background                       active
+  // 23   active     background (1st) / active (next) active
+  useEffect(() => {
+    const blur = AppState.addEventListener('blur', () => { // ON APP BLUR
+      saveData("savedInput", input.current.toString())
+      saveData("savedSecInput", secInput.current.toString())
+      saveData("savedDate", Date.now().toString())
+      saveData("savedTallBar", tallBar.current.toString())
+      let array = navigationRef.getState().routes // INSIDE ANY COMPONENT: navigation.getState().routes
+      saveData("savedRoute", array[array.length - 1].name) // SAVE LAST ROUTE ON APP BLUR
+      updateShowModal(false)
+      console.log("savedRoute", array[array.length - 1].name)
+    })
+    return () => blur.remove()
+  }, []);
+
+  const saveData = async (key: string, value: string) => {
+    try { await AsyncStorage.setItem(key, value) }
+    catch(e) { }
+  };
+
+  const readData = async (key: string) => {
+    try { return await AsyncStorage.getItem(key) }
+    catch(e) { }
+  };
+
+  FastImage.preload([{ uri: Image.resolveAssetSource(require('./src/images/profile.png')).uri }])
+
+  const [ showModal, setShowModal ] = useState(false);
+  const updateShowModal = (bool: boolean) => setShowModal(bool)
+
+  const fadeAnim: Animated.Value = useAnimatedValue(0); // ORIGINAL
+  const fadeIn = () => Animated.timing(fadeAnim, { toValue: 1, duration: 1000, useNativeDriver: true }).start();
+  const fadeOut = () => Animated.timing(fadeAnim, { toValue: 0, duration: 1000, useNativeDriver: true }).start();
+
+  const width = layout.window.width
+  const height = layout.window.height
+  const state = layout.state
+  const ins = layout.insets
+  const hingeBounds = layout.hingeBounds
+  const maxVerticalInset = layout.maxVerticalInset
+  const maxHorizontalInset = layout.maxHorizontalInset
+  const vmin = layout.vmin
+
+  const sharedProps = { width, height, state, ins, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, fadeAnim, fadeIn, fadeOut }
+
+  const dynamicImport = (nav: navigationI, module: string) => {
+    switch (module) {
+      case "Home":
+        const Home = require('./src/components/Home/Home').default
+        return (
+          <Home
+            {...nav} {...sharedProps} input={input} secInput={secInput}
+            showModal={showModal} updateShowModal={updateShowModal}
+            update={update}
+          />
+        )
+      case "About":
+        const About = require('./src/components/About/About').default
+        return (
+          <About
+            {...nav} {...sharedProps} showModal={showModal}
+            updateShowModal={updateShowModal} twoScreens={false}
+          />
+        )
+      case "KnowMore":
+        const KnowMore = require('./src/components/KnowMore/KnowMore').default
+        return <KnowMore {...nav} {...sharedProps} />
+    }
+  }
+
+  //const fadeAnim = useAnimatedValue(0); // ORIGINAL
+
+  // const ModalForegroundScreen =
+  //   <Animated.View
+  //     style={[ s.ModalForegroundScreen, { /* backgroundColor: 'orange', */opacity: fadeAnim, pointerEvents: showModal ? 'auto' : 'none' } ]}
+  //     children={
+  //       <Pressable
+  //         style={[ s.ModalForegroundScreenPressable, { /* backgroundColor: 'yellow', */ paddingTop: ins.top, paddingBottom: ins.bottom } ]}
+  //         onPress={() => {console.log('CLICKED Home');updateShowModal(false)}}
+  //       />
+  //     }
+  //   />
+
+  let stackScreens: ReactElement[] = [ "Home", "About", "KnowMore" ].map((e: string) => {
+    return (
+      
+        <Stack.Screen
+          name={e}
+          key={e}
+          options={{ contentStyle: { backgroundColor: "rgb(255, 255, 255)" } }} // DEFAULT APP BACKGROUND COLOR
+          //children={(nav) => dynamicImport(nav, e)}
+          children={(nav) => dynamicImport(nav, e)}
+        />
+      
+    )
+  })
+
+  let initialState = { index: 0, routes: [ { name: 'Home' } ] }; // SET NAVIGATOR INITIAL STATE TO AVOID "UNDEFINED" ON "APP BLUR SAVE LAST ROUTE" (WITHOUT NAVIGATE ANY SCREEN)
+
+  const runOnceAvailable = useRef(true)
+
+  const runOnce = async () => {
+    console.log("EXEC RUN ONCE")
+    const resInput = await readData("savedInput") // RESPONSE INPUT
+    const resSecInput = await readData("savedSecInput") // RESPONSE INPUT
+    const resDate = await readData("savedDate") // RESPONSE DATE
+    const resTallBar = await readData("savedTallBar") // RESPONSE HEIGHT
+    const resRoute = await readData("savedRoute") // RESPONSE ROUTE
+
+    typeof resInput === "string" && (input.current = resInput)
+    typeof resSecInput === "string" && (secInput.current = resSecInput)
+
+    console.log("RESTORED ROUTE: ", resRoute)
+
+    try {
+      await Font.loadAsync({
+        ...AntDesign.font,
+        ...Entypo.font,
+        ...FontAwesome5.font,
+        ...Ionicons.font,
+        ...MaterialIcons.font,
+        ...SimpleLineIcons.font
+      })
+    } catch (error) { console.log(error) }
+
+    async function navigationBarToGestureOrViceVersa() {
+      if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {
+        if (Date.now() - parseInt(resDate) < 60000 && resTallBar !== tallBar.current.toString()) {
+          resRoute === "KnowMore" ? navigationRef.dispatch(CommonActions.reset(routes[0])) :
+          resRoute === "About" ? navigationRef.dispatch(CommonActions.reset(routes[1])) :
+          navigationRef.dispatch(CommonActions.reset(routes[2]))
+        } // else console.log("WINDOWS NOT HAS CHANGED.")
+      }
+    }
+    navigationBarToGestureOrViceVersa()
+    .then(() => {
+      setTimeout(() => { // ONLY FIRST TIME & WHEN DEVICE WINDOW DIMENSIONS CHANGE
+        setAnimation('slide_from_right') // SLIDE SCREEN ANIMATION
+        BootSplash.hide()
+        console.log("runOnceAvailable.current", runOnceAvailable.current)
+        runOnceAvailable.current = false
+      }, 200) // AVOID ICON BLINKING
+    })
+  }
+
+  //useLayoutEffect(() => { // THIS
+  useEffect(() => { // THIS
+    console.log("EXEC USE EFFECT")
+    const nativeEvent = new NativeEventEmitter(MainActivity);
+    let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+      console.log("EXEC LayoutInfo EVENT LISTENER")
+      setLayout(e)
+      tallBar.current = e.tallBar
+      if (runOnceAvailable.current) runOnce()
+    });
+    return () => {
+      console.log("REMOVED LayoutInfo EVENT LISTENER")
+      LayoutInfoListener.remove();
+    }
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+    <NavigationContainer
+      ref={navigationRef}
+      initialState={initialState}
+      //children={ NavigatorMapper(animation, tallBar.current, stackScreens) }
+      children={ NavigatorMapper(animation, tallBar.current, stackScreens) }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;

@@ -3,11 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "lint": "eslint .",
-    "start": "react-native start",
-    "test": "jest"
+    "server": "react-native start",
+    "install": "react-native run-android"
   },
   "dependencies": {
     "react": "19.1.1",

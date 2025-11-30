@@ -1,9 +1,0 @@
-<resources>
-  <style name="Start" parent="Theme.BootSplash">
-    <item name="bootSplashLogo">@drawable/logo</item>
-    <item name="bootSplashBackground">@color/darkBlue</item>
-    <item name="android:statusBarColor">@color/darkBlue</item>
-    <item name="android:navigationBarColor">@color/darkBlue</item>
-  </style>
-</resources>
-

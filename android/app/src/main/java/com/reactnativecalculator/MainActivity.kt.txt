@@ -48,8 +48,9 @@ import kotlinx.coroutines.Job
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 
-// NEW, THIS DONT WORK ON API 23
+// OLD, THIS WORK
 
+@Suppress("DEPRECATION")
 class MainActivity : ReactActivity() {
   
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -59,11 +60,11 @@ class MainActivity : ReactActivity() {
   var currentMaxVerticalInset: Int by Delegates.notNull<Int>()
   lateinit var rootView: View
   //private val lock = Any()
-  lateinit var currentOrientation: String // UI retrigger
-  lateinit var currentState: String // UI retrigger
-  lateinit var currentInsets: Rect // UI retrigger
-  var currentWindow: MutableMap<String, Int> = mutableMapOf() // UI retrigger
-  var currentHingeBounds: MutableMap<String, Int> = mutableMapOf() // UI retrigger
+  lateinit var currentOrientation: String // UI var
+  lateinit var currentState: String // UI var
+  lateinit var currentInsets: Rect // UI var
+  var currentWindow: MutableMap<String, Int> = mutableMapOf() // UI var
+  var currentHingeBounds: MutableMap<String, Int> = mutableMapOf() // UI var
 
 
 
@@ -103,126 +104,80 @@ class MainActivity : ReactActivity() {
 
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) { //manual: Boolean
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
-    Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
     //canUpdate = false // FLAG FOR updateUI()
 
-    // VALUES
     val mainActivity = this@MainActivity
-    val multiWindow = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) mainActivity.isInMultiWindowMode else false // MULTI-WINDOW (24)
+
+    // MULTI-WINDOW // 24
+    val multiWindow = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) mainActivity.isInMultiWindowMode else false
+
+    // BEGIN ORIENTATION //
+    val newOrientation = mainActivity.resources.configuration.orientation
+    if (newOrientation == Configuration.ORIENTATION_PORTRAIT) { currentOrientation = "portrait" }
+    else { currentOrientation = "landscape" }
+    // END ORIENTATION //
+
+    //lateinit var job: Job
     var job: Job? = null
-    val mainMap = Arguments.createMap()
-    var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
-    lateinit var newState: String
-    lateinit var newInsets: Rect
-    val windowBounds = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(mainActivity).bounds
 
-    // val newOrientation = mainActivity.resources.configuration.orientation
-    // if (newOrientation == Configuration.ORIENTATION_PORTRAIT) { currentOrientation = "portrait" }
-    // else { currentOrientation = "landscape" }
+    fun collectAndCancel(windowLayoutInfo: WindowLayoutInfo, doJob: Boolean) {
+      Log.d("LOG", "DATA: " + windowLayoutInfo + ", DO JOB VALUE: " + doJob)
+      if (doJob) job?.cancel(); // CANCEL CURRENT, IF ANY, JOB
 
-    // // BEGIN INSETS //
-    // @RequiresApi(Build.VERSION_CODES.R)
-    // fun getInsetsCompatR(rootView: View): Unit {
-    //   val preNewInsets = rootView.rootWindowInsets?.getInsets(
-    //     WindowInsets.Type.statusBars() or
-    //     WindowInsets.Type.displayCutout() or
-    //     WindowInsets.Type.navigationBars() or
-    //     WindowInsets.Type.captionBar()
-    //   )
-    //   if (preNewInsets !== null) newInsets = Rect(preNewInsets.left, preNewInsets.top, preNewInsets.right, preNewInsets.bottom)
-    // }
-    // @RequiresApi(Build.VERSION_CODES.M)
-    // fun getInsetsCompatM(rootView: View): Unit {
-    //   val ppreNewInsets = rootView.rootWindowInsets
-    //   if (ppreNewInsets !== null) newInsets = Rect(ppreNewInsets.systemWindowInsetLeft, ppreNewInsets.systemWindowInsetTop, ppreNewInsets.systemWindowInsetRight, min(ppreNewInsets.systemWindowInsetBottom, ppreNewInsets.stableInsetBottom))
-    // }
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
-    // else getInsetsCompatM(rootView) // 6 to 10
-    // // 5 or older NOT SUPPORTED
+      val mainMap = Arguments.createMap()
 
-    // END INSETS //
-
-    fun getOrHandleWindowLayoutInfo(windowLayoutInfo: WindowLayoutInfo, manualJob: Boolean) { // get or handle WindowLayoutInfo
-      Log.d("LOG", "DATA: " + windowLayoutInfo + ", MANUAL JOB: " + manualJob)
-      if (manualJob) job?.cancel(); // CANCEL CURRENT, IF ANY, JOB
-
-      // NEW VALUES //
-      val foldingFeature = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
-      val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
+      // BEGIN WINDOW //
+      val windowBounds = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(mainActivity).bounds
       val newWindow = mutableMapOf("width" to windowBounds.width(), "height" to windowBounds.height())
-
-
+      if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
+      // END WINDOW //
 
       // BEGIN INSETS //
       @RequiresApi(Build.VERSION_CODES.R)
       fun getInsetsCompatR(rootView: View): Unit {
-        val preNewInsets = rootView.rootWindowInsets?.getInsets(
-          WindowInsets.Type.statusBars() or
-          WindowInsets.Type.displayCutout() or
-          WindowInsets.Type.navigationBars() or
-          WindowInsets.Type.captionBar()
-        )
-        if (preNewInsets !== null) newInsets = Rect(preNewInsets.left, preNewInsets.top, preNewInsets.right, preNewInsets.bottom)
+        val newInsets =
+          rootView.rootWindowInsets?.getInsets(
+            WindowInsets.Type.statusBars() or
+            WindowInsets.Type.displayCutout() or
+            WindowInsets.Type.navigationBars() or
+            WindowInsets.Type.captionBar()
+          )
+
+        if (newInsets !== null) {
+          currentInsets = Rect(newInsets.left, newInsets.top, newInsets.right, newInsets.bottom)
+          sendUpdate = true
+        }
       }
+
       @RequiresApi(Build.VERSION_CODES.M)
       fun getInsetsCompatM(rootView: View): Unit {
-        val preNewInsets = rootView.rootWindowInsets
-        if (preNewInsets !== null) newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
+        val preInsets = rootView.rootWindowInsets
+        if (preInsets !== null) {
+          currentInsets = Rect(preInsets.systemWindowInsetLeft, preInsets.systemWindowInsetTop, preInsets.systemWindowInsetRight, min(preInsets.systemWindowInsetBottom, preInsets.stableInsetBottom))
+          sendUpdate = true
+        }
       }
+
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
       else getInsetsCompatM(rootView) // 6 to 10
       // 5 or older NOT SUPPORTED
 
-      // // BEGIN INSETS //
-      // @RequiresApi(Build.VERSION_CODES.R)
-      // fun getInsetsCompatR(rootView: View): Unit {
-      //   val newInsets =
-      //     rootView.rootWindowInsets?.getInsets(
-      //       WindowInsets.Type.statusBars() or
-      //       WindowInsets.Type.displayCutout() or
-      //       WindowInsets.Type.navigationBars() or
-      //       WindowInsets.Type.captionBar()
-      //     )
+      // END INSETS //
 
-      //   if (newInsets !== null) {
-      //     currentInsets = Rect(newInsets.left, newInsets.top, newInsets.right, newInsets.bottom)
-      //     sendUpdate = true
-      //   }
-      // }
+      // BEGIN VERTICAL & HORIZONTAL INSET //
+      if (currentInsets.left > currentInsets.right) currentMaxHorizontalInset = currentInsets.left
+      else currentMaxHorizontalInset = currentInsets.right
+      if (currentInsets.top > currentInsets.bottom) currentMaxVerticalInset = currentInsets.top
+      else currentMaxVerticalInset = currentInsets.bottom
+      // END VERTICAL & HORIZONTAL INSET //
 
-      // @RequiresApi(Build.VERSION_CODES.M)
-      // fun getInsetsCompatM(rootView: View): Unit {
-      //   val preInsets = rootView.rootWindowInsets
-      //   if (preInsets !== null) {
-      //     currentInsets = Rect(preInsets.systemWindowInsetLeft, preInsets.systemWindowInsetTop, preInsets.systemWindowInsetRight, min(preInsets.systemWindowInsetBottom, preInsets.stableInsetBottom))
-      //     sendUpdate = true
-      //   }
-      // }
+      val foldingFeature = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
 
-      // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
-      // else getInsetsCompatM(rootView) // 6 to 10
-      // // 5 or older NOT SUPPORTED
+      var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
 
-      // // BEGIN VERTICAL & HORIZONTAL INSET //
-      // if (currentInsets.left > currentInsets.right) currentMaxHorizontalInset = currentInsets.left
-      // else currentMaxHorizontalInset = currentInsets.right
-      // if (currentInsets.top > currentInsets.bottom) currentMaxVerticalInset = currentInsets.top
-      // else currentMaxVerticalInset = currentInsets.bottom
-      // // END VERTICAL & HORIZONTAL INSET //
+      lateinit var newState: String;
 
-      
-
-      //var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
-      //lateinit var newState: String
-
-
-
-      // sendUpdate FLAG SETTERS
-      if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
-      if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
-      if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
-
-      if (foldingFeature != null) { // DEVICE IS FOLDABLE
+      if (foldingFeature != null) {
         newHingeBounds = mutableMapOf(
           "left" to foldingFeature.bounds.left,
           "top" to foldingFeature.bounds.top,
@@ -234,17 +189,10 @@ class MainActivity : ReactActivity() {
           if ((foldingFeature.state == FoldingFeature.State.FLAT && foldingFeature.occlusionType == FoldingFeature.OcclusionType.NONE) || multiWindow) "flat"
           else if (foldingFeature.orientation == FoldingFeature.Orientation.HORIZONTAL) "tabletop"
           else "book"
-      } else { // DEVICE IS NOT FOLDABLE
+      } else {
         newState = currentOrientation
         newHingeBounds = mutableMapOf("left" to 0, "top" to 0, "right" to 0, "bottom" to 0)
       }
-
-      // BEGIN VERTICAL & HORIZONTAL INSET //
-      if (currentInsets.left > currentInsets.right) currentMaxHorizontalInset = currentInsets.left
-      else currentMaxHorizontalInset = currentInsets.right
-      if (currentInsets.top > currentInsets.bottom) currentMaxVerticalInset = currentInsets.top
-      else currentMaxVerticalInset = currentInsets.bottom
-      // END VERTICAL & HORIZONTAL INSET //
 
       if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
 
@@ -282,7 +230,6 @@ class MainActivity : ReactActivity() {
         mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
         if (reactInstanceManager.currentReactContext == null) {
-          Log.d("LOG", "111111111111111111")
           reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
             override fun onReactContextInitialized(context: ReactContext) {
               context
@@ -291,7 +238,6 @@ class MainActivity : ReactActivity() {
             }
           })
         } else {
-          Log.d("LOG", "2222222222222222")
           reactInstanceManager.currentReactContext
             ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             ?.emit("LayoutInfo", mainMap)
@@ -301,14 +247,14 @@ class MainActivity : ReactActivity() {
       canUpdate = true // FLAG FOR updateUI()
     } // END OF updateUI()
 
-    if (incomingWindowLayoutInfo != null) getOrHandleWindowLayoutInfo(incomingWindowLayoutInfo, false) // AUTO FOLDING FEATURE INFO
+    if (incomingWindowLayoutInfo != null) collectAndCancel(incomingWindowLayoutInfo, false) // AUTO FOLDING FEATURE INFO
     else {
     Log.d("LOG", "LAUNCHED MANUAL JOB")
       job?.cancel(); // CANCEL PREVIOUS, IF ANY, JOB
       job = lifecycleScope.launch { // MANUAL FOLDING FEATURE INFO
         WindowInfoTracker.getOrCreate(mainActivity)
           .windowLayoutInfo(mainActivity)
-          .collect { getOrHandleWindowLayoutInfo(it, true) }
+          .collect { collectAndCancel(it, true) }
       };
     }
   }

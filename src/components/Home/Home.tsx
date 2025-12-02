@@ -6,6 +6,9 @@ import About from '../About/About';
 import OwnButton from '../OwnButton/OwnButton';
 import KnowMore from '../KnowMore/KnowMore';
 //import { /* createIconSetFromFontello, */ SimpleLineIcons } from '@expo/vector-icons';
+//import { SimpleLineIcons } from '@react-native-vector-icons/simple-line-icons';
+//import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { HomeI, counterI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import { Text } from '../../utils/Text';
 import { portButtons, landButtons } from '../../utils/Buttons';
@@ -60,6 +63,8 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     scrollRefUpper.current?.scrollToEnd({ animated: false })
     scrollRefCenter.current?.scrollToEnd({ animated: false })
   }
+
+  console.log("AAAAAAAAAAAAAAAA SADDDDDDDDDDD")
 
   const lastButtonPort = { value: "=", parErr: parErr, size: '22.5%', margin: '2%' }
   const lastButtonLand = { value: "=", parErr: parErr, size: `${92/7}%`, margin: '1%' }
@@ -189,15 +194,12 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       activeOpacity={1}
       style={s.question}
       onPress={() => state === 'tabletop' ? setShowCalc(false) : navigate('About')}
+      //children={ <SimpleLineIcons name='question' size={40} color='red' /> }
       //children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
+      //children={ <Text style={{size: 20}}>ASD</Text> }
       //children="asd"
     >
-      <Text
-        //style={[ s.text, { fontSize: small ? fontSize * 10 : fontSize * 12 } ]}
-        style={ { fontSize: 10 } }
-      >
-        "B"
-      </Text>
+      <SimpleLineIcons name='emotsmile' size={40} color='red' />
     </TouchableHighlight>
 
   const PortCalc =

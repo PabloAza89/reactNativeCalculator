@@ -14,6 +14,14 @@ import { Image, AppState, Dimensions, useWindowDimensions, /* NativeModules, Nat
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import FastImage from 'react-native-fast-image'
 //import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+//import { SimpleLineIcons, Icon as BaseIcon } from '@react-native-vector-icons/simple-line-icons';
+//import { SimpleLineIcons, /* BaseIcon  */} from '@react-native-vector-icons/simple-line-icons';
+//import { SimpleLineIcons } from 'react-native-vector-icons/simple-line-icons';
+//import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+//import {SimpleLineIcons} from '@react-native-vector-icons/simple-line-icons';
+//import SimpleLineIcons from '@react-native-vector-icons/simple-line-icons';
+//import { /* Icon as BaseIcon, */ IconProps, IconSource } from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
@@ -218,6 +226,17 @@ const App = (): ReactElement => {
     //     ...SimpleLineIcons.font
     //   })
     // } catch (error) { console.log(error) }
+
+    try {
+      await Promise.all([
+				SimpleLineIcons.loadFont()
+				//<SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' />
+				//SimpleLineIcons.getImageSource('question', 40, 'red')
+        //(SimpleLineIcons as any).loadFont()
+        ])
+    } catch (error) { console.log("VV FONT LOAD ERROR", error) }
+
+		console.log("SADDDDDDDDDDD")
 
     async function navigationBarToGestureOrViceVersa() {
       if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {

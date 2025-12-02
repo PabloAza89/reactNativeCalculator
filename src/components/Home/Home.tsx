@@ -5,7 +5,7 @@ import { s } from './HomeCSS';
 import About from '../About/About';
 import OwnButton from '../OwnButton/OwnButton';
 import KnowMore from '../KnowMore/KnowMore';
-import { createIconSetFromFontello, SimpleLineIcons } from '@expo/vector-icons';
+//import { /* createIconSetFromFontello, */ SimpleLineIcons } from '@expo/vector-icons';
 import { HomeI, counterI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import { Text } from '../../utils/Text';
 import { portButtons, landButtons } from '../../utils/Buttons';
@@ -189,8 +189,16 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       activeOpacity={1}
       style={s.question}
       onPress={() => state === 'tabletop' ? setShowCalc(false) : navigate('About')}
-      children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
-    />;
+      //children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
+      //children="asd"
+    >
+      <Text
+        //style={[ s.text, { fontSize: small ? fontSize * 10 : fontSize * 12 } ]}
+        style={ { fontSize: 10 } }
+      >
+        "B"
+      </Text>
+    </TouchableHighlight>
 
   const PortCalc =
     <View

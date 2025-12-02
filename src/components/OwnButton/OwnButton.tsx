@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import { TouchableHighlight } from 'react-native';
 import { Text } from '../../utils/Text';
 import { s } from './OwnButtonCSS';
-import { Ionicons } from '@expo/vector-icons';
+//import { Ionicons } from '@expo/vector-icons';
 import { Adder } from '../../utils/Adder';
 import { OwnButtonI, ComponentI } from '../../interfaces/interfaces';
 
@@ -15,12 +15,28 @@ const OwnButton = ({ value, size, margin, fontSize, small, state, handlePress }:
       activeOpacity={1}
       style={[ state === 'tabletop' ? s.ownButtonTabletop : s.ownButton, { width: size, marginLeft: margin } ]}
       onPress={() => handlePress(value)} // value = keyPressed = kP
-      children={
-        <Text
+      // children={
+      //   <Text
+      //     style={[ s.text, { fontSize: small ? fontSize * 10 : fontSize * 12 } ]}
+      //     children={
+      //       value === "B" ?
+      //       //<Ionicons name='backspace' size={ small ? fontSize * 10 : fontSize * 12 } color='rgba(0, 0, 0, .54)' /> :
+      //       "A" :
+      //       value === "N" ?
+      //       "-X" :
+      //       value === "-" ?
+      //       "–" :
+      //       value
+      //     }
+      //   />
+      // }
+    >
+      <Text
           style={[ s.text, { fontSize: small ? fontSize * 10 : fontSize * 12 } ]}
           children={
             value === "B" ?
-            <Ionicons name='backspace' size={ small ? fontSize * 10 : fontSize * 12 } color='rgba(0, 0, 0, .54)' /> :
+            //<Ionicons name='backspace' size={ small ? fontSize * 10 : fontSize * 12 } color='rgba(0, 0, 0, .54)' /> :
+            "A" :
             value === "N" ?
             "-X" :
             value === "-" ?
@@ -28,8 +44,7 @@ const OwnButton = ({ value, size, margin, fontSize, small, state, handlePress }:
             value
           }
         />
-      }
-    />
+    </TouchableHighlight>
   );
 }
 

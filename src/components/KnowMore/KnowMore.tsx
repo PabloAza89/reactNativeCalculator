@@ -5,15 +5,15 @@ import {
   UIManager, findNodeHandle, Platform, Dimensions
 } from 'react-native';
 import { s } from './KnowMoreCSS';
-import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+//import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+//import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../utils/Text';
 import { scrollBarSize, iconColor } from '../../utils/constants';
 import { counterI, KnowMoreI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
 
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
+//const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 //function KnowMore({ navigation: { navigate }, opw, port }: KnowMoreI): ReactElement {
 const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, aboutUp, switchSide, nextScreen,   }: KnowMoreI): ReactElement => {
@@ -71,30 +71,30 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
       </View>
     </View>,
     <View key={3} style={s.eachItem}>
-      <FontAwesome5
+      {/* <FontAwesome5
         name='infinity'
         size={30}
         color={iconColor}
         style={s.leftItem}
-      />
+      /> */}
       <Text style={s.rightItem} children={'Numbers largers than 1.797693e+307 (positive or negative) are treated as Infinity. After that, every calc will output Infinity, or -Infinity, as applicable.'} />
     </View>,
     <View key={4} style={s.eachItem}>
-      <Entypo
+      {/* <Entypo
         name='new'
         size={30}
         color={iconColor}
         style={s.leftItem}
-      />
+      /> */}
       <Text style={s.rightItem} children={'All new input characters are placed to the right.'} />
     </View>,
     <View key={5} style={s.eachItem}>
-      <Ionicons
+      {/* <Ionicons
         name='backspace'
         size={40}
         color={iconColor}
         style={s.leftItem}
-      />
+      /> */}
       <Text style={s.rightItem} children={'Erase the last character.'} />
     </View>,
     <View key={6} style={s.eachItem}>
@@ -110,12 +110,12 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
       <Text style={s.rightItem} children={`If there is no calc to do ('x', '/', '+' or '-') '=' will not work.\nIf calc is valid, result will be shown and, in a smaller upper place, the current calc will be shown.\nIf result or current calc is larger than screen, you can scroll to see entire result/calc.`} />
     </View>,
     <View key={9} style={[ s.eachItem, { marginBottom: 10 } ]}>
-      <MaterialIcons
+      {/* <MaterialIcons
         name='phonelink-erase'
         size={30}
         color={iconColor}
         style={s.leftItem}
-      />
+      /> */}
       <Text style={s.rightItem} children={'This App does not have access to your device.'} />
     </View>
   ]
@@ -214,19 +214,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
         />
       }
 
-      <LinearGradient
-        colors={linearGradientColors} // BODY
-        style={[ s.linearGradient, { zIndex: 2 },  (state === 'tabletop' && aboutUp) ? { height: 0, top: 0 } : { height: height - (ins.top*1), top: ins.top } ]}
-        start={[ 0, 1 - topByHeight ]}
-        end={[ 1, topByHeight * -1 ]}
-      />
 
-      <AnimatedLinearGradient
-        colors={linearGradientColors} // ENTIRE WINDOW
-        style={[ s.animatedLinearGradient, { backgroundColor: currentColor } ]}
-        start={[ 0, 1 ]} // [ XfromLeft, YfromTop ]
-        end={[ 1, 0 ]}   // [ XfromLeft, YfromTop ]
-      />
 
       <CustomScrollView
         ref={scrollRef}
@@ -250,7 +238,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
             <View style={[ s.buttonContainer, { marginTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 0 : 7 } ]}>
 
               {
-                twoScreens ?
+                /* twoScreens ?
                 <CustomButton
                   type={MaterialCommunityIcons.Button}
                   name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
@@ -268,24 +256,17 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
                   onPress={() => navigate('About')}
                   margin={{ right: 12 }}
                   children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
-                />
+                /> */
               }
 
               {/* <View style={s.space} /> */}
 
               {
                 twoScreens && state === 'tabletop' ?
-                <CustomButton
-                  type={Ionicons.Button}
-                  name={'calculator-sharp'}
-                  size={30}
-                  color={iconColor}
-                  onPress={() => nextScreen()}
-                  margin={{ left: 12 }}
-                  //style={{ height: 30, backgroundColor: 'red' }}
-                  children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
-                /> :
-                twoScreens ?
+                <></>
+                 :
+                <></>
+                /* twoScreens ?
                 <CustomButton
                   type={SimpleLineIcons.Button}
                   name={'question'}
@@ -303,7 +284,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
                   onPress={() => navigate('Home')}
                   margin={{ left: 12 }}
                   children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
-                />
+                /> */
               }
 
             </View>

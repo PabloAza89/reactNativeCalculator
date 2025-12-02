@@ -2,9 +2,9 @@ import { ReactElement, useEffect } from 'react';
 import { View, Linking, Animated, Pressable } from 'react-native';
 import { Text } from '../../utils/Text';
 import { s } from './AboutCSS';
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import FastImage from 'react-native-fast-image';
+//import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+//import { LinearGradient } from 'expo-linear-gradient';
+//import FastImage from 'react-native-fast-image';
 import { AboutI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
@@ -57,7 +57,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
                   children={'You are about to leave this App\nand access an external link\nDo you want to continue ?'}
                 />
                 <View style={s.lowerModal}>
-                  <CustomButton
+                  {/* <CustomButton
                     type={Ionicons.Button}
                     name={'close-circle'}
                     size={25}
@@ -73,7 +73,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
                     onPress={() => { Linking.openURL('https://www.linkedin.com/in/juan-pablo-azambuyo'); updateShowModal(false) }}
                     margin={{ left: 12 }}
                     children={ <Text style={s.buttonModal} children={'CONTINUE'} /> }
-                  />
+                  /> */}
                 </View>
               </View>
             }
@@ -81,19 +81,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
         }
       />
 
-      <LinearGradient // STATUS BAR
-        colors={linearGradientColors}
-        style={[ s.statusBarGradient, { height: ins.top } ]}
-        start={[ 0, state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop ]}
-        end={[ 1, 0 ]}
-      />
 
-      <LinearGradient  // BACKGROUND
-        colors={linearGradientColors}
-        style={[ s.bodyGradient, { top: ins.top } ]}
-        start={[ 0, 1 - topByHeight ]}
-        end={[ 1, topByHeight * -1 ]}
-      />
 
       <CustomScrollView
         persistentScrollbar={true}
@@ -119,23 +107,23 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
             children={'This App is developed by\nJuan Pablo Azambuyo'}
           />
           <View style={s.imageWrapper}>
-            <FastImage
-              style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 /* 50% */ }}
-              source={ require('../../images/profile.png') }
-              resizeMode={FastImage.resizeMode.contain}
-            />
-            <CustomButton
+            {/* <FastImage */}
+              {/* style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 }} */} {/* 50% */}
+              {/* source={ require('../../images/profile.png') } */}
+              {/* resizeMode={FastImage.resizeMode.contain} */}
+            {/* /> */}
+            {/* <CustomButton
               type={AntDesign}
               name={'linkedin-square'}
               size={40}
               color={'rgba(0, 0, 0, .7)'}
               onPress={() => updateShowModal(true)}
               style={{ position: 'absolute', top: ((vmin * 30) / 2) - 20, right: (((parsedWidth / 2) - ((vmin * 30) / 2)) / -2) - 20 }}
-            />
+            /> */}
           </View>
 
           {
-            twoScreens ?
+            /* twoScreens ?
             <CustomButton
               type={MaterialCommunityIcons.Button}
               name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
@@ -153,10 +141,10 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
               onPress={() => navigate('Home')}
               margin={{ bottom: 24 }}
               children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
-            />
+            /> */
           }
           {
-            twoScreens ?
+            /* twoScreens ?
             <CustomButton
               type={Ionicons.Button}
               name={ state === 'tabletop' ? 'calculator-sharp' : 'alert-circle' }
@@ -173,7 +161,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
               onPress={() => navigate('KnowMore')}
               iconStyle={s.buttonAndIconLower}
               children={ <Text style={[ s.textInButton, s.oneLine, { transform: [{ rotate: '180deg' }] } ]} children={'HOW DOES IT WORK ?'} /> }
-            />
+            /> */
           }
         </View>
       </CustomScrollView>

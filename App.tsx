@@ -8,19 +8,24 @@ import React, { ReactElement, useEffect, useState, useRef, useLayoutEffect } fro
 import {  CommonActions, NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
-import * as Font from 'expo-font';
-import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter,
+//import * as Font from 'expo-font';
+import { Image, AppState, Dimensions, useWindowDimensions, /* NativeModules, NativeEventEmitter, */
   PixelRatio, View, Animated, useAnimatedValue, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import FastImage from 'react-native-fast-image'
-import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
-import { StackAnimationTypes, enableScreens } from "react-native-screens";
+//import FastImage from 'react-native-fast-image'
+//import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+//import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
 
+import Home from './src/components/Home/Home';
+import About from './src/components/About/About';
+import KnowMore from './src/components/KnowMore/KnowMore';
+
 const Stack = createNativeStackNavigator();
 
-const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
+//const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
+const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactElement[]) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -46,7 +51,7 @@ const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, scree
 
 const App = (): ReactElement => {
 
-  const { MainActivity } = NativeModules;
+  /* const { MainActivity } = NativeModules; */
 
   let tallBar = useRef<boolean>(false)
 
@@ -66,7 +71,8 @@ const App = (): ReactElement => {
 
   const navigationRef = useNavigationContainerRef();
 
-  const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
+  //const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
+  const [ animation, setAnimation ] = useState<unknown>('none'); // NO INITIAL SCREEN ANIMATION
 
   let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
 
@@ -113,7 +119,7 @@ const App = (): ReactElement => {
     catch(e) { }
   };
 
-  FastImage.preload([{ uri: Image.resolveAssetSource(require('./src/images/profile.png')).uri }])
+  //FastImage.preload([{ uri: Image.resolveAssetSource(require('./src/images/profile.png')).uri }])
 
   const [ showModal, setShowModal ] = useState(false);
   const updateShowModal = (bool: boolean) => setShowModal(bool)
@@ -136,7 +142,7 @@ const App = (): ReactElement => {
   const dynamicImport = (nav: navigationI, module: string) => {
     switch (module) {
       case "Home":
-        const Home = require('./src/components/Home/Home').default
+        //const Home = require('./src/components/Home/Home').default
         return (
           <Home
             {...nav} {...sharedProps} input={input} secInput={secInput}
@@ -145,7 +151,7 @@ const App = (): ReactElement => {
           />
         )
       case "About":
-        const About = require('./src/components/About/About').default
+        //const About = require('./src/components/About/About').default
         return (
           <About
             {...nav} {...sharedProps} showModal={showModal}
@@ -153,7 +159,7 @@ const App = (): ReactElement => {
           />
         )
       case "KnowMore":
-        const KnowMore = require('./src/components/KnowMore/KnowMore').default
+        //const KnowMore = require('./src/components/KnowMore/KnowMore').default
         return <KnowMore {...nav} {...sharedProps} />
     }
   }
@@ -202,16 +208,16 @@ const App = (): ReactElement => {
 
     console.log("RESTORED ROUTE: ", resRoute)
 
-    try {
-      await Font.loadAsync({
-        ...AntDesign.font,
-        ...Entypo.font,
-        ...FontAwesome5.font,
-        ...Ionicons.font,
-        ...MaterialIcons.font,
-        ...SimpleLineIcons.font
-      })
-    } catch (error) { console.log(error) }
+    // try {
+    //   await Font.loadAsync({
+    //     ...AntDesign.font,
+    //     ...Entypo.font,
+    //     ...FontAwesome5.font,
+    //     ...Ionicons.font,
+    //     ...MaterialIcons.font,
+    //     ...SimpleLineIcons.font
+    //   })
+    // } catch (error) { console.log(error) }
 
     async function navigationBarToGestureOrViceVersa() {
       if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {
@@ -235,18 +241,21 @@ const App = (): ReactElement => {
 
   //useLayoutEffect(() => { // THIS
   useEffect(() => { // THIS
-    console.log("EXEC USE EFFECT")
-    const nativeEvent = new NativeEventEmitter(MainActivity);
-    let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-      console.log("EXEC LayoutInfo EVENT LISTENER")
-      setLayout(e)
-      tallBar.current = e.tallBar
-      if (runOnceAvailable.current) runOnce()
-    });
-    return () => {
-      console.log("REMOVED LayoutInfo EVENT LISTENER")
-      LayoutInfoListener.remove();
-    }
+    // console.log("EXEC USE EFFECT")
+    // const nativeEvent = new NativeEventEmitter(MainActivity);
+    // let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+    //   console.log("EXEC LayoutInfo EVENT LISTENER")
+    //   setLayout(e)
+    //   tallBar.current = e.tallBar
+    //   if (runOnceAvailable.current) runOnce()
+    // });
+    // return () => {
+    //   console.log("REMOVED LayoutInfo EVENT LISTENER")
+    //   LayoutInfoListener.remove();
+    // }
+
+    runOnce()
+
   }, []);
 
   return (

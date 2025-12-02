@@ -5,7 +5,19 @@ import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
+import android.os.Bundle
+import com.zoontek.rnbootsplash.RNBootSplash
+import com.reactnativecalculator.R
+import androidx.core.view.WindowCompat
+
 class MainActivity : ReactActivity() {
+
+   override fun onCreate(savedInstanceState: Bundle?) {
+    RNBootSplash.init(this, R.style.Start); // Initialize SplashScreen
+    //super.onCreate(null); // super.onCreate(savedInstanceState) // super.onCreate(null) with react-native-screens
+    super.onCreate(savedInstanceState)
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+  }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

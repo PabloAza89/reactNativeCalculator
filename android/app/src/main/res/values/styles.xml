@@ -1,9 +1,13 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
+    <!-- <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
-    </style>
+    </style> -->
+  <style name="Start" parent="Theme.BootSplash">
+    <item name="bootSplashLogo">@drawable/logo</item>
+    <item name="bootSplashBackground">@color/darkBlue</item>
+    <item name="android:statusBarColor">@color/darkBlue</item>
+    <item name="android:navigationBarColor">@color/darkBlue</item>
+  </style>
 
 </resources>

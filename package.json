@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "server": "react-native start",
-    "install": "react-native run-android"
+    "install": "react-native run-android",
+    "log5554": "sh ./scripts/log5554.sh"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",

@@ -34,6 +34,10 @@ import com.facebook.react.bridge.ReactContext
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.turbomodule.core.interfaces.TurboModule
 
+import com.facebook.react.ReactInstanceManager
+
+//import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
+
 class MainActivity : ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -257,20 +261,59 @@ class MainActivity : ReactActivity() {
         mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
         //if (reactInstanceManager.currentReactContext == null) {
-        if (1 == 1) {
-          //Log.d("LOG", "111111111111111111")
+        //if (1 == 1) {
+        if (reactActivityDelegate.reactHost?.currentReactContext == null) {
+          Log.d("LOG", "111111111111111111")
           //(application as MainApplication).reactNativeHost.reactInstanceManager
           //Log.d("LOG", "111111111111111111: " + (application as MainApplication).reactNativeHost)
           //Log.d("LOG", "111111111111111111: " + reactNativeHost.reactInstanceManager)
           //Log.d("LOG", "111111111111111111: " + (application as MainApplication))
           //Log.d("LOG", "111111111111111111: " + (application as MainApplication).reactNativeHost)
           //Log.d("LOG", "111111111111111111: " + this@MainActivity)
+          //Log.d("LOG", "111111111111111111" + reactInstanceManager.currentReactContext)
           //Log.d("LOG", "111111111111111111: " + this@MainActivity.reactInstanceManager) // no
           //Log.d("LOG", "111111111111111111: " + this@MainActivity.reactNativeHost) // no
           //Log.d("LOG", "111111111111111111: " + reactActivityDelegate) // works
           //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost) // works
-          Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost?.currentReactContext) // works
-          //Log.d("LOG", "111111111111111111" + reactInstanceManager.currentReactContext)
+          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost?.currentReactContext) // works
+          //Log.d("LOG", "111111111111111111: " + reactInstanceManager) // no
+          
+          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost?.currentReactContext) // WORKING
+          // TurboModule {
+          //   reactActivityDelegate.reactHost?.currentReactContext
+          // }
+
+          //Log.d("LOG", "111111111111111111: " + reactActivity)
+
+          //Log.d("LOG", "111111111111111111: " + this.reactActivityDelegate.reactNativeHost) // no
+          //val qqasd = getReactNativeHost()
+          //Log.d("LOG", "111111111111111111: " + reactNativeHost) // no
+          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactNativeHost?.reactInstanceManager) // no
+          //Log.d("LOG", "111111111111111111: " + reactInstanceManager) // no
+          //Log.d("LOG", "111111111111111111: " + reactInstanceHost) // no
+          //Log.d("LOG", "111111111111111111: " + getReactNativeHost()) // no
+          //Log.d("LOG", "111111111111111111: " + this.reactInstanceManager) // no
+          //Log.d("LOG", "111111111111111111: " + reactHost.addReactInstanceEventListener) // maybe..
+
+          reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
+            override fun onReactContextInitialized(context: ReactContext) {
+              Log.d("LOG", "3333333333333333333333333333")
+            }
+          })
+
+          // this.reactNativeHost?.reactInstanceManager?.addReactInstanceEventListener(object: ReactInstanceEventListener {
+          //   override fun onReactContextInitialized(context: ReactContext) {
+          //     Log.d("LOG", "3333333333333333333333333333")
+          //   }
+          // })
+
+          // reactActivityDelegate.reactHost?.reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
+          //     override fun onReactContextInitialized(context: ReactContext) {
+          //       Log.d("LOG", "3333333333333333333333333333")
+          //     }
+          //   })
+          
+
         } else {
           Log.d("LOG", "2222222222222222")
         }
@@ -319,6 +362,8 @@ class MainActivity : ReactActivity() {
     //}
  
   }
+
+  //override fun onReactContextInitialized(context: ReactContext) { }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 

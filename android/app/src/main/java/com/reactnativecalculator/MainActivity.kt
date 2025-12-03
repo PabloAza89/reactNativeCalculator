@@ -32,6 +32,7 @@ import kotlin.math.min
 import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.facebook.react.turbomodule.core.interfaces.TurboModule
 
 class MainActivity : ReactActivity() {
 
@@ -255,7 +256,26 @@ class MainActivity : ReactActivity() {
         );
         mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
-        // if (reactInstanceManager.currentReactContext == null) {
+        //if (reactInstanceManager.currentReactContext == null) {
+        if (1 == 1) {
+          //Log.d("LOG", "111111111111111111")
+          //(application as MainApplication).reactNativeHost.reactInstanceManager
+          //Log.d("LOG", "111111111111111111: " + (application as MainApplication).reactNativeHost)
+          //Log.d("LOG", "111111111111111111: " + reactNativeHost.reactInstanceManager)
+          //Log.d("LOG", "111111111111111111: " + (application as MainApplication))
+          //Log.d("LOG", "111111111111111111: " + (application as MainApplication).reactNativeHost)
+          //Log.d("LOG", "111111111111111111: " + this@MainActivity)
+          //Log.d("LOG", "111111111111111111: " + this@MainActivity.reactInstanceManager) // no
+          //Log.d("LOG", "111111111111111111: " + this@MainActivity.reactNativeHost) // no
+          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate) // works
+          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost) // works
+          Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost?.currentReactContext) // works
+          //Log.d("LOG", "111111111111111111" + reactInstanceManager.currentReactContext)
+        } else {
+          Log.d("LOG", "2222222222222222")
+        }
+
+        // if (reactInstanceManager.currentReactContext == null) { // NOT WORKING
         //   Log.d("LOG", "111111111111111111")
         //   reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
         //     override fun onReactContextInitialized(context: ReactContext) {

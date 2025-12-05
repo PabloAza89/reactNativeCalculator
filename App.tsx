@@ -9,7 +9,7 @@ import {  CommonActions, NavigationContainer, useNavigationContainerRef } from '
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
 //import * as Font from 'expo-font';
-import { Image, AppState, Dimensions, useWindowDimensions, /* NativeModules, NativeEventEmitter, */
+import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter, DeviceEventEmitter,
   PixelRatio, View, Animated, useAnimatedValue, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import FastImage from 'react-native-fast-image'
@@ -59,7 +59,11 @@ const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactEle
 
 const App = (): ReactElement => {
 
-  /* const { MainActivity } = NativeModules; */
+  const { MainActivity, TestModule } = NativeModules;
+  
+  
+
+  //console.log("MAIN ACTIVITY", MainActivity)
 
   let tallBar = useRef<boolean>(false)
 
@@ -260,22 +264,43 @@ const App = (): ReactElement => {
 
   //useLayoutEffect(() => { // THIS
   useEffect(() => { // THIS
-    // console.log("EXEC USE EFFECT")
-    // const nativeEvent = new NativeEventEmitter(MainActivity);
-    // let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-    //   console.log("EXEC LayoutInfo EVENT LISTENER")
-    //   setLayout(e)
-    //   tallBar.current = e.tallBar
-    //   if (runOnceAvailable.current) runOnce()
-    // });
-    // return () => {
-    //   console.log("REMOVED LayoutInfo EVENT LISTENER")
-    //   LayoutInfoListener.remove();
-    // }
+    console.log("EXEC USE EFFECT")
+    //const nativeEvent = new NativeEventEmitter(MainActivity);
+    const nativeEvent = new NativeEventEmitter(TestModule);
+    //const nativeEvent = new NativeEventEmitter(MainApplication);
+    
+    let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+      console.log("EXEC LayoutInfo EVENT LISTENER")
+      // setLayout(e)
+      // tallBar.current = e.tallBar
+      console.log("EEEEEE", e)
+      //if (runOnceAvailable.current) runOnce()
+    });
 
     runOnce()
 
+    // const LayoutInfoListener = DeviceEventEmitter.addListener(
+    //       'LayoutInfo', // Must match the eventName from Android
+    //       (e) => {
+    //           //console.log('Received event from native:', eventData);
+    //             console.log("EEEEEE", e)
+    //             if (runOnceAvailable.current) runOnce()
+    //           // Handle the event data here
+    //       }
+    //   );
+    return () => {
+      console.log("REMOVED LayoutInfo EVENT LISTENER")
+      LayoutInfoListener.remove();
+    }
+
+    
+
+  //}, [MainActivity]);
   }, []);
+
+  // useEffect(() => { 
+  //   console.log("MAIN ACT VALUE: ", MainActivity)
+  // }, [MainActivity])
 
   return (
     <NavigationContainer

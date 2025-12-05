@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useRef, useEffect, MutableRefObject } from 'react';
 import { ScrollView, StatusBar, View, Animated,
-  useAnimatedValue, Pressable, TouchableHighlight } from 'react-native';
+  useAnimatedValue, Pressable, TouchableHighlight, NativeModules } from 'react-native';
 import { s } from './HomeCSS';
 import About from '../About/About';
 import OwnButton from '../OwnButton/OwnButton';
@@ -17,6 +17,25 @@ import { Adder } from '../../utils/Adder';
 const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBounds, 
   route, maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
+
+  const { MainActivity, TestModule } = NativeModules;
+  //const { MainApplication } = NativeModules;
+
+  //const {TestModule} = NativeModules;
+
+   const onPressTest = async () => {
+
+      //console.log("CLICKED", await MainActivity.callFromReact())
+      //console.log("CLICKED", await MainActivity.getMainComponentName())
+      //console.log("CLICKED", await MainActivity.getMainComponentName())
+      //console.log("CLICKED", await MainActivity.TestClass.getName()) // no
+      //console.log("CLICKED", await MainActivity.testFunc()) // no
+      //console.log("CLICKED", await TestModule.testFunc()) // no
+      //console.log("CLICKED")
+      //console.log("CLICKED", await MainActivity.testFunc()) // no
+      console.log("CLICKED", await TestModule.testFunc()) // no
+
+  };
 
   // useEffect(() => {
   //   updateShowModal(false)
@@ -432,6 +451,21 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
         LandCalc
 
       }
+
+      <TouchableHighlight
+        underlayColor="#8aaeba"
+        //underlayColor="red"
+        activeOpacity={1}
+
+        style={[
+          //s.question,
+          { borderRadius: 21 }
+        ]}
+
+        //onPress={() => navigate('About')}
+        onPress={() => onPressTest()}
+        children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
+      />
     </View>
   );
 }

@@ -29,15 +29,33 @@ import android.content.res.Configuration
 import androidx.annotation.RequiresApi
 import android.view.WindowInsets
 import kotlin.math.min
-import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
+//import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.turbomodule.core.interfaces.TurboModule
 
-import com.facebook.react.ReactInstanceManager
+import com.facebook.react.ReactInstanceEventListener
+
+//import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+//import com.facebook.react.ReactInstanceManager
 
 //import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 
+import com.facebook.react.ReactPackage
+import com.facebook.react.uimanager.ReactShadowNode
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.uimanager.ViewManager
+
+import android.app.Activity
+
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.NativeModule
+
+//class MainActivity : ReactActivity() , ReactInstanceManager.ReactInstanceEventListener {
+//class MainActivity : ReactActivity(), ReactInstanceEventListener {
 class MainActivity : ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -62,19 +80,14 @@ class MainActivity : ReactActivity() {
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
     rootView = findViewById<View>(android.R.id.content).rootView
 
-      lifecycleScope.launch(Dispatchers.Main) {
+    lifecycleScope.launch(Dispatchers.Main) {
       lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-          WindowInfoTracker.getOrCreate(mainActivity)
-              .windowLayoutInfo(mainActivity)
-              .collect { newLayoutInfo ->
-                //synchronized(AppLock.lock) {
-                    Log.d("LOG", "AppLock.canUpdate auto " + canUpdate)
-                    //if (canUpdate) updateUI(newLayoutInfo)
-                    if (canUpdate) {canUpdate = false;updateUI(newLayoutInfo)} // BLOCK 1st FLAG ASAP
-                    //if (canUpdate) {canUpdate = false} // BLOCK 1st FLAG ASAP
-                    
-                //}
-              }
+        WindowInfoTracker.getOrCreate(mainActivity)
+          .windowLayoutInfo(mainActivity)
+          .collect { newLayoutInfo ->
+            Log.d("LOG", "AppLock.canUpdate auto " + canUpdate)
+            if (canUpdate) {canUpdate = false;updateUI(newLayoutInfo)} // BLOCK 1st FLAG ASAP
+          }
       }
     }
 
@@ -262,61 +275,136 @@ class MainActivity : ReactActivity() {
 
         //if (reactInstanceManager.currentReactContext == null) {
         //if (1 == 1) {
-        if (reactActivityDelegate.reactHost?.currentReactContext == null) {
+        //Log.d("LOG", "TEST TEST TEST " + reactHost?.currentReactContext) // work
+
+        // reactHost.onHostResume(reactHost?.currentReactContext) {
+        //     Log.d("LOG", "00000000: " + reactHost.currentReactContext)
+        //   }
+
+        if (reactHost?.currentReactContext == null) {
           Log.d("LOG", "111111111111111111")
-          //(application as MainApplication).reactNativeHost.reactInstanceManager
-          //Log.d("LOG", "111111111111111111: " + (application as MainApplication).reactNativeHost)
-          //Log.d("LOG", "111111111111111111: " + reactNativeHost.reactInstanceManager)
-          //Log.d("LOG", "111111111111111111: " + (application as MainApplication))
-          //Log.d("LOG", "111111111111111111: " + (application as MainApplication).reactNativeHost)
-          //Log.d("LOG", "111111111111111111: " + this@MainActivity)
-          //Log.d("LOG", "111111111111111111" + reactInstanceManager.currentReactContext)
-          //Log.d("LOG", "111111111111111111: " + this@MainActivity.reactInstanceManager) // no
-          //Log.d("LOG", "111111111111111111: " + this@MainActivity.reactNativeHost) // no
-          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate) // works
-          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost) // works
-          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost?.currentReactContext) // works
-          //Log.d("LOG", "111111111111111111: " + reactInstanceManager) // no
-          
-          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactHost?.currentReactContext) // WORKING
-          // TurboModule {
-          //   reactActivityDelegate.reactHost?.currentReactContext
-          // }
 
-          //Log.d("LOG", "111111111111111111: " + reactActivity)
+          //mainMap.putString("state", "portrait")
+          //this@MainActivity.reactNativeHost.reactInstanceManager.currentReactContext
+          //this@MainActivity.reactNativeHost.reactInstanceManager
 
-          //Log.d("LOG", "111111111111111111: " + this.reactActivityDelegate.reactNativeHost) // no
-          //val qqasd = getReactNativeHost()
-          //Log.d("LOG", "111111111111111111: " + reactNativeHost) // no
-          //Log.d("LOG", "111111111111111111: " + reactActivityDelegate.reactNativeHost?.reactInstanceManager) // no
-          //Log.d("LOG", "111111111111111111: " + reactInstanceManager) // no
-          //Log.d("LOG", "111111111111111111: " + reactInstanceHost) // no
-          //Log.d("LOG", "111111111111111111: " + getReactNativeHost()) // no
-          //Log.d("LOG", "111111111111111111: " + this.reactInstanceManager) // no
-          //Log.d("LOG", "111111111111111111: " + reactHost.addReactInstanceEventListener) // maybe..
-
-          reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
-            override fun onReactContextInitialized(context: ReactContext) {
-              Log.d("LOG", "3333333333333333333333333333")
-            }
-          })
-
-          // this.reactNativeHost?.reactInstanceManager?.addReactInstanceEventListener(object: ReactInstanceEventListener {
+          //this@MainActivity.reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
+          //this@MainActivity.reactNativeHost.reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
+          // reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
           //   override fun onReactContextInitialized(context: ReactContext) {
-          //     Log.d("LOG", "3333333333333333333333333333")
+          //       Log.d("LOG", "111111111111111111 INNER")
+                
+          //       // // this@MainActivity.reactHost.currentReactContext
+          //       // context
+          //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          //       //   ?.emit("LayoutInfo", "asdasdsadasd")
+          //       //   //?.emit("LayoutInfo", mainMap)
+
+          //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //       // reactHost?.currentReactContext
+          //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+          //       //   ?.emit("LayoutInfo", "TEST RESPONSE");
+          //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //       //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //       //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
           //   }
           // })
 
-          // reactActivityDelegate.reactHost?.reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
-          //     override fun onReactContextInitialized(context: ReactContext) {
-          //       Log.d("LOG", "3333333333333333333333333333")
-          //     }
-          //   })
-          
+          //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          // reactHost?.currentReactContext
+          //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+          //   ?.emit("LayoutInfo", "TEST RESPONSE");
+          //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
 
         } else {
-          Log.d("LOG", "2222222222222222")
+          Log.d("LOG", "222222222222222222")
+          //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap)
+          //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          // reactHost?.currentReactContext
+          //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+          //   ?.emit("LayoutInfo", "TEST RESPONSE");
+          reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM ELSE")
+          //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
         }
+        //   
+
+        //   //Log.d("LOG", "111111111111111111: " + reactHost.addReactInstanceEventListener) // maybe..
+
+        //   // reactHost.currentReactContext
+        //   //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //   ?.emit("LayoutInfo", mainMap)
+
+        //   //this@MainActivity.reactNativeHost.reactInstanceManager.currentReactContext
+        //   //this@MainActivity.reactNativeHost.reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
+        //   // this@MainActivity.reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
+        //   //   override fun onReactContextInitialized(context: ReactContext) {
+        //   //       Log.d("LOG", "111111111111111111 INNER")
+        //   //       //context
+        //   //       this@MainActivity.reactHost.currentReactContext
+        //   //         ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //         ?.emit("LayoutInfo", mainMap)
+        //   //   }
+        //   // })
+        //   // reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
+        //   //   // reactHost?.currentReactContext
+        //   //   //     ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //   //     ?.emit("LayoutInfo", mainMap)
+        //   //   override fun onReactContextInitialized(context: ReactContext) {
+
+        //   //     Log.d("LOG", "111111111111111111 INNER")
+
+        //   //     // Log.d("LOG", "111111111111111111: " + reactHost.currentReactContext)
+        //   //     // Log.d("LOG", "111111111111111111: " + reactHost.lifecycleState)
+        //   //     //Log.d("LOG", "111111111111111111: $context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)")
+        //   //     //Log.d("LOG", "111111111111111111: $reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap)")
+
+        //   //     // reactHost?.currentReactContext
+        //   //     //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //     //   ?.emit("LayoutInfo", mainMap)
+        //   //       // ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //       // ?.emit("LayoutInfo", mainMap)
+
+        //   //     //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap) // Don't know why does not work..
+
+        //   //     // Log.d("LOG", "111111111111111111: $reactHost.reactInstanceManager" )
+        //   //     // Log.d("LOG", "111111111111111111: $reactHost.reactInstanceManager.currentReactContext" )
+        //   //     Log.d("LOG", "111111111111111111 1: $reactHost" ) // CALL OK
+        //   //     Log.d("LOG", "111111111111111111 2: $this.reactHost" ) // CALL OK
+        //   //     Log.d("LOG", "111111111111111111 3: $this.reactNativeHost" ) // CALL OK
+        //   //     //Log.d("LOG", "111111111111111111 4: $reactNativeHost" ) // NO CALL !!
+        //   //     //this@MainActivity.reactNativeHost.reactInstanceManager.currentReactContext
+        //   //     this@MainActivity.reactNativeHost.reactInstanceManager.currentReactContext
+        //   //       ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //       ?.emit("LayoutInfo", mainMap)
+
+        //   //     //Log.d("LOG", "INS 111111111111111111 Context ID: " + context)
+        //   //     //reactActivityDelegate.reactHost?.currentReactContext
+        //   //     // context
+        //   //     //   .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //     //   .emit("LayoutInfo", mainMap)
+        //   //     // Log.d("LOG", "FIN 111111111111111111: " + context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java))
+        //   //     // context
+        //   //     //   .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //     //   .emit("LayoutInfo", mainMap)
+        //   //     // reactActivityDelegate.reactHost?.currentReactContext
+        //   //     //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //     //   ?.emit("LayoutInfo", mainMap)
+        //   //   }
+        //   // })
+
+
+
+        // } else {
+        //   Log.d("LOG", "2222222222222222")
+        //   //Log.d("LOG", "2222222222222222 : " + reactActivityDelegate.reactHost?.currentReactContext)
+        //   //Log.d("LOG", "2222222222222222222: $reactHost.currentReactContext?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)")
+        //   // reactHost?.currentReactContext
+        //   //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   //   ?.emit("LayoutInfo", mainMap)
+        //   //Log.d("LOG", "2222222222222222222: $reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap)")
+        //   reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap)
+        // }
 
         // if (reactInstanceManager.currentReactContext == null) { // NOT WORKING
         //   Log.d("LOG", "111111111111111111")
@@ -363,7 +451,96 @@ class MainActivity : ReactActivity() {
  
   }
 
-  //override fun onReactContextInitialized(context: ReactContext) { }
+  // override fun onReactContextInitialized(casontext: ReactContext) {
+  //   //Log.d("LOG", "BBBBBBBBBBBBBBBBBBBBBBBBBBB: $context")
+  //   Log.d("LOG", "LOG LOG LOG")
+  //   Log.d("LOG", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  // }
+
+  // override fun onResume() {
+  //       super.onResume()
+
+  //       // 1. Get the ReactInstanceManager via the public host property
+  //       //val reactInstanceManager = this.reactNativeHost.reactInstanceManager
+
+  //       // 2. Create the listener object
+  //       //val contextReadyListener = object : ReactInstanceEventListener {
+
+  //       val listener = object : ReactInstanceEventListener {
+  //           override fun onReactContextInitialized(context: ReactContext) {
+  //               Log.d("LOG", "4444444444 newer test")
+  //               //reactInstanceManager.removeReactInstanceEventListener(this)
+  //               //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
+  //               //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
+  //               reactHost?.currentReactContext
+  //                 ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+  //                 ?.emit("LayoutInfo", "TEST RESPONSE FROM BEGINNING");
+  //               //reactHost.removeReactInstanceEventListener(this)
+  //           }
+  //       }
+
+  //       reactHost.addReactInstanceEventListener(listener)
+
+  // }
+
+  class TestPackage : ReactPackage {
+    override fun createViewManagers(
+      reactContext: ReactApplicationContext
+    ): MutableList<ViewManager<View, ReactShadowNode<*>>> = mutableListOf()
+
+    override fun createNativeModules(
+      reactContext: ReactApplicationContext
+    ): MutableList<NativeModule> = listOf(TestModule(reactContext)).toMutableList()
+  }
+
+  class TestModule(reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
+    override fun getName(): String = "TestModule"
+
+    val contextTest = reactContext
+
+    @ReactMethod // Must be exposed to JS
+    fun addListener(eventName: String) {
+        // Required for NativeEventEmitter initialization
+    }
+
+    @ReactMethod // Must be exposed to JS
+    fun removeListeners(count: Int) {
+        // Required for NativeEventEmitter cleanup
+    }
+
+    @ReactMethod
+    fun testFunc(promise: Promise) {
+      
+      try {
+        //let asd = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        promise.resolve("AASDASDASDASDASD") // OK
+        Log.d("LOG", "TEST LOG TEST LOG TEST LOG")
+
+        Log.d("LOG", "TEST LOG TEST LOG TEST LOG: $this.reactContext")
+
+        //reactContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+        //contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+        //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM ELSE")
+        //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+
+        contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+        // contextTest
+        //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        //   ?.emit("LayoutInfo", "TEST RESPONSE FROM MODULE");
+
+        //promise.resolve("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") // OK
+        //this.toggleDualScreenMode()
+        //promise.resolve((activity as MainActivity).getString())
+        //promise.resolve((activity as MainActivity).toggleDualScreenMode())
+        //(activity as MainActivity).toggleDualScreenMode()
+        //(activity as MainActivity).toggleDualScreenMode2()
+      } catch (e: Exception) {
+          promise.reject(e)
+          // pickerPromise?.reject(E_FAILED_TO_SHOW_PICKER, t)
+          // pickerPromise = null
+      }
+    }
+  }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 

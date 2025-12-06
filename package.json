@@ -5,7 +5,8 @@
   "scripts": {
     "server": "react-native start",
     "install": "react-native run-android",
-    "log5554": "sh ./scripts/log5554.sh"
+    "log5554": "sh ./scripts/log5554.sh",
+    "rnlog": "sh ./scripts/rnlog.sh"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",

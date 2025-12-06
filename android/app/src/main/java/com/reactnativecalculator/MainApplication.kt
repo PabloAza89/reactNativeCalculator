@@ -7,12 +7,18 @@ import com.facebook.react.ReactHost
 import com.facebook.react.ReactNativeApplicationEntryPoint.loadReactNative
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 
+import com.reactnativecalculator.CustomScrollViewPackage
+import com.reactnativecalculator.TestPackage
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactHost: ReactHost by lazy {
     getDefaultReactHost(
       context = applicationContext,
-      packageList = PackageList(this).packages.apply { add(CustomScrollViewPackage()); add(MainActivity.TestPackage()) }
+      packageList = PackageList(this).packages.apply {
+        add(CustomScrollViewPackage())
+        add(TestPackage())
+      }
     )
   }
 

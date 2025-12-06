@@ -54,9 +54,11 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.NativeModule
 
+import com.reactnativecalculator.TestModule
+
 //class MainActivity : ReactActivity() , ReactInstanceManager.ReactInstanceEventListener {
 //class MainActivity : ReactActivity(), ReactInstanceEventListener {
-class MainActivity : ReactActivity() {
+class MainActivity: ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
   var sendUpdate: Boolean = false
@@ -290,32 +292,34 @@ class MainActivity : ReactActivity() {
 
           //this@MainActivity.reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
           //this@MainActivity.reactNativeHost.reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
-          // reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
-          //   override fun onReactContextInitialized(context: ReactContext) {
-          //       Log.d("LOG", "111111111111111111 INNER")
+          reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
+            override fun onReactContextInitialized(context: ReactContext) {
+                Log.d("LOG", "111111111111111111 INNER")
                 
-          //       // // this@MainActivity.reactHost.currentReactContext
-          //       // context
-          //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-          //       //   ?.emit("LayoutInfo", "asdasdsadasd")
-          //       //   //?.emit("LayoutInfo", mainMap)
+                reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
+                // // this@MainActivity.reactHost.currentReactContext
+                // context
+                //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                //   ?.emit("LayoutInfo", "asdasdsadasd")
+                //   //?.emit("LayoutInfo", mainMap)
 
-          //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-          //       // reactHost?.currentReactContext
-          //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-          //       //   ?.emit("LayoutInfo", "TEST RESPONSE");
-          //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-          //       //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-          //       //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-          //   }
-          // })
+                //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+                // reactHost?.currentReactContext
+                //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                //   ?.emit("LayoutInfo", "TEST RESPONSE");
+                //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+                //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+                //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+            }
+          })
 
           //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-          // reactHost?.currentReactContext
-          //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-          //   ?.emit("LayoutInfo", "TEST RESPONSE");
+          // reactHost.currentReactContext
+          //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          //   ?.emit("LayoutInfo", "TEST RESPONSE FROM 1111111111111111111")
           //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
           //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+         //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 1111111111111111111")
 
         } else {
           Log.d("LOG", "222222222222222222")
@@ -324,7 +328,7 @@ class MainActivity : ReactActivity() {
           // reactHost?.currentReactContext
           //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
           //   ?.emit("LayoutInfo", "TEST RESPONSE");
-          reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM ELSE")
+          reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222")
           //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
         }
         //   
@@ -457,90 +461,123 @@ class MainActivity : ReactActivity() {
   //   Log.d("LOG", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
   // }
 
-  // override fun onResume() {
-  //       super.onResume()
+  override fun onResume() {
+        super.onResume()
 
-  //       // 1. Get the ReactInstanceManager via the public host property
-  //       //val reactInstanceManager = this.reactNativeHost.reactInstanceManager
+        val listener = object : ReactInstanceEventListener {
+            override fun onReactContextInitialized(context: ReactContext) {
+              
+                Log.d("LOG", "4444444444 newer test")
+                //reactInstanceManager.removeReactInstanceEventListener(this)
+                //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
+                //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
+                // reactHost?.currentReactContext
+                //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                //   ?.emit("LayoutInfo", "TEST RESPONSE FROM BEGINNING");
 
-  //       // 2. Create the listener object
-  //       //val contextReadyListener = object : ReactInstanceEventListener {
+                //val testModule = context.getNativeModule(TestModule::class.java)
+                //val testModule = reactHost?.currentReactContext?.getNativeModule(TestModule::class.java)
+                val rawModule = context.getNativeModule("TestModule")
+                val testModule = rawModule as? TestModule
+                //val testModule = TestModule
+                //val testModule = this@MainActivity.TestModule
+                //val testModule = this.TestModule
+                //val qqtestModule = qqqtestModule as TestModule
+                //Log.d("LOG", "testModule VAL: $qqtestModule")
+                
+                // Log.d("LOG", "testModule VAL 0: $TestModule::class.java")
+                // Log.d("LOG", "testModule VAL 1: $testModule")
+                // Log.d("LOG", "testModule VAL 2: $TestModule")
+                // Log.d("LOG", "testModule VAL 3: $this@TestModule")
+                if (testModule != null) {
+                  Log.d("LOG", "EMITEDDDDDDDDDDDDDDDDDDDDDDD")
+                  //testModule.emitInitializationEvent("SUPER RARE RESPONSE")
+                } else {
+                  Log.d("LOG", "NO EMITEDDDDDDDDDDDDDDDDDDDDDDD")
+                }
+                
 
-  //       val listener = object : ReactInstanceEventListener {
-  //           override fun onReactContextInitialized(context: ReactContext) {
-  //               Log.d("LOG", "4444444444 newer test")
-  //               //reactInstanceManager.removeReactInstanceEventListener(this)
-  //               //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
-  //               //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
-  //               reactHost?.currentReactContext
-  //                 ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-  //                 ?.emit("LayoutInfo", "TEST RESPONSE FROM BEGINNING");
-  //               //reactHost.removeReactInstanceEventListener(this)
-  //           }
-  //       }
+                reactHost.removeReactInstanceEventListener(this)
+            }
+        }
+        reactHost.addReactInstanceEventListener(listener)
+  }
 
-  //       reactHost.addReactInstanceEventListener(listener)
+  // class TestPackage : ReactPackage {
+  //   override fun createViewManagers(
+  //     reactContext: ReactApplicationContext
+  //   ): MutableList<ViewManager<View, ReactShadowNode<*>>> = mutableListOf()
 
+  //   override fun createNativeModules(
+  //     reactContext: ReactApplicationContext
+  //   ): MutableList<NativeModule> = listOf(TestModule(reactContext)).toMutableList()
   // }
 
-  class TestPackage : ReactPackage {
-    override fun createViewManagers(
-      reactContext: ReactApplicationContext
-    ): MutableList<ViewManager<View, ReactShadowNode<*>>> = mutableListOf()
+  // class TestModule(reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
+  //   override fun getName(): String = "TestModule"
 
-    override fun createNativeModules(
-      reactContext: ReactApplicationContext
-    ): MutableList<NativeModule> = listOf(TestModule(reactContext)).toMutableList()
-  }
+  //   val contextTest = reactContext
 
-  class TestModule(reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
-    override fun getName(): String = "TestModule"
+    
+  //   // @ReactMethod
+  //   // fun asdasd() {
+  //   //   contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE 111")
+  //   // }
 
-    val contextTest = reactContext
+  //   // asdasd()
 
-    @ReactMethod // Must be exposed to JS
-    fun addListener(eventName: String) {
-        // Required for NativeEventEmitter initialization
-    }
+  //   @ReactMethod
+  //   fun addListener(eventName: String) { }
 
-    @ReactMethod // Must be exposed to JS
-    fun removeListeners(count: Int) {
-        // Required for NativeEventEmitter cleanup
-    }
+  //   @ReactMethod
+  //   fun removeListeners(count: Int) { }
 
-    @ReactMethod
-    fun testFunc(promise: Promise) {
+  //   fun emitInitializationEvent(message: String) {
+        
+  //       // Use the inherited context property
+  //       // reactApplicationContext
+  //       //     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+  //       //     .emit("TestInitializationEvent", message) 
+
+  //       //reactApplicationContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE 111")
+  //       reactApplicationContext.emitDeviceEvent("LayoutInfo", message)
+            
+        
+  //   }
+
+  //   @ReactMethod
+  //   fun testFunc(promise: Promise) {
       
-      try {
-        //let asd = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        promise.resolve("AASDASDASDASDASD") // OK
-        Log.d("LOG", "TEST LOG TEST LOG TEST LOG")
+  //     try {
+  //       //let asd = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  //       promise.resolve("AASDASDASDASDASD") // OK
+  //       Log.d("LOG", "TEST LOG TEST LOG TEST LOG")
 
-        Log.d("LOG", "TEST LOG TEST LOG TEST LOG: $this.reactContext")
+  //       Log.d("LOG", "TEST LOG TEST LOG TEST LOG: $this.reactContext")
 
-        //reactContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
-        //contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
-        //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM ELSE")
-        //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+  //       //reactContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+  //       //contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
+  //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM ELSE")
+  //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
 
-        contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE")
-        // contextTest
-        //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        //   ?.emit("LayoutInfo", "TEST RESPONSE FROM MODULE");
+  //       contextTest.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM MODULE 222")
+  //       // contextTest
+  //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+  //       //   ?.emit("LayoutInfo", "TEST RESPONSE FROM MODULE");
 
-        //promise.resolve("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") // OK
-        //this.toggleDualScreenMode()
-        //promise.resolve((activity as MainActivity).getString())
-        //promise.resolve((activity as MainActivity).toggleDualScreenMode())
-        //(activity as MainActivity).toggleDualScreenMode()
-        //(activity as MainActivity).toggleDualScreenMode2()
-      } catch (e: Exception) {
-          promise.reject(e)
-          // pickerPromise?.reject(E_FAILED_TO_SHOW_PICKER, t)
-          // pickerPromise = null
-      }
-    }
-  }
+  //       //promise.resolve("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") // OK
+  //       //this.toggleDualScreenMode()
+  //       //promise.resolve((activity as MainActivity).getString())
+  //       //promise.resolve((activity as MainActivity).toggleDualScreenMode())
+  //       //(activity as MainActivity).toggleDualScreenMode()
+  //       //(activity as MainActivity).toggleDualScreenMode2()
+  //     } catch (e: Exception) {
+  //         promise.reject(e)
+  //         // pickerPromise?.reject(E_FAILED_TO_SHOW_PICKER, t)
+  //         // pickerPromise = null
+  //     }
+  //   }
+  // }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 

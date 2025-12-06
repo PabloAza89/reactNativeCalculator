@@ -32,6 +32,19 @@ import KnowMore from './src/components/KnowMore/KnowMore';
 
 const Stack = createNativeStackNavigator();
 
+const { MainActivity, TestModule } = NativeModules;
+//const nativeEvent = new NativeEventEmitter(TestModule);
+const nativeEvent = new NativeEventEmitter(MainActivity);
+
+nativeEvent.addListener('LayoutInfo', e => {
+    //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
+      console.log("EXEC LayoutInfo EVENT LISTENER")
+      // setLayout(e)
+      // tallBar.current = e.tallBar
+      console.log("EEEEEE", e)
+      //if (runOnceAvailable.current) runOnce()
+    });
+
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactElement[]) => {
   return (
@@ -59,7 +72,7 @@ const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactEle
 
 const App = (): ReactElement => {
 
-  const { MainActivity, TestModule } = NativeModules;
+  //const { MainActivity, TestModule } = NativeModules;
   
   
 
@@ -266,16 +279,17 @@ const App = (): ReactElement => {
   useEffect(() => { // THIS
     console.log("EXEC USE EFFECT")
     //const nativeEvent = new NativeEventEmitter(MainActivity);
-    const nativeEvent = new NativeEventEmitter(TestModule);
+    //const nativeEvent = new NativeEventEmitter(TestModule);
     //const nativeEvent = new NativeEventEmitter(MainApplication);
     
-    let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-      console.log("EXEC LayoutInfo EVENT LISTENER")
-      // setLayout(e)
-      // tallBar.current = e.tallBar
-      console.log("EEEEEE", e)
-      //if (runOnceAvailable.current) runOnce()
-    });
+    // let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+    // //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
+    //   console.log("EXEC LayoutInfo EVENT LISTENER")
+    //   // setLayout(e)
+    //   // tallBar.current = e.tallBar
+    //   console.log("EEEEEE", e)
+    //   //if (runOnceAvailable.current) runOnce()
+    // });
 
     runOnce()
 

@@ -35,14 +35,19 @@ const Stack = createNativeStackNavigator();
 const { MainActivity } = NativeModules;
 const nativeEvent = new NativeEventEmitter(MainActivity);
 
-nativeEvent.addListener('LayoutInfo', e => {
-    //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
-      console.log("EXEC LayoutInfo EVENT LISTENER")
-      // setLayout(e)
-      // tallBar.current = e.tallBar
-      console.log("EEEEEE", e)
-      //if (runOnceAvailable.current) runOnce()
-    });
+// nativeEvent.addListener('LayoutInfo', e => {
+//   console.log("EXEC LayoutInfo EVENT LISTENER")
+//   console.log("EEEEEE", e)
+// });
+
+// nativeEvent.addListener('LayoutInfo', e => {
+//     //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
+//       console.log("EXEC LayoutInfo EVENT LISTENER")
+//       // setLayout(e)
+//       // tallBar.current = e.tallBar
+//       console.log("EEEEEE", e)
+//       //if (runOnceAvailable.current) runOnce()
+//     });
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactElement[]) => {
@@ -281,14 +286,14 @@ const App = (): ReactElement => {
     //const nativeEvent = new NativeEventEmitter(TestModule);
     //const nativeEvent = new NativeEventEmitter(MainApplication);
     
-    // let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-    // //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
-    //   console.log("EXEC LayoutInfo EVENT LISTENER")
-    //   // setLayout(e)
-    //   // tallBar.current = e.tallBar
-    //   console.log("EEEEEE", e)
-    //   //if (runOnceAvailable.current) runOnce()
-    // });
+    let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+    //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
+      console.log("EXEC LayoutInfo EVENT LISTENER")
+      // setLayout(e)
+      // tallBar.current = e.tallBar
+      console.log("EEEEEE", e)
+      //if (runOnceAvailable.current) runOnce()
+    });
 
     runOnce()
 
@@ -303,13 +308,13 @@ const App = (): ReactElement => {
     //   );
     return () => {
       console.log("REMOVED LayoutInfo EVENT LISTENER")
-      //LayoutInfoListener.remove();
+      LayoutInfoListener.remove();
     }
 
     
 
   //}, [MainActivity]);
-  }, []);
+  }, [nativeEvent]);
 
   // useEffect(() => { 
   //   console.log("MAIN ACT VALUE: ", MainActivity)

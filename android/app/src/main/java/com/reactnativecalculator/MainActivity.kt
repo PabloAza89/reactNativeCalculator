@@ -54,6 +54,8 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.NativeModule
 
+import com.facebook.react.ReactRootView
+
 class MainActivity: ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -272,24 +274,43 @@ class MainActivity: ReactActivity() {
         mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
         val rrr = reactHost.currentReactContext
-        if (rrr == null) {
+        // if (rrr == null) {
 
-          val listener = object : ReactInstanceEventListener {
-              override fun onReactContextInitialized(context: ReactContext) {
-                  Log.d("LOG", "111111111111111111 INNER")
-                  context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
-                  reactHost.removeReactInstanceEventListener(this)
-              }
-          }
-          reactHost.addReactInstanceEventListener(listener)
+        //   val listener = object : ReactInstanceEventListener {
+        //       override fun onReactContextInitialized(context: ReactContext) {
+        //           Log.d("LOG", "111111111111111111 INNER")
+        //           context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
+        //           reactHost.removeReactInstanceEventListener(this)
+        //       }
+        //   }
+        //   reactHost.addReactInstanceEventListener(listener)
 
-
-
-        } else {
-          Log.d("LOG", "222222222222222222")
-          rrr.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222")
+        // } else {
+        //   Log.d("LOG", "222222222222222222")
+        //   rrr.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222")
           
-        }
+        // }
+        // putLong("launchTime", System.currentTimeMillis())
+        // val initialProps = Bundle().apply {
+        //     putString("theme", "dark")
+        // }
+
+        // val mReactRootView = ReactRootView(this)
+
+        // //(application as MyApplication).reactNativeHost.reactInstanceManager, // MyApplication ?
+        // //reactNativeHost.reactInstanceManager, // crash
+        // //reactHost.reactInstanceManager, unresolved rIM
+        // //reactActivityDelegate.reactHost.reactInstanceManager, unresolved rIM
+        // // reactActivityDelegate.reactNativeHost.reactInstanceManager, protected reactNativeHost
+        // mReactRootView.startReactApplication(
+        //     reactActivityDelegate.reactNativeHost.reactInstanceManager,
+        //     "reactNativeCalculator", // The name registered in AppRegistry.registerComponent
+        //     initialProps // Passing the data to the JS root component
+        // )
+
+
+
+
 
         sendUpdate = false // RESET UPDATE FLAG
       }
@@ -336,6 +357,23 @@ class MainActivity: ReactActivity() {
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 
-  override fun createReactActivityDelegate(): ReactActivityDelegate =
-    DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+ 
+
+  // override fun createReactActivityDelegate(): ReactActivityDelegate =
+  //   DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+
+  override fun createReactActivityDelegate(): ReactActivityDelegate {
+        return object : DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) {
+
+            override fun getLaunchOptions(): Bundle? {
+                val initialProps = Bundle().apply {
+                    putString("source", "MainActivity")
+                    putInt("configId", 42)
+                    putBoolean("isDebug", true)
+                }
+                return initialProps
+            }
+        }
+    }
+
 }

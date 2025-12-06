@@ -283,7 +283,8 @@ class MainActivity: ReactActivity() {
         //     Log.d("LOG", "00000000: " + reactHost.currentReactContext)
         //   }
 
-        if (reactHost?.currentReactContext == null) {
+        val rrr = reactHost.currentReactContext
+        if (rrr == null) {
           Log.d("LOG", "111111111111111111")
 
           //mainMap.putString("state", "portrait")
@@ -292,26 +293,37 @@ class MainActivity: ReactActivity() {
 
           //this@MainActivity.reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
           //this@MainActivity.reactNativeHost.reactInstanceManager.addReactInstanceEventListener(object: ReactInstanceEventListener {
-          reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
-            override fun onReactContextInitialized(context: ReactContext) {
-                Log.d("LOG", "111111111111111111 INNER")
-                
-                reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
-                // // this@MainActivity.reactHost.currentReactContext
-                // context
-                //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                //   ?.emit("LayoutInfo", "asdasdsadasd")
-                //   //?.emit("LayoutInfo", mainMap)
 
-                //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-                // reactHost?.currentReactContext
-                //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                //   ?.emit("LayoutInfo", "TEST RESPONSE");
-                //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-                //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-                //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
-            }
-          })
+
+          val listener = object : ReactInstanceEventListener {
+              override fun onReactContextInitialized(context: ReactContext) {
+                  Log.d("LOG", "111111111111111111 INNER")
+                  context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
+                  reactHost.removeReactInstanceEventListener(this)
+              }
+          }
+          reactHost.addReactInstanceEventListener(listener)
+
+          // reactHost.addReactInstanceEventListener(object: ReactInstanceEventListener {
+          //   override fun onReactContextInitialized(context: ReactContext) {
+          //       Log.d("LOG", "111111111111111111 INNER")
+                
+          //       reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
+          //       // // this@MainActivity.reactHost.currentReactContext
+          //       // context
+          //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          //       //   ?.emit("LayoutInfo", "asdasdsadasd")
+          //       //   //?.emit("LayoutInfo", mainMap)
+
+          //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //       // reactHost?.currentReactContext
+          //       //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+          //       //   ?.emit("LayoutInfo", "TEST RESPONSE");
+          //       //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //       //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //       //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
+          //   }
+          // })
 
           //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
           // reactHost.currentReactContext
@@ -328,7 +340,7 @@ class MainActivity: ReactActivity() {
           // reactHost?.currentReactContext
           //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
           //   ?.emit("LayoutInfo", "TEST RESPONSE");
-          reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222")
+          rrr.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222")
           //getReactInstanceManager().getCurrentReactContext()?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE")
         }
         //   
@@ -466,37 +478,7 @@ class MainActivity: ReactActivity() {
 
         val listener = object : ReactInstanceEventListener {
             override fun onReactContextInitialized(context: ReactContext) {
-              
                 Log.d("LOG", "4444444444 newer test")
-                //reactInstanceManager.removeReactInstanceEventListener(this)
-                //reactHost?.currentReactContext?.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
-                //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM BEGINNING")
-                // reactHost?.currentReactContext
-                //   ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                //   ?.emit("LayoutInfo", "TEST RESPONSE FROM BEGINNING");
-
-                //val testModule = context.getNativeModule(TestModule::class.java)
-                //val testModule = reactHost?.currentReactContext?.getNativeModule(TestModule::class.java)
-                val rawModule = context.getNativeModule("TestModule")
-                val testModule = rawModule as? TestModule
-                //val testModule = TestModule
-                //val testModule = this@MainActivity.TestModule
-                //val testModule = this.TestModule
-                //val qqtestModule = qqqtestModule as TestModule
-                //Log.d("LOG", "testModule VAL: $qqtestModule")
-                
-                // Log.d("LOG", "testModule VAL 0: $TestModule::class.java")
-                // Log.d("LOG", "testModule VAL 1: $testModule")
-                // Log.d("LOG", "testModule VAL 2: $TestModule")
-                // Log.d("LOG", "testModule VAL 3: $this@TestModule")
-                if (testModule != null) {
-                  Log.d("LOG", "EMITEDDDDDDDDDDDDDDDDDDDDDDD")
-                  //testModule.emitInitializationEvent("SUPER RARE RESPONSE")
-                } else {
-                  Log.d("LOG", "NO EMITEDDDDDDDDDDDDDDDDDDDDDDD")
-                }
-                
-
                 reactHost.removeReactInstanceEventListener(this)
             }
         }

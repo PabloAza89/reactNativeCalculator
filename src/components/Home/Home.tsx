@@ -18,24 +18,11 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   route, maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
 
-  const { MainActivity, TestModule } = NativeModules;
   //const { MainApplication } = NativeModules;
 
   //const {TestModule} = NativeModules;
 
-   const onPressTest = async () => {
 
-      //console.log("CLICKED", await MainActivity.callFromReact())
-      //console.log("CLICKED", await MainActivity.getMainComponentName())
-      //console.log("CLICKED", await MainActivity.getMainComponentName())
-      //console.log("CLICKED", await MainActivity.TestClass.getName()) // no
-      //console.log("CLICKED", await MainActivity.testFunc()) // no
-      //console.log("CLICKED", await TestModule.testFunc()) // no
-      //console.log("CLICKED")
-      //console.log("CLICKED", await MainActivity.testFunc()) // no
-      console.log("CLICKED", await TestModule.testFunc()) // no
-
-  };
 
   // useEffect(() => {
   //   updateShowModal(false)
@@ -463,7 +450,6 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
         ]}
 
         //onPress={() => navigate('About')}
-        onPress={() => onPressTest()}
         children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
       />
     </View>

@@ -32,8 +32,7 @@ import KnowMore from './src/components/KnowMore/KnowMore';
 
 const Stack = createNativeStackNavigator();
 
-const { MainActivity, TestModule } = NativeModules;
-//const nativeEvent = new NativeEventEmitter(TestModule);
+const { MainActivity } = NativeModules;
 const nativeEvent = new NativeEventEmitter(MainActivity);
 
 nativeEvent.addListener('LayoutInfo', e => {
@@ -304,7 +303,7 @@ const App = (): ReactElement => {
     //   );
     return () => {
       console.log("REMOVED LayoutInfo EVENT LISTENER")
-      LayoutInfoListener.remove();
+      //LayoutInfoListener.remove();
     }
 
     

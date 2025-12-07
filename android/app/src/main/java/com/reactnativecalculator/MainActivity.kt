@@ -29,18 +29,11 @@ import android.content.res.Configuration
 import androidx.annotation.RequiresApi
 import android.view.WindowInsets
 import kotlin.math.min
-//import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.turbomodule.core.interfaces.TurboModule
 
 import com.facebook.react.ReactInstanceEventListener
-
-//import com.facebook.react.modules.core.DeviceEventManagerModule;
-
-//import com.facebook.react.ReactInstanceManager
-
-//import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.uimanager.ReactShadowNode
@@ -281,8 +274,7 @@ class MainActivity: ReactActivity() {
           val listener = object: ReactInstanceEventListener {
             override fun onReactContextInitialized(context: ReactContext) {
               Log.d("LOG", "111111111111111111 INNER")
-              //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111 $Random.nextDouble()")
-              context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111" + Random.nextDouble())
+              context.emitDeviceEvent("LayoutInfo", mainMap)
               reactHost.removeReactInstanceEventListener(this)
             }
           }
@@ -290,30 +282,8 @@ class MainActivity: ReactActivity() {
 
         } else {
           Log.d("LOG", "222222222222222222")
-          //currentContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222 $Random.nextDouble()")
-          currentContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222" + Random.nextDouble())
+          currentContext.emitDeviceEvent("LayoutInfo", mainMap)
         }
-        // putLong("launchTime", System.currentTimeMillis())
-        // val initialProps = Bundle().apply {
-        //     putString("theme", "dark")
-        // }
-
-        // val mReactRootView = ReactRootView(this)
-
-        // //(application as MyApplication).reactNativeHost.reactInstanceManager, // MyApplication ?
-        // //reactNativeHost.reactInstanceManager, // crash
-        // //reactHost.reactInstanceManager, unresolved rIM
-        // //reactActivityDelegate.reactHost.reactInstanceManager, unresolved rIM
-        // // reactActivityDelegate.reactNativeHost.reactInstanceManager, protected reactNativeHost
-        // mReactRootView.startReactApplication(
-        //     reactActivityDelegate.reactNativeHost.reactInstanceManager,
-        //     "reactNativeCalculator", // The name registered in AppRegistry.registerComponent
-        //     initialProps // Passing the data to the JS root component
-        // )
-
-
-
-
 
         sendUpdate = false // RESET UPDATE FLAG
       }
@@ -342,18 +312,6 @@ class MainActivity: ReactActivity() {
     Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
     if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
   }
-
-  // override fun onResume() {
-  //   super.onResume()
-
-  //   val listener = object : ReactInstanceEventListener {
-  //     override fun onReactContextInitialized(context: ReactContext) {
-  //       Log.d("LOG", "4444444444 newer test")
-  //       reactHost.removeReactInstanceEventListener(this)
-  //     }
-  //   }
-  //   reactHost.addReactInstanceEventListener(listener)
-  // }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 

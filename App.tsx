@@ -35,49 +35,6 @@ const Stack = createNativeStackNavigator();
 
 startListener()
 
-// const { MainActivity } = NativeModules;
-// const nativeEvent = new NativeEventEmitter(MainActivity);
-
-
-// let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-//   console.log("EXEC LayoutInfo EVENT LISTENER")
-//   console.log("EEEEEE", e)
-//   updateData(e)
-// });
-
-// let aaa: any
-
-// const updater = (e: any) => {
-//   e(aaa)
-// }
-
-// let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-//   console.log("EXEC LayoutInfo EVENT LISTENER")
-//   //aaa = e
-//   //setBB(e)
-//   //updater(e)
-//   console.log("EEEEEE", e)
-// });
-
-// let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-// //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
-//   console.log("EXEC LayoutInfo EVENT LISTENER")
-//   // setLayout(e)
-//   // tallBar.current = e.tallBar
-//   aaa = e
-//   console.log("EEEEEE", e)
-//   //if (runOnceAvailable.current) runOnce()
-// });
-
-// nativeEvent.addListener('LayoutInfo', e => {
-//     //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
-//       console.log("EXEC LayoutInfo EVENT LISTENER")
-//       // setLayout(e)
-//       // tallBar.current = e.tallBar
-//       console.log("EEEEEE", e)
-//       //if (runOnceAvailable.current) runOnce()
-//     });
-
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactElement[]) => {
   return (
@@ -105,37 +62,6 @@ const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactEle
 
 const App = (): ReactElement => {
 
-  // const [ BB , setBB] = useState(null)
-
-  // //const { MainActivity, TestModule } = NativeModules;
-
-  // useEffect(() => {
-  //   updater(setBB)
-  // }, [aaa])
-
-  // useEffect(() => {
-  //   console.log("SSSSSSSSSSSSSSSSSSSSSSSS", BB)
-  // }, [BB])
-
-  //console.log("MAIN ACTIVITY", MainActivity)
-
-  // const tF = () => {
-  //   console.log("CALLED CALLED CALLED CALLED")
-  // }
-
-  // callbackSaved = tF
-
-  // const newData = (e: any) => { console.log("callbackSaved 2", e) }
-  // callbackSaved2 = newData
-  // useEffect(() => {
-  //   console.log("callbackSaved 1", callbackSaved)
-  // }, [])
-
-  // const newData = (e: any) => { console.log("callbackSaved 2", e) }
-  // if (callbackSaved) callbackSaved = newData
-  // useEffect(() => {
-  //   console.log("callbackSaved 1", callbackSaved)
-  // }, [])
 
   
 
@@ -157,8 +83,8 @@ const App = (): ReactElement => {
 
     //addCallback((e: any) => { console.log("callback with new data", e) })
     //addCallback = (e: any) => { console.log("callback with new data", e) }
-    let inner = (e: any) => { console.log("callback with new data", e) }
-    addListener(inner)
+    // let inner = (e: any) => { console.log("callback with new data", e) }
+    // addListener(inner)
     //console.log("QQQQQQQQQQ", addCallback(inner))
     //sharedValue = inner
     
@@ -362,51 +288,18 @@ const App = (): ReactElement => {
     })
   }
 
-  //useLayoutEffect(() => { // THIS
   useEffect(() => { // THIS
     console.log("EXEC USE EFFECT")
-    //const nativeEvent = new NativeEventEmitter(MainActivity);
-    //const nativeEvent = new NativeEventEmitter(TestModule);
-    //const nativeEvent = new NativeEventEmitter(MainApplication);
-    
-    // let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-    // //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
-    //   console.log("EXEC LayoutInfo EVENT LISTENER")
-    //   // setLayout(e)
-    //   // tallBar.current = e.tallBar
-    //   console.log("EEEEEE", e)
-    //   //if (runOnceAvailable.current) runOnce()
-    // });
-
-    //console.log("NEWWWWWWWWWWWWW", aaa)
-
-    //console.log("123123123123123", Listener)
-
-    runOnce()
-
-    // const LayoutInfoListener = DeviceEventEmitter.addListener(
-    //       'LayoutInfo', // Must match the eventName from Android
-    //       (e) => {
-    //           //console.log('Received event from native:', eventData);
-    //             console.log("EEEEEE", e)
-    //             if (runOnceAvailable.current) runOnce()
-    //           // Handle the event data here
-    //       }
-    //   );
-    return () => {
-      console.log("REMOVED LayoutInfo EVENT LISTENER")
-      //LayoutInfoListener.remove();
-      removeListener.remove();
+    let inner = (e: any) => {
+      console.log("callback with new data", e)
+      setLayout(e)
+      tallBar.current = e.tallBar
+      if (runOnceAvailable.current) runOnce()
     }
+    addListener(inner)
 
-    
-
-  //}, [MainActivity]);
+    return () => removeListener.remove();
   }, []);
-
-  // useEffect(() => { 
-  //   console.log("MAIN ACT VALUE: ", MainActivity)
-  // }, [MainActivity])
 
   return (
     <NavigationContainer

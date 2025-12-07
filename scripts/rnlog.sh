@@ -1,2 +1,3 @@
 cd /c/Users/pablo/AppData/Local/Android/Sdk/platform-tools/ && # GO TO ADB FOLDER
-./adb logcat *:S ReactNative:V ReactNativeJS:V # START LISTEN emulator-5554 DEBUG LOG WITH "LOG" TAG
+./adb logcat -v raw *:S ReactNative:V ReactNativeJS:V # logs with no-newline
+#./adb logcat *:S ReactNative:V ReactNativeJS:V # logs with newline

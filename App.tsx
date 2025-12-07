@@ -47,78 +47,23 @@ startListener()
 //StatusBar.setBackgroundColor('transparent')
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
-const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
+const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
-        //navigationBarColor: tallBar ? 'rgba(0, 0, 0, 0.2)' : 'transparent',
-        //navigationBarColor: 'red',
-        //navigationBarColor: '#000000',
-        //navigationBarColor: 'gold',
         animation: animation,
-        //statusBarColor: 'red',
-        //statusBarBackgroundColor: 'transparent',
-        //statusBarBackgroundColor: '#000000',
         statusBarStyle: 'dark',
-        //contentStyle: { backgroundColor: "red", position: 'absolute' }
       }}
-      //children={ screens.map((e: ReactElement) => e) }
-      children={ 
-        
-          screens.map((e: ReactElement) => e)
-        
-      }
+      children={ screens.map((e: ReactElement) => e) }
     />
   )
 }
 
-// <View style={{backgroundColor: 'red', position: 'absolute', width: '100%', height: '100%'}}>
-
 const App = (): ReactElement => {
 
   StatusBar.setBackgroundColor('transparent')
-  //NavigationBar.setBackgroundColorAsync("white");
-
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     // Set the bottom navigation bar color
-  //     //SystemNavigationBar.setBarColor('red');
-  //     SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
-  //     // Optional: Set the icons to dark for better contrast on a light bar
-  //     // SystemNavigationBar.setBarMode('dark');
-
-  //     // No need for a return cleanup in this simple case, but you can add one.
-  //   }, [])
-  // );
-
-  useEffect(() => {
-
-    // console.log("callbackSaved 1", callbackSaved)
-    // const newData = (e: any) => { console.log("callbackSaved 2", e) }
-    // callbackSaved = newData
-
-    // console.log("callbackSaved 1", callbackSaved)
-    // const newData = (e: any) => { console.log("callbackSaved 2", e) }
-    // callbackSaved = newData
-
-    //callback = (e: any) => { console.log("callback with new data", e) }
-    //callback()
-
-    //callback = (e: any) => { console.log("callback with new data", e) }
-    //callbackMain((e: any) => { console.log("callback with new data", e) })
-
-    //addCallback((e: any) => { console.log("callback with new data", e) })
-    //addCallback = (e: any) => { console.log("callback with new data", e) }
-    // let inner = (e: any) => { console.log("callback with new data", e) }
-    // addListener(inner)
-    //console.log("QQQQQQQQQQ", addCallback(inner))
-    //sharedValue = inner
-    
-
-  }, [])
 
   let tallBar = useRef<boolean>(false)
 
@@ -138,7 +83,6 @@ const App = (): ReactElement => {
 
   const navigationRef = useNavigationContainerRef();
 
-  //const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
   const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
 
   let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
@@ -246,23 +190,12 @@ const App = (): ReactElement => {
 
   let stackScreens: ReactElement[] = [ "Home", "About", "KnowMore" ].map((e: string) => {
     return (
-      
-        <Stack.Screen
-          name={e}
-          key={e}
-          //options={{ contentStyle: { backgroundColor: "rgb(255, 255, 255)" } }} // DEFAULT APP BACKGROUND COLOR
-          //screenOptions={{navigationBarColor: 'gold'}}
-          options={{
-            contentStyle: { backgroundColor: "rgb(255, 255, 255)" },
-            //navigationBarColor: 'gold'
-            //statusBarBackgroundColor: 'red',
-            //navigationBarColor: 'red',
-            //statusBarBackgroundColor: '#000000'
-          }} // DEFAULT APP BACKGROUND COLOR
-          //children={(nav) => dynamicImport(nav, e)}
-          children={(nav) => dynamicImport(nav, e)}
-        />
-      
+      <Stack.Screen
+        name={e}
+        key={e}
+        options={{ contentStyle: { backgroundColor: "rgb(255, 255, 255)" } }} // DEFAULT APP BACKGROUND COLOR
+        children={(nav) => dynamicImport(nav, e)}
+      />
     )
   })
 
@@ -297,13 +230,8 @@ const App = (): ReactElement => {
     try {
       await Promise.all([
 				SimpleLineIcons.loadFont()
-				//<SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' />
-				//SimpleLineIcons.getImageSource('question', 40, 'red')
-        //(SimpleLineIcons as any).loadFont()
         ])
     } catch (error) { console.log("VV FONT LOAD ERROR", error) }
-
-		console.log("SADDDDDDDDDDD")
 
     async function navigationBarToGestureOrViceVersa() {
       if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {
@@ -311,7 +239,7 @@ const App = (): ReactElement => {
           resRoute === "KnowMore" ? navigationRef.dispatch(CommonActions.reset(routes[0])) :
           resRoute === "About" ? navigationRef.dispatch(CommonActions.reset(routes[1])) :
           navigationRef.dispatch(CommonActions.reset(routes[2]))
-        } // else console.log("WINDOWS NOT HAS CHANGED.")
+        } // else "WINDOWS HAS NOT CHANGED."
       }
     }
     navigationBarToGestureOrViceVersa()
@@ -325,7 +253,7 @@ const App = (): ReactElement => {
     })
   }
 
-  useEffect(() => { // THIS
+  useEffect(() => {
     console.log("EXEC USE EFFECT")
     let inner = (e: any) => {
       console.log("callback with new data", e)
@@ -342,9 +270,7 @@ const App = (): ReactElement => {
     <NavigationContainer
       ref={navigationRef}
       initialState={initialState}
-      //screenOptions={{navigationBarColor: 'gold'}}
-      //children={ NavigatorMapper(animation, tallBar.current, stackScreens) }
-      children={ NavigatorMapper(animation, tallBar.current, stackScreens) }
+      children={ NavigatorMapper(animation, stackScreens) }
     />
   );
 }

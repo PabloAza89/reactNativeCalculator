@@ -283,8 +283,12 @@ class MainActivity: ReactActivity() {
 
         Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallBar"))
 
-        if (mainMap.getBoolean("tallBar")) window.setNavigationBarColor(Color.parseColor("#FFD700"))
-        else window.setNavigationBarColor(Color.parseColor("#FF0000"))
+        // if (mainMap.getBoolean("tallBar")) window.setNavigationBarColor(Color.parseColor("#FFD700"))
+        // else window.setNavigationBarColor(Color.parseColor("#FF0000"))
+
+        if (mainMap.getBoolean("tallBar")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
+        else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
+        
 
         // if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true
         // else false

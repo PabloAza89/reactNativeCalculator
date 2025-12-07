@@ -25,7 +25,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
-import { newData, addCallback, sharedValue } from './Listener';
+import { addListener, startListener, removeListener } from './listener';
 
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
@@ -33,41 +33,17 @@ import KnowMore from './src/components/KnowMore/KnowMore';
 
 const Stack = createNativeStackNavigator();
 
-const { MainActivity } = NativeModules;
-const nativeEvent = new NativeEventEmitter(MainActivity);
+startListener()
+
+// const { MainActivity } = NativeModules;
+// const nativeEvent = new NativeEventEmitter(MainActivity);
 
 
-
-//let callbackSaved: any
-// let callbackSaved = (e: any) => {
-//   return e
-// }
-
-// let callbackSaved: any
-// let callbackSaved2: any
-
-
-let callbackSaved: any
-let callbackSaved2: any
-
-//const callback = () => {}
-
-let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-  console.log("EXEC LayoutInfo EVENT LISTENER")
-  console.log("EEEEEE", e)
-
-  // callbackSaved = e
-  // if (typeof callbackSaved2 === 'function') callbackSaved2(e)
-  
-  // if (!callbackSaved) callbackSaved = e
-  // else callbackSaved(e)
-
-  // if (!callbackSaved) callbackSaved = e
-  // else callbackSaved(e)
-
-  newData(e)
-
-});
+// let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+//   console.log("EXEC LayoutInfo EVENT LISTENER")
+//   console.log("EEEEEE", e)
+//   updateData(e)
+// });
 
 // let aaa: any
 
@@ -182,7 +158,7 @@ const App = (): ReactElement => {
     //addCallback((e: any) => { console.log("callback with new data", e) })
     //addCallback = (e: any) => { console.log("callback with new data", e) }
     let inner = (e: any) => { console.log("callback with new data", e) }
-    addCallback(inner)
+    addListener(inner)
     //console.log("QQQQQQQQQQ", addCallback(inner))
     //sharedValue = inner
     
@@ -420,6 +396,7 @@ const App = (): ReactElement => {
     return () => {
       console.log("REMOVED LayoutInfo EVENT LISTENER")
       //LayoutInfoListener.remove();
+      removeListener.remove();
     }
 
     

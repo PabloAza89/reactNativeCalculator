@@ -1,80 +1,37 @@
-import { useEffect, useState } from "react";
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
 
 const { MainActivity } = NativeModules;
-//export const nativeEvent = new NativeEventEmitter(MainActivity);
+const nativeEvent = new NativeEventEmitter(MainActivity);
+
+// export let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+//   console.log("EXEC LayoutInfo EVENT LISTENER")
+//   console.log("EEEEEE", e)
+//   updateData(e)
+// });
+
+export let removeListener: EmitterSubscription
+
+export let startListener = () => {
+  removeListener = nativeEvent.addListener('LayoutInfo', e => {
+  console.log("EXEC LayoutInfo EVENT LISTENER")
+  console.log("EEEEEE", e)
+  updateData(e)
+});
+
+}
 
 let storedData: any
 let storedFn: any
 
-export let newData = (e: any) => {
+let updateData = (e: any) => {
   storedData = e
-  //fn(storedData)
-  //storedFn()
-  //fn(12)
-  //addCallback(e)
-  //sharedValue && sharedValue(e)
-  //console.log("RRRRRRRRRRRRR", typeof sharedValue)
-  //updater(storedData)
-  //savedFunction(e) // OK
-  savedFunction && savedFunction(e) // OK
-}
-
-export let sharedValue: any
-
-let savedFunction: any
-
-let updater = (e:any) => {
-  //console.log(e)
-  e(storedData)
-}
-
-//export let addCallback: any
-export let addCallback = (fn: any) => {
-  //storedFn = fn
-  //return fn(storedData)
-  //console.log("FNNNNNNNNNNN", fn)
-  // if (!savedFunction) fn(storedData)
-  // savedFunction = fn
-  // if (!savedFunction) {fn(storedData); console.log("HERE 1")}
-  // savedFunction = fn; console.log("HERE 2")
-
-  fn(storedData)
-  savedFunction = fn
-  
-  //return storedData
-  //updater(fn) 
+  storedFn && storedFn(e) // OK
 }
 
 
-
-export let callbackMain2 = () => {
-  return storedData
-}
-
-export const Listener = () => {
-
-  //const [ val, newVal ] = useState(null)
-
-  // useEffect(() => {
-
-  //   let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-  //     console.log("EXEC LayoutInfo EVENT LISTENER")
-  //     //aaa = e
-  //     //setBB(e)
-  //     //updater(e)
-  //     newVal(val)
-  //     console.log("val val val", e)
-  //   });
-
-  //   return () => {
-  //     console.log("REMOVED LayoutInfo EVENT LISTENER")
-  //     LayoutInfoListener.remove();
-  //   }
-  // }, [])
-
-  //return val
+export let addListener = (cb: any) => {
+  cb(storedData)
+  storedFn = cb
 }
 
 
-//export nativeEvent

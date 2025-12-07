@@ -359,19 +359,4 @@ class MainActivity: ReactActivity() {
 
   override fun createReactActivityDelegate(): ReactActivityDelegate =
     DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
-
-  // override fun createReactActivityDelegate(): ReactActivityDelegate {
-  //       return object : DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) {
-
-  //           override fun getLaunchOptions(): Bundle? {
-  //               val initialProps = Bundle().apply {
-  //                   putString("source", "MainActivity")
-  //                   putInt("configId", 42)
-  //                   putBoolean("isDebug", true)
-  //               }
-  //               return initialProps
-  //           }
-  //       }
-  // }
-
 }

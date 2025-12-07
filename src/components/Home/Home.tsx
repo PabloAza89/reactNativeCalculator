@@ -9,14 +9,44 @@ import KnowMore from '../KnowMore/KnowMore';
 //import { SimpleLineIcons } from '@react-native-vector-icons/simple-line-icons';
 //import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { useFocusEffect } from '@react-navigation/native';
 import { HomeI, counterI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import { Text } from '../../utils/Text';
 import { portButtons, landButtons } from '../../utils/Buttons';
 import { Adder } from '../../utils/Adder';
+//import SystemNavigationBar from 'react-native-system-navigation-bar';
+
+
+
+
 
 const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBounds, 
   route, maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
+
+  //SystemNavigationBar.setNavigationColor('green', 'light', 'navigation')
+
+  
+  //const navigationBarColor: string = 
+  // useEffect(() => {
+  //   //test()
+  //   const test = async () => {
+  //   return await SystemNavigationBar.getBarColor('navigation')
+  // }
+  //   console.log("TEST 123", test())
+  // }, [])
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Set the bottom navigation bar color
+  //     //SystemNavigationBar.setBarColor('red');
+  //     SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
+  //     // Optional: Set the icons to dark for better contrast on a light bar
+  //     // SystemNavigationBar.setBarMode('dark');
+
+  //     // No need for a return cleanup in this simple case, but you can add one.
+  //   }, [])
+  // );
 
   //const { MainApplication } = NativeModules;
 

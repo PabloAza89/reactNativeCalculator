@@ -5,7 +5,7 @@
 //   useSafeAreaInsets,
 // } from 'react-native-safe-area-context';
 import React, { ReactElement, useEffect, useState, useRef, useLayoutEffect } from "react";
-import {  CommonActions, NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {  CommonActions, NavigationContainer, useNavigationContainerRef, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
 //import * as Font from 'expo-font';
@@ -26,6 +26,8 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
 import { addListener, startListener, removeListener } from './listener';
+//import SystemNavigationBar from 'react-native-system-navigation-bar';
+//import * as NavigationBar from 'expo-navigation-bar';
 
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
@@ -33,18 +35,28 @@ import KnowMore from './src/components/KnowMore/KnowMore';
 
 const Stack = createNativeStackNavigator();
 
+type StackAnimationTypes = 'none' | 'slide_from_right'
+
 startListener()
 
+//SystemNavigationBar.setBarColor('red');
+//SystemNavigationBar.setNavigationColor('red');
+//SystemNavigationBar.setNavigationColor('red', 'dark');
+//SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
+
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
-const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactElement[]) => {
+const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
-        navigationBarColor: tallBar ? 'rgba(0, 0, 0, 0.2)' : 'transparent',
+        //navigationBarColor: tallBar ? 'rgba(0, 0, 0, 0.2)' : 'transparent',
+        //navigationBarColor: 'red',
+        navigationBarColor: '#000000',
         animation: animation,
-        statusBarColor: 'transparent',
+        //statusBarColor: 'red',
+        //statusBarBackgroundColor: 'transparent',
         statusBarStyle: 'dark',
         //contentStyle: { backgroundColor: "red", position: 'absolute' }
       }}
@@ -63,7 +75,20 @@ const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactEle
 const App = (): ReactElement => {
 
 
-  
+  //NavigationBar.setBackgroundColorAsync("white");
+
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Set the bottom navigation bar color
+  //     //SystemNavigationBar.setBarColor('red');
+  //     SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
+  //     // Optional: Set the icons to dark for better contrast on a light bar
+  //     // SystemNavigationBar.setBarMode('dark');
+
+  //     // No need for a return cleanup in this simple case, but you can add one.
+  //   }, [])
+  // );
 
   useEffect(() => {
 
@@ -110,7 +135,7 @@ const App = (): ReactElement => {
   const navigationRef = useNavigationContainerRef();
 
   //const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
-  const [ animation, setAnimation ] = useState<unknown>('none'); // NO INITIAL SCREEN ANIMATION
+  const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
 
   let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
 

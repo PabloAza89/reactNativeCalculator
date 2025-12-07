@@ -44,7 +44,7 @@ startListener()
 //SystemNavigationBar.setNavigationColor('red', 'dark');
 //SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
 
-StatusBar.setBackgroundColor('transparent')
+//StatusBar.setBackgroundColor('transparent')
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
@@ -78,7 +78,7 @@ const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, scree
 
 const App = (): ReactElement => {
 
-
+  StatusBar.setBackgroundColor('transparent')
   //NavigationBar.setBackgroundColorAsync("white");
 
 

@@ -56,6 +56,8 @@ import com.facebook.react.bridge.NativeModule
 
 import com.facebook.react.ReactRootView
 
+import kotlin.random.Random
+
 class MainActivity: ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -273,23 +275,24 @@ class MainActivity: ReactActivity() {
         );
         mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
-        val rrr = reactHost.currentReactContext
-        // if (rrr == null) {
+        val currentContext = reactHost.currentReactContext
+        if (currentContext == null) {
 
-        //   val listener = object : ReactInstanceEventListener {
-        //       override fun onReactContextInitialized(context: ReactContext) {
-        //           Log.d("LOG", "111111111111111111 INNER")
-        //           context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111")
-        //           reactHost.removeReactInstanceEventListener(this)
-        //       }
-        //   }
-        //   reactHost.addReactInstanceEventListener(listener)
+          val listener = object: ReactInstanceEventListener {
+            override fun onReactContextInitialized(context: ReactContext) {
+              Log.d("LOG", "111111111111111111 INNER")
+              //context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111 $Random.nextDouble()")
+              context.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 111111111111111111111111" + Random.nextDouble())
+              reactHost.removeReactInstanceEventListener(this)
+            }
+          }
+          reactHost.addReactInstanceEventListener(listener)
 
-        // } else {
-        //   Log.d("LOG", "222222222222222222")
-        //   rrr.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222")
-          
-        // }
+        } else {
+          Log.d("LOG", "222222222222222222")
+          //currentContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222 $Random.nextDouble()")
+          currentContext.emitDeviceEvent("LayoutInfo", "TEST RESPONSE FROM 222222222222222222" + Random.nextDouble())
+        }
         // putLong("launchTime", System.currentTimeMillis())
         // val initialProps = Bundle().apply {
         //     putString("theme", "dark")
@@ -335,45 +338,40 @@ class MainActivity: ReactActivity() {
     Log.d("LOG", "CONFIGURATION HAS CHANGED")
     //updateUI(null) // manual
     //synchronized(AppLock.lock) {
-      //if (canUpdate) {canUpdate = false;updateUI(null)}
-      Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
-      if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
-
- 
+    //if (canUpdate) {canUpdate = false;updateUI(null)}
+    Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
+    if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
   }
 
+  // override fun onResume() {
+  //   super.onResume()
 
-  override fun onResume() {
-        super.onResume()
-
-        val listener = object : ReactInstanceEventListener {
-            override fun onReactContextInitialized(context: ReactContext) {
-                Log.d("LOG", "4444444444 newer test")
-                reactHost.removeReactInstanceEventListener(this)
-            }
-        }
-        reactHost.addReactInstanceEventListener(listener)
-  }
+  //   val listener = object : ReactInstanceEventListener {
+  //     override fun onReactContextInitialized(context: ReactContext) {
+  //       Log.d("LOG", "4444444444 newer test")
+  //       reactHost.removeReactInstanceEventListener(this)
+  //     }
+  //   }
+  //   reactHost.addReactInstanceEventListener(listener)
+  // }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 
- 
+  override fun createReactActivityDelegate(): ReactActivityDelegate =
+    DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
-  // override fun createReactActivityDelegate(): ReactActivityDelegate =
-  //   DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+  // override fun createReactActivityDelegate(): ReactActivityDelegate {
+  //       return object : DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) {
 
-  override fun createReactActivityDelegate(): ReactActivityDelegate {
-        return object : DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) {
-
-            override fun getLaunchOptions(): Bundle? {
-                val initialProps = Bundle().apply {
-                    putString("source", "MainActivity")
-                    putInt("configId", 42)
-                    putBoolean("isDebug", true)
-                }
-                return initialProps
-            }
-        }
-    }
+  //           override fun getLaunchOptions(): Bundle? {
+  //               val initialProps = Bundle().apply {
+  //                   putString("source", "MainActivity")
+  //                   putInt("configId", 42)
+  //                   putBoolean("isDebug", true)
+  //               }
+  //               return initialProps
+  //           }
+  //       }
+  // }
 
 }

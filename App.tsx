@@ -25,6 +25,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
+import { newData, addCallback, sharedValue } from './Listener';
 
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
@@ -35,9 +36,61 @@ const Stack = createNativeStackNavigator();
 const { MainActivity } = NativeModules;
 const nativeEvent = new NativeEventEmitter(MainActivity);
 
-// nativeEvent.addListener('LayoutInfo', e => {
+
+
+//let callbackSaved: any
+// let callbackSaved = (e: any) => {
+//   return e
+// }
+
+// let callbackSaved: any
+// let callbackSaved2: any
+
+
+let callbackSaved: any
+let callbackSaved2: any
+
+//const callback = () => {}
+
+let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+  console.log("EXEC LayoutInfo EVENT LISTENER")
+  console.log("EEEEEE", e)
+
+  // callbackSaved = e
+  // if (typeof callbackSaved2 === 'function') callbackSaved2(e)
+  
+  // if (!callbackSaved) callbackSaved = e
+  // else callbackSaved(e)
+
+  // if (!callbackSaved) callbackSaved = e
+  // else callbackSaved(e)
+
+  newData(e)
+
+});
+
+// let aaa: any
+
+// const updater = (e: any) => {
+//   e(aaa)
+// }
+
+// let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
 //   console.log("EXEC LayoutInfo EVENT LISTENER")
+//   //aaa = e
+//   //setBB(e)
+//   //updater(e)
 //   console.log("EEEEEE", e)
+// });
+
+// let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+// //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
+//   console.log("EXEC LayoutInfo EVENT LISTENER")
+//   // setLayout(e)
+//   // tallBar.current = e.tallBar
+//   aaa = e
+//   console.log("EEEEEE", e)
+//   //if (runOnceAvailable.current) runOnce()
 // });
 
 // nativeEvent.addListener('LayoutInfo', e => {
@@ -76,11 +129,65 @@ const NavigatorMapper = (animation: unknown, tallBar: boolean, screens: ReactEle
 
 const App = (): ReactElement => {
 
-  //const { MainActivity, TestModule } = NativeModules;
-  
-  
+  // const [ BB , setBB] = useState(null)
+
+  // //const { MainActivity, TestModule } = NativeModules;
+
+  // useEffect(() => {
+  //   updater(setBB)
+  // }, [aaa])
+
+  // useEffect(() => {
+  //   console.log("SSSSSSSSSSSSSSSSSSSSSSSS", BB)
+  // }, [BB])
 
   //console.log("MAIN ACTIVITY", MainActivity)
+
+  // const tF = () => {
+  //   console.log("CALLED CALLED CALLED CALLED")
+  // }
+
+  // callbackSaved = tF
+
+  // const newData = (e: any) => { console.log("callbackSaved 2", e) }
+  // callbackSaved2 = newData
+  // useEffect(() => {
+  //   console.log("callbackSaved 1", callbackSaved)
+  // }, [])
+
+  // const newData = (e: any) => { console.log("callbackSaved 2", e) }
+  // if (callbackSaved) callbackSaved = newData
+  // useEffect(() => {
+  //   console.log("callbackSaved 1", callbackSaved)
+  // }, [])
+
+  
+
+  useEffect(() => {
+
+    // console.log("callbackSaved 1", callbackSaved)
+    // const newData = (e: any) => { console.log("callbackSaved 2", e) }
+    // callbackSaved = newData
+
+    // console.log("callbackSaved 1", callbackSaved)
+    // const newData = (e: any) => { console.log("callbackSaved 2", e) }
+    // callbackSaved = newData
+
+    //callback = (e: any) => { console.log("callback with new data", e) }
+    //callback()
+
+    //callback = (e: any) => { console.log("callback with new data", e) }
+    //callbackMain((e: any) => { console.log("callback with new data", e) })
+
+    //addCallback((e: any) => { console.log("callback with new data", e) })
+    //addCallback = (e: any) => { console.log("callback with new data", e) }
+    let inner = (e: any) => { console.log("callback with new data", e) }
+    addCallback(inner)
+    //console.log("QQQQQQQQQQ", addCallback(inner))
+    //sharedValue = inner
+    
+
+  }, [])
 
   let tallBar = useRef<boolean>(false)
 
@@ -286,14 +393,18 @@ const App = (): ReactElement => {
     //const nativeEvent = new NativeEventEmitter(TestModule);
     //const nativeEvent = new NativeEventEmitter(MainApplication);
     
-    let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
-    //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
-      console.log("EXEC LayoutInfo EVENT LISTENER")
-      // setLayout(e)
-      // tallBar.current = e.tallBar
-      console.log("EEEEEE", e)
-      //if (runOnceAvailable.current) runOnce()
-    });
+    // let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', e => {
+    // //let LayoutInfoListener = nativeEvent.addListener('LayoutInfo', (e: { detail: string }) => {
+    //   console.log("EXEC LayoutInfo EVENT LISTENER")
+    //   // setLayout(e)
+    //   // tallBar.current = e.tallBar
+    //   console.log("EEEEEE", e)
+    //   //if (runOnceAvailable.current) runOnce()
+    // });
+
+    //console.log("NEWWWWWWWWWWWWW", aaa)
+
+    //console.log("123123123123123", Listener)
 
     runOnce()
 
@@ -308,13 +419,13 @@ const App = (): ReactElement => {
     //   );
     return () => {
       console.log("REMOVED LayoutInfo EVENT LISTENER")
-      LayoutInfoListener.remove();
+      //LayoutInfoListener.remove();
     }
 
     
 
   //}, [MainActivity]);
-  }, [nativeEvent]);
+  }, []);
 
   // useEffect(() => { 
   //   console.log("MAIN ACT VALUE: ", MainActivity)

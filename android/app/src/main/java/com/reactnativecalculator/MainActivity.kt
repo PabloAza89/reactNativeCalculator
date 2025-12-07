@@ -51,6 +51,8 @@ import com.facebook.react.ReactRootView
 
 import kotlin.random.Random
 
+import android.graphics.Color
+
 class MainActivity: ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -74,6 +76,16 @@ class MainActivity: ReactActivity() {
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
     rootView = findViewById<View>(android.R.id.content).rootView
+    //rootView.setNavigationBarColor(this, "#FFD700")
+    //this@MainActivity.window.setNavigationBarColor("#FFD700")
+    //this@MainActivity.window.setNavigationBarColor(Color.parseColor(colorHex))
+    //this@MainActivity.window.setNavigationBarColor(Color.parseColor("#FFD700"))
+    //this@MainActivity.window.setNavigationBarColor(Color.parseColor("#33000000"))
+    //this.window.setNavigationBarColor(Color.parseColor("#33000000"))
+    //window.setNavigationBarColor(Color.parseColor("#33000000"))
+    // window.setNavigationBarColor(Color.parseColor("#FFD700"))
+    // window.setNavigationBarColor(Color.parseColor("#FF0000"))
+    //setNavigationBarColor(this, "#FFD700")
 
     lifecycleScope.launch(Dispatchers.Main) {
       lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -266,7 +278,24 @@ class MainActivity: ReactActivity() {
           if (currentWindow["width"]!! > currentWindow["height"]!!) (currentWindow["height"]!! / dotsPerInch) / 100
           else (currentWindow["width"]!! / dotsPerInch) / 100
         );
+
         mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
+
+        Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallBar"))
+
+        if (mainMap.getBoolean("tallBar")) window.setNavigationBarColor(Color.parseColor("#FFD700"))
+        else window.setNavigationBarColor(Color.parseColor("#FF0000"))
+
+        // if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true
+        // else false
+
+        // if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) {
+        //   //true
+        //   this@MainActivity.window.setNavigationBarColor(Color.parseColor("#FFD700"))
+        // } else {
+        //   //false
+        //   this@MainActivity.window.setNavigationBarColor(Color.parseColor("#FF0000"))
+        // }
 
         val currentContext = reactHost.currentReactContext
         if (currentContext == null) {

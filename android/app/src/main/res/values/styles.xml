@@ -4,5 +4,7 @@
     <item name="bootSplashBackground">@color/darkBlue</item>
     <item name="android:statusBarColor">@color/darkBlue</item>
     <item name="android:navigationBarColor">@color/darkBlue</item>
+    <!-- <item name="android:windowLightNavigationBar">false</item> -->
+    <!-- <item name="android:windowTranslucentNavigation">false</item> -->
   </style>
 </resources>

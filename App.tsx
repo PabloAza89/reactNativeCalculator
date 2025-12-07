@@ -10,7 +10,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
 //import * as Font from 'expo-font';
 import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter, DeviceEventEmitter,
-  PixelRatio, View, Animated, useAnimatedValue, Pressable } from 'react-native';
+  PixelRatio, View, Animated, useAnimatedValue, Pressable, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import FastImage from 'react-native-fast-image'
 //import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
@@ -44,6 +44,8 @@ startListener()
 //SystemNavigationBar.setNavigationColor('red', 'dark');
 //SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
 
+StatusBar.setBackgroundColor('transparent')
+
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
   return (
@@ -53,10 +55,12 @@ const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, scree
         gestureEnabled: false,
         //navigationBarColor: tallBar ? 'rgba(0, 0, 0, 0.2)' : 'transparent',
         //navigationBarColor: 'red',
-        navigationBarColor: '#000000',
+        //navigationBarColor: '#000000',
+        //navigationBarColor: 'gold',
         animation: animation,
         //statusBarColor: 'red',
         //statusBarBackgroundColor: 'transparent',
+        //statusBarBackgroundColor: '#000000',
         statusBarStyle: 'dark',
         //contentStyle: { backgroundColor: "red", position: 'absolute' }
       }}
@@ -246,7 +250,15 @@ const App = (): ReactElement => {
         <Stack.Screen
           name={e}
           key={e}
-          options={{ contentStyle: { backgroundColor: "rgb(255, 255, 255)" } }} // DEFAULT APP BACKGROUND COLOR
+          //options={{ contentStyle: { backgroundColor: "rgb(255, 255, 255)" } }} // DEFAULT APP BACKGROUND COLOR
+          //screenOptions={{navigationBarColor: 'gold'}}
+          options={{
+            contentStyle: { backgroundColor: "rgb(255, 255, 255)" },
+            //navigationBarColor: 'gold'
+            //statusBarBackgroundColor: 'red',
+            //navigationBarColor: 'red',
+            //statusBarBackgroundColor: '#000000'
+          }} // DEFAULT APP BACKGROUND COLOR
           //children={(nav) => dynamicImport(nav, e)}
           children={(nav) => dynamicImport(nav, e)}
         />
@@ -330,6 +342,7 @@ const App = (): ReactElement => {
     <NavigationContainer
       ref={navigationRef}
       initialState={initialState}
+      //screenOptions={{navigationBarColor: 'gold'}}
       //children={ NavigatorMapper(animation, tallBar.current, stackScreens) }
       children={ NavigatorMapper(animation, tallBar.current, stackScreens) }
     />

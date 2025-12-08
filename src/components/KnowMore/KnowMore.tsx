@@ -188,8 +188,11 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   useEffect(() => setViewId(findNodeHandle(scrollRef.current)), [])
 
   const scrollHandler = (val: number) => {
+    console.log("VAL ", val)
+    console.log("viewId ", viewId)
+    
     val > 100 ? setShowButton(true) : setShowButton(false);
-    val < 0 && UIManager.dispatchViewManagerCommand(viewId, 0);
+    val < 0 && UIManager.dispatchViewManagerCommand(viewId, 0, []);
   }
 
   /// END CUSTOMSCROLLVIEW ///
@@ -242,28 +245,25 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
       />
 
       <CustomScrollView
-        //ref={scrollRef}
-        //onScroll={(e: NativeSyntheticEvent<NativeScrollEvent>) => scrollHandler(e.nativeEvent.contentOffset.y)}
+        ref={scrollRef}
+        onScroll={(e: NativeSyntheticEvent<NativeScrollEvent>) => scrollHandler(e.nativeEvent.contentOffset.y)}
         persistentScrollbar={true}
         scrollbarPadding={{
-          //top: (state === 'tabletop' && aboutUp) ? 0 : ins.top * 1,
-          top: 24,
+          top: (state === 'tabletop' && aboutUp) ? 0 : ins.top * 1,
           right: ins.right,
-          //bottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1,
-          bottom: 48,
+          bottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1
         }}
         contentContainerStyle={{
+          alignItems: 'center',
+          width: '100%',
           paddingLeft: ins.left,
-          //paddingTop: ins.top * 1, // HERE
-          //paddingTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 24 : ins.top * 1, // HERE
-          //paddingTop: 100, // HERE
+          paddingTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 24 : ins.top * 1, // HERE
           paddingRight: ins.right,
-          paddingBottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1,
-          //paddingBottom: 24,
+          paddingBottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1
         }}
         style={[ s.customScrollView, {}]}
       >
-        <View collapsable={false} style={[ s.background, { width: '100%', paddingTop: 24, paddingBottom: 48, } ]}>
+        
             <View style={[ s.buttonContainer, { marginTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 0 : 7 } ]}>
 
               {
@@ -330,7 +330,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
 
             { loaded ? lazyLoad.map(e => e) : <ActivityIndicator size="large" color="#2196F3" /> }
 
-          </View>
+        
       </CustomScrollView>
 
       {

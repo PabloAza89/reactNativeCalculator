@@ -132,11 +132,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   //   return () => interactionPromise.cancel();
   // }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true)
-    }, 0);
-  }, []);
+  useEffect(() => { setTimeout(() => setLoaded(true), 0) }, []); // Former: InteractionManager.runAfterInteractions()
 
   const [ showButton, setShowButton ] = useState(false)
 
@@ -246,24 +242,28 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
       />
 
       <CustomScrollView
-        ref={scrollRef}
-        onScroll={(e: NativeSyntheticEvent<NativeScrollEvent>) => scrollHandler(e.nativeEvent.contentOffset.y)}
+        //ref={scrollRef}
+        //onScroll={(e: NativeSyntheticEvent<NativeScrollEvent>) => scrollHandler(e.nativeEvent.contentOffset.y)}
         persistentScrollbar={true}
         scrollbarPadding={{
-          top: (state === 'tabletop' && aboutUp) ? 0 : ins.top * 1,
+          //top: (state === 'tabletop' && aboutUp) ? 0 : ins.top * 1,
+          top: 24,
           right: ins.right,
-          bottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1,
+          //bottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1,
+          bottom: 24,
         }}
         contentContainerStyle={{
           paddingLeft: ins.left,
           //paddingTop: ins.top * 1, // HERE
-          paddingTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 24 : ins.top * 1, // HERE
+          //paddingTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 24 : ins.top * 1, // HERE
+          //paddingTop: 100, // HERE
           paddingRight: ins.right,
           paddingBottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1,
+          //paddingBottom: 24,
         }}
         style={[ s.customScrollView, {}]}
       >
-        <View style={[ s.background, { width: '100%' } ]}>
+        <View collapsable={false} style={[ s.background, { width: '100%', paddingTop: 24, paddingBottom: 24, } ]}>
             <View style={[ s.buttonContainer, { marginTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 0 : 7 } ]}>
 
               {

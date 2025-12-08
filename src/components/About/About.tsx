@@ -108,6 +108,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
         contentContainerStyle={s.cswContentContainerStyle}
       >
         <View
+          collapsable={false}
           style={{
               alignItems: 'center',
               marginTop: 'auto',

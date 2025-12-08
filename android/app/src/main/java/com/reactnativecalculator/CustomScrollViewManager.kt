@@ -22,7 +22,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 class CustomScrollViewManager(reactContext: ReactApplicationContext) : ViewGroupManager<ReactScrollView>() {
-  override fun getName(): String = "RCTScrollView"
+  override fun getName(): String = "RCScrollView"
 
   fun dpToPx(dp: Double): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), Resources.getSystem().displayMetrics).toInt()
 

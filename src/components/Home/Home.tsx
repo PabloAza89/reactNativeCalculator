@@ -24,36 +24,6 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   route, maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
 
-  //SystemNavigationBar.setNavigationColor('green', 'light', 'navigation')
-
-  
-  //const navigationBarColor: string = 
-  // useEffect(() => {
-  //   //test()
-  //   const test = async () => {
-  //   return await SystemNavigationBar.getBarColor('navigation')
-  // }
-  //   console.log("TEST 123", test())
-  // }, [])
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     // Set the bottom navigation bar color
-  //     //SystemNavigationBar.setBarColor('red');
-  //     SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
-  //     // Optional: Set the icons to dark for better contrast on a light bar
-  //     // SystemNavigationBar.setBarMode('dark');
-
-  //     // No need for a return cleanup in this simple case, but you can add one.
-  //   }, [])
-  // );
-
-  //const { MainApplication } = NativeModules;
-
-  //const {TestModule} = NativeModules;
-
-
-
   // useEffect(() => {
   //   updateShowModal(false)
   //   // return () => {
@@ -90,7 +60,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
 
   const [ parErr, setParErr ] = useState(false);
 
-  useEffect(() => scrollEnd(), [input.current])
+  //useEffect(() => scrollEnd(), [input.current]) // ????
 
   const scrollRefUpper = useRef<ScrollView>(null);
   const scrollRefCenter = useRef<ScrollView>(null);
@@ -99,8 +69,6 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     scrollRefUpper.current?.scrollToEnd({ animated: false })
     scrollRefCenter.current?.scrollToEnd({ animated: false })
   }
-
-  console.log("AAAAAAAAAAAAAAAA SADDDDDDDDDDD")
 
   const lastButtonPort = { value: "=", parErr: parErr, size: '22.5%', margin: '2%' }
   const lastButtonLand = { value: "=", parErr: parErr, size: `${92/7}%`, margin: '1%' }
@@ -129,7 +97,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   // const fadeOut = () => {}
   
 
-  const [ OPCQH, setOPCQH ] = useState(0) // onePercentContainerQueryHeight
+  const [ OPCQH, setOPCQH ] = useState(1) // onePercentContainerQueryHeight
 
   const sharedProps = { width, height, state, ins, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, nextScreen, switchSide, navigation, aboutUp, fadeAnim, fadeIn, fadeOut }
 
@@ -230,19 +198,19 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       activeOpacity={1}
       style={s.question}
       onPress={() => state === 'tabletop' ? setShowCalc(false) : navigate('About')}
-      //children={ <SimpleLineIcons name='question' size={40} color='red' /> }
-      //children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
-      //children={ <Text style={{size: 20}}>ASD</Text> }
-      //children="asd"
-    >
-      <SimpleLineIcons name='emotsmile' size={40} color='red' />
-    </TouchableHighlight>
+      children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
+    />;
+
+  // <View onLayout={e => setOPCQH(e.nativeEvent.layout.height / 100)} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
 
   const PortCalc =
     <View
       style={[ s.outline, { marginTop: ins.top, marginBottom: ins.bottom } ]}
       children={
-        <View onLayout={e => setOPCQH(e.nativeEvent.layout.height / 100)} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
+        <View onLayout={e => {
+          setOPCQH(e.nativeEvent.layout.height / 100)
+          console.log("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", e.nativeEvent.layout.height / 100)
+        }} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
           <View style={[ s.displayContainer, s.displayContainerPort, { height: `${(28.4/3)*2}%`, paddingLeft: vmin * 1, paddingRight: vmin * 1 } ]}>
             <ScrollView
               overScrollMode="never"
@@ -468,20 +436,6 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
         LandCalc
 
       }
-
-      <TouchableHighlight
-        underlayColor="#8aaeba"
-        //underlayColor="red"
-        activeOpacity={1}
-
-        style={[
-          //s.question,
-          { borderRadius: 21 }
-        ]}
-
-        //onPress={() => navigate('About')}
-        children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
-      />
     </View>
   );
 }

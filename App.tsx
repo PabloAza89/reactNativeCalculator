@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //import { SimpleLineIcons } from 'react-native-vector-icons/simple-line-icons';
 //import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 //import {SimpleLineIcons} from '@react-native-vector-icons/simple-line-icons';
 //import SimpleLineIcons from '@react-native-vector-icons/simple-line-icons';
 //import { /* Icon as BaseIcon, */ IconProps, IconSource } from 'react-native-vector-icons/SimpleLineIcons';
@@ -229,7 +230,8 @@ const App = (): ReactElement => {
 
     try {
       await Promise.all([
-				SimpleLineIcons.loadFont()
+				SimpleLineIcons.loadFont(),
+        Ionicons.loadFont(),
         ])
     } catch (error) { console.log("VV FONT LOAD ERROR", error) }
 

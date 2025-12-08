@@ -5,14 +5,12 @@ import {
   UIManager, findNodeHandle, Platform, Dimensions
 } from 'react-native';
 import { s } from './KnowMoreCSS';
-//import { Entypo, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-//import { LinearGradient } from 'expo-linear-gradient';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text } from '../../utils/Text';
 import { scrollBarSize, iconColor } from '../../utils/constants';
@@ -129,9 +127,15 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
 
   const [ loaded, setLoaded ] = useState(false)
 
+  // useEffect(() => {
+  //   const interactionPromise = InteractionManager.runAfterInteractions(() =>  setLoaded(true));
+  //   return () => interactionPromise.cancel();
+  // }, []);
+
   useEffect(() => {
-    const interactionPromise = InteractionManager.runAfterInteractions(() =>  setLoaded(true));
-    return () => interactionPromise.cancel();
+    setTimeout(() => {
+      setLoaded(true)
+    }, 0);
   }, []);
 
   const [ showButton, setShowButton ] = useState(false)
@@ -216,23 +220,29 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
           colors={linearGradientColors}
           style={[ s.linearGradient, { zIndex: 4, height: ins.top } ]}
           //start={[ 0, state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop ]}
-          start={[ 0, height / parsedInsTop ]}
-          end={[ 1, 0 ]}
+          //start={[ 0, height / parsedInsTop ]}
+          start={{ x: 0, y: height / parsedInsTop }}
+          //end={[ 1, 0 ]}
+          end={{ x: 1, y: 0 }}
         />
       }
 
       <LinearGradient
         colors={linearGradientColors} // BODY
         style={[ s.linearGradient, { zIndex: 2 },  (state === 'tabletop' && aboutUp) ? { height: 0, top: 0 } : { height: height - (ins.top*1), top: ins.top } ]}
-        start={[ 0, 1 - topByHeight ]}
-        end={[ 1, topByHeight * -1 ]}
+        //start={[ 0, 1 - topByHeight ]}
+        start={{ x: 0, y: 1 - topByHeight }}
+        //end={[ 1, topByHeight * -1 ]}
+        end={{ x: 1, y: topByHeight * -1 }}
       />
 
       <AnimatedLinearGradient
         colors={linearGradientColors} // ENTIRE WINDOW
         style={[ s.animatedLinearGradient, { backgroundColor: currentColor } ]}
-        start={[ 0, 1 ]} // [ XfromLeft, YfromTop ]
-        end={[ 1, 0 ]}   // [ XfromLeft, YfromTop ]
+        //start={[ 0, 1 ]} // [ XfromLeft, YfromTop ]
+        start={{ x: 0, y: 1 }}
+        //end={[ 1, 0 ]}   // [ XfromLeft, YfromTop ]
+        end={{ x: 1, y: 0 }}
       />
 
       <CustomScrollView

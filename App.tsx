@@ -8,54 +8,21 @@ import React, { ReactElement, useEffect, useState, useRef, useLayoutEffect } fro
 import {  CommonActions, NavigationContainer, useNavigationContainerRef, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
-//import * as Font from 'expo-font';
 import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter, DeviceEventEmitter,
   PixelRatio, View, Animated, useAnimatedValue, Pressable, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import FastImage from 'react-native-fast-image'
 import FastImage from '@d11/react-native-fast-image';
-//import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
-//import { SimpleLineIcons, Icon as BaseIcon } from '@react-native-vector-icons/simple-line-icons';
-//import { SimpleLineIcons, /* BaseIcon  */} from '@react-native-vector-icons/simple-line-icons';
-//import { SimpleLineIcons } from 'react-native-vector-icons/simple-line-icons';
-//import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-//import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-//import { FontAwesome5 } from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-//import type { FontAwesome5IconProps, FontAwesome5IconVariants } from '@types/react-native-vector-icons/FontAwesome5.d.ts';
-//import FontAwesome5_Brands from 'react-native-vector-icons/FontAwesome5_Brands';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-//import All from 'react-native-vector-icons';
-//import { FontAwesome5 as qq } from 'react-native-vector-icons';
-
-//import {SimpleLineIcons} from '@react-native-vector-icons/simple-line-icons';
-//import SimpleLineIcons from '@react-native-vector-icons/simple-line-icons';
-//import { /* Icon as BaseIcon, */ IconProps, IconSource } from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
 import { addListener, startListener, removeListener } from './layoutListener';
-//import SystemNavigationBar from 'react-native-system-navigation-bar';
-//import * as NavigationBar from 'expo-navigation-bar';
-
-
-    // {
-    //   "path": "assets/fonts/FontAwesome5_Brands.ttf",
-    //   "sha1": "3fa2d67cef22da5c3f3eb5730c6afbd6fecf0372"
-    // },
-    // {
-    //   "path": "assets/fonts/FontAwesome5_Regular.ttf",
-    //   "sha1": "7d849a3981a716e2ba4a84634bc57d0b8054a6a3"
-    // },
-    // {
-    //   "path": "assets/fonts/FontAwesome5_Solid.ttf",
-    //   "sha1": "c1b9fae262f42868c075ac865a8ab34920e20a2c"
-
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
 import KnowMore from './src/components/KnowMore/KnowMore';
@@ -65,13 +32,6 @@ const Stack = createNativeStackNavigator();
 type StackAnimationTypes = 'none' | 'slide_from_right'
 
 startListener()
-
-//SystemNavigationBar.setBarColor('red');
-//SystemNavigationBar.setNavigationColor('red');
-//SystemNavigationBar.setNavigationColor('red', 'dark');
-//SystemNavigationBar.setNavigationColor('green', 'light', 'navigation');
-
-//StatusBar.setBackgroundColor('transparent')
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]) => {
@@ -243,36 +203,10 @@ const App = (): ReactElement => {
 
     console.log("RESTORED ROUTE: ", resRoute)
 
-    // try {
-    //   await Font.loadAsync({
-    //     ...AntDesign.font,
-    //     ...Entypo.font,
-    //     ...FontAwesome5.font,
-    //     ...Ionicons.font,
-    //     ...MaterialIcons.font,
-    //     ...SimpleLineIcons.font
-    //   })
-    // } catch (error) { console.log(error) }
-
-    //console.log("RRRRRRRRRRRRRRRRRRRRRR", FontAwesome5.getStyledIconSet())
-    //console.log("RRRRRRRRRRRRRRRRRRRRRR", Entypo)
-    //console.log("RRRRRRRRRRRRRRRRRRRRRR", All)
-    
-
     try {
       await Promise.all([
-				// SimpleLineIcons.loadFont(),
-        // Ionicons.loadFont(),
         AntDesign.loadFont(),
         Entypo.loadFont(),
-        //(FontAwesome5 as any).getStyledIconSet('regular').loadFont(),
-        //FontAwesome5.loadFont('brand'),
-        //FontAwesome5.getFontFamily(),
-        //FontAwesome5('brand').loadFont(),
-        // (FontAwesome5 as any).getStyledIconSet('brand').loadFont(),
-        // (FontAwesome5 as any).getStyledIconSet('light').loadFont(),
-        // (FontAwesome5 as any).getStyledIconSet('regular').loadFont(),
-        // (FontAwesome5 as any).getStyledIconSet('solid').loadFont(),
         FontAwesome5.getStyledIconSet('brand').loadFont(),
         FontAwesome5.getStyledIconSet('light').loadFont(),
         FontAwesome5.getStyledIconSet('regular').loadFont(),

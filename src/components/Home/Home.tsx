@@ -201,16 +201,11 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
     />;
 
-  // <View onLayout={e => setOPCQH(e.nativeEvent.layout.height / 100)} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
-
   const PortCalc =
     <View
       style={[ s.outline, { marginTop: ins.top, marginBottom: ins.bottom } ]}
       children={
-        <View onLayout={e => {
-          setOPCQH(e.nativeEvent.layout.height / 100)
-          console.log("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ", e.nativeEvent.layout.height / 100)
-        }} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
+        <View onLayout={e => setOPCQH(e.nativeEvent.layout.height / 100)} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
           <View style={[ s.displayContainer, s.displayContainerPort, { height: `${(28.4/3)*2}%`, paddingLeft: vmin * 1, paddingRight: vmin * 1 } ]}>
             <ScrollView
               overScrollMode="never"

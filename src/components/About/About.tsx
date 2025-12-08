@@ -3,7 +3,12 @@ import { View, Linking, Animated, Pressable } from 'react-native';
 import { Text } from '../../utils/Text';
 import { s } from './AboutCSS';
 //import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 //import { LinearGradient } from 'expo-linear-gradient';
+//import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 //import FastImage from 'react-native-fast-image';
 import { AboutI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
@@ -43,7 +48,144 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
 
   return (
     <View style={s.background}>
-      <Text style={{size:20}}>asd</Text>
+      <Animated.View
+        style={[ s.modalForegroundAbout, { backgroundColor: twoScreens ? 'transparent' : 'rgba(0, 0, 0, 0.4)', opacity: fadeAnim, pointerEvents: showModal ? 'auto' : 'none', paddingTop: ins.top, paddingBottom: ins.bottom } ]}
+        children={
+          <Pressable
+            style={[ s.modalForegroundAboutPressable ]}
+            onPress={() => updateShowModal(false)}
+            children={
+              <View style={s.modal}>
+                <Text
+                  numberOfLines={3}
+                  style={s.upperModal}
+                  children={'You are about to leave this App\nand access an external link\nDo you want to continue ?'}
+                />
+                <View style={s.lowerModal}>
+                  <CustomButton
+                    type={Ionicons.Button}
+                    name={'close-circle'}
+                    size={25}
+                    color={'rgba(0, 0, 0, .7)'}
+                    onPress={() => updateShowModal(false)}
+                    children={ <Text style={s.buttonModal} children={'CANCEL'} /> }
+                  />
+                  <CustomButton
+                    type={Ionicons.Button}
+                    name={'checkmark-circle'}
+                    size={25}
+                    color={'rgba(0, 0, 0, .7)'}
+                    onPress={() => { Linking.openURL('https://www.linkedin.com/in/juan-pablo-azambuyo'); updateShowModal(false) }}
+                    margin={{ left: 12 }}
+                    children={ <Text style={s.buttonModal} children={'CONTINUE'} /> }
+                  />
+                </View>
+              </View>
+            }
+          />
+        }
+      />
+
+      <LinearGradient // STATUS BAR
+        colors={linearGradientColors}
+        style={[ s.statusBarGradient, { height: ins.top } ]}
+        //start={[ 0, state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop ]}
+        start={{ x: 0, y: state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop }}
+        //end={[ 1, 0 ]}
+        end={{ x: 1, y: 0 }}
+      />
+
+      <LinearGradient  // BACKGROUND
+        colors={linearGradientColors}
+        style={[ s.bodyGradient, { top: ins.top } ]}
+        //start={[ 0, 1 - topByHeight ]}
+        start={{ x: 0, y: 1 - topByHeight }}
+        //end={[ 1, topByHeight * -1 ]}
+        end={{ x: 1, y: topByHeight * -1 }}
+      />
+
+      <CustomScrollView
+        persistentScrollbar={true}
+        scrollbarPadding={{
+          top: (state === 'tabletop' && !aboutUp) ? 0 : ins.top,
+          right: ins.right,
+          bottom: (state === 'tabletop' && aboutUp) ? 0 : ins.bottom,
+        }}
+        style={[s.cswStyle, { zIndex: 2 }]}
+        contentContainerStyle={s.cswContentContainerStyle}
+      >
+        <View
+          style={{
+              alignItems: 'center',
+              marginTop: 'auto',
+              marginBottom: 'auto',
+              paddingTop: parsedMaxVerticalInset,
+              paddingBottom: parsedMaxVerticalInset,
+          }}
+        >
+          <Text
+            style={[ s.title ]}
+            children={'This App is developed by\nJuan Pablo Azambuyo'}
+          />
+          <View style={s.imageWrapper}>
+            {/* <FastImage 50% in the next line
+              style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 }}
+              source={ require('../../images/profile.png') }
+              resizeMode={FastImage.resizeMode.contain}
+            /> */}
+            <CustomButton
+              type={AntDesign}
+              name={'linkedin-square'}
+              size={40}
+              color={'rgba(0, 0, 0, .7)'}
+              onPress={() => updateShowModal(true)}
+              style={{ position: 'absolute', top: ((vmin * 30) / 2) - 20, right: (((parsedWidth / 2) - ((vmin * 30) / 2)) / -2) - 20 }}
+            />
+          </View>
+
+          {
+            twoScreens ?
+            <CustomButton
+              type={MaterialCommunityIcons.Button}
+              name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
+              size={30}
+              color={'rgba(0, 0, 0, .7)'}
+              onPress={() => switchSide()}
+              margin={{ bottom: 24 }}
+              children={ <Text style={[ s.textInButton, s.twoLines ]} children={'SWITCH\nSCREENS'} /> }
+            /> :
+            <CustomButton
+              type={Ionicons.Button}
+              name={'chevron-back-circle-sharp'}
+              size={30}
+              color={'rgba(0, 0, 0, .7)'}
+              onPress={() => navigate('Home')}
+              margin={{ bottom: 24 }}
+              children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
+            />
+          }
+          {
+            twoScreens ?
+            <CustomButton
+              type={Ionicons.Button}
+              name={ state === 'tabletop' ? 'calculator-sharp' : 'alert-circle' }
+              size={30}
+              color={'rgba(0, 0, 0, .7)'}
+              onPress={() => nextScreen()}
+              children={ <Text style={[ s.textInButton, s.oneLine ]} children={ state === 'tabletop' ? 'HOME' : 'HOW DOES IT WORK ?' } /> }
+            /> :
+            <CustomButton
+              type={Ionicons.Button}
+              name={'chevron-back-circle-sharp'}
+              size={30}
+              color={'rgba(0, 0, 0, .7)'}
+              onPress={() => navigate('KnowMore')}
+              iconStyle={s.buttonAndIconLower}
+              children={ <Text style={[ s.textInButton, s.oneLine, { transform: [{ rotate: '180deg' }] } ]} children={'HOW DOES IT WORK ?'} /> }
+            />
+          }
+        </View>
+      </CustomScrollView>
     </View>
   );
 }

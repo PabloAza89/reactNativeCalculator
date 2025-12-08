@@ -250,7 +250,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
           top: 24,
           right: ins.right,
           //bottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1,
-          bottom: 24,
+          bottom: 48,
         }}
         contentContainerStyle={{
           paddingLeft: ins.left,
@@ -263,7 +263,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
         }}
         style={[ s.customScrollView, {}]}
       >
-        <View collapsable={false} style={[ s.background, { width: '100%', paddingTop: 24, paddingBottom: 24, } ]}>
+        <View collapsable={false} style={[ s.background, { width: '100%', paddingTop: 24, paddingBottom: 48, } ]}>
             <View style={[ s.buttonContainer, { marginTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 0 : 7 } ]}>
 
               {

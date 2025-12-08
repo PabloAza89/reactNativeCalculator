@@ -6,10 +6,9 @@ import { s } from './AboutCSS';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-//import { LinearGradient } from 'expo-linear-gradient';
-//import { LinearGradient } from 'react-native-linear-gradient';
 import LinearGradient from 'react-native-linear-gradient';
 //import FastImage from 'react-native-fast-image';
+import FastImage from '@d11/react-native-fast-image';
 import { AboutI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
@@ -89,18 +88,14 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
       <LinearGradient // STATUS BAR
         colors={linearGradientColors}
         style={[ s.statusBarGradient, { height: ins.top } ]}
-        //start={[ 0, state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop ]}
         start={{ x: 0, y: state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop }}
-        //end={[ 1, 0 ]}
         end={{ x: 1, y: 0 }}
       />
 
       <LinearGradient  // BACKGROUND
         colors={linearGradientColors}
         style={[ s.bodyGradient, { top: ins.top } ]}
-        //start={[ 0, 1 - topByHeight ]}
         start={{ x: 0, y: 1 - topByHeight }}
-        //end={[ 1, topByHeight * -1 ]}
         end={{ x: 1, y: topByHeight * -1 }}
       />
 
@@ -128,11 +123,11 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
             children={'This App is developed by\nJuan Pablo Azambuyo'}
           />
           <View style={s.imageWrapper}>
-            {/* <FastImage 50% in the next line
-              style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 }}
+            <FastImage
+              style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 /* 50% */ }}
               source={ require('../../images/profile.png') }
               resizeMode={FastImage.resizeMode.contain}
-            /> */}
+            />
             <CustomButton
               type={AntDesign}
               name={'linkedin-square'}

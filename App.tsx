@@ -13,6 +13,7 @@ import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, Native
   PixelRatio, View, Animated, useAnimatedValue, Pressable, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import FastImage from 'react-native-fast-image'
+import FastImage from '@d11/react-native-fast-image';
 //import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 //import { SimpleLineIcons, Icon as BaseIcon } from '@react-native-vector-icons/simple-line-icons';
 //import { SimpleLineIcons, /* BaseIcon  */} from '@react-native-vector-icons/simple-line-icons';
@@ -131,7 +132,7 @@ const App = (): ReactElement => {
     catch(e) { }
   };
 
-  //FastImage.preload([{ uri: Image.resolveAssetSource(require('./src/images/profile.png')).uri }])
+  FastImage.preload([{ uri: Image.resolveAssetSource(require('./src/images/profile.png')).uri }])
 
   const [ showModal, setShowModal ] = useState(false);
   const updateShowModal = (bool: boolean) => setShowModal(bool)

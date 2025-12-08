@@ -35,7 +35,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
     (navigation.getState().routes.at(-1)?.name === 'KnowMore' && (state === 'tabletop' || state === 'book')) && navigate('Home', { lastRoute: 'KnowMore' })
   }, [state])
 
-  const goUp = () => UIManager.dispatchViewManagerCommand(viewId, 0)
+  const goUp = () => UIManager.dispatchViewManagerCommand(viewId, 0, [])
 
   let lazyLoad = [
     <View key={0} style={s.eachItem}>

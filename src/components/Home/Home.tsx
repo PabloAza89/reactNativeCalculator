@@ -24,6 +24,40 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   route, maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
 
+  useEffect(() => {
+    console.log("navigationRef HOME ROUTES", navigation.getState().routes)
+  }, [navigation])
+
+  useEffect(() => {
+    console.log("FOCUSEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+  }, [])
+
+  const ssstate = {
+    type: 'stack',
+    key: 'stack-1',
+    routeNames: ['Home', 'Profile', 'Settings'],
+    routes: [
+      { key: 'home-1', name: 'Home' },
+      { key: 'settings-1', name: 'Settings' },
+    ],
+    index: 1,
+    stale: false,
+  };
+
+  // const sstate = {
+  //   type: 'stack',
+  //   key: 'stack-1',
+  //   routeNames: ['Home', 'Profile', 'Settings'],
+  //   routes: [
+  //     { key: 'home-1', name: 'Home', params: { sortBy: 'latest' } },
+  //     { key: 'settings-1', name: 'Settings' },
+  //   ],
+  //   index: 1,
+  //   stale: false,
+  // };
+
+
+
   // useEffect(() => {
   //   updateShowModal(false)
   //   // return () => {

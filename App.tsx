@@ -9,7 +9,7 @@ import {  CommonActions, NavigationContainer, useNavigationContainerRef, useFocu
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
 import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter, DeviceEventEmitter,
-  PixelRatio, View, Animated, useAnimatedValue, Pressable, StatusBar } from 'react-native';
+  PixelRatio, View, Animated, useAnimatedValue, Pressable, StatusBar, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from '@d11/react-native-fast-image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -43,7 +43,9 @@ const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]
         animation: animation,
         statusBarStyle: 'dark',
       }}
-      children={ screens.map((e: ReactElement) => e) }
+      //children={ screens.map((e: ReactElement) => e) }
+      //children={{...screens}}
+      children={screens}
     />
   )
 }
@@ -70,14 +72,18 @@ const App = (): ReactElement => {
 
   const navigationRef = useNavigationContainerRef();
 
+  // useEffect(() => {
+  //   console.log("navigationRef APP", navigationRef.getState())
+  // }, [navigationRef])
+
   const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
 
   let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
 
   let routes = [
-    { index: 2, routes: allRoutes },
-    { index: 1, routes: allRoutes.slice(0, 2) },
-    { index: 0, routes: allRoutes.slice(0, 1) }
+    { index: 2, routes: allRoutes }, // KnowMore
+    { index: 1, routes: allRoutes.slice(0, 2) }, // About
+    { index: 0, routes: allRoutes.slice(0, 1) } // Home
   ]
 
   const input = useRef(""); // MAIN DISPLAY (CENTER)
@@ -95,6 +101,7 @@ const App = (): ReactElement => {
   // 23   active     background (1st) / active (next) active
   useEffect(() => {
     const blur = AppState.addEventListener('blur', () => { // ON APP BLUR
+      console.log("APP COMP APP BLURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
       saveData("savedInput", input.current.toString())
       saveData("savedSecInput", secInput.current.toString())
       saveData("savedDate", Date.now().toString())
@@ -106,6 +113,16 @@ const App = (): ReactElement => {
     })
     return () => blur.remove()
   }, []);
+
+  // useEffect(() => {
+
+  //   BackHandler.addEventListener('hardwareBackPress', () => {
+  //     console.log("BACK HANDLER: ", )
+  //     //return true;
+  //     return false;
+  //   });
+
+  // }, [])
 
   const saveData = async (key: string, value: string) => {
     try { await AsyncStorage.setItem(key, value) }
@@ -186,7 +203,18 @@ const App = (): ReactElement => {
     )
   })
 
-  let initialState = { index: 0, routes: [ { name: 'Home' } ] }; // SET NAVIGATOR INITIAL STATE TO AVOID "UNDEFINED" ON "APP BLUR SAVE LAST ROUTE" (WITHOUT NAVIGATE ANY SCREEN)
+  //let initialState = { index: 0, routes: [ { name: 'Home' } ] }; // SET NAVIGATOR INITIAL STATE TO AVOID "UNDEFINED" ON "APP BLUR SAVE LAST ROUTE" (WITHOUT NAVIGATE ANY SCREEN)
+  //let initialState = { index: 2, routes: [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }] }; // SET NAVIGATOR INITIAL STATE TO AVOID "UNDEFINED" ON "APP BLUR SAVE LAST ROUTE" (WITHOUT NAVIGATE ANY SCREEN)
+  //let initialState = { index: 2, routes: [{ name: 'Home' }, { name: 'About' }] }; // SET NAVIGATOR INITIAL STATE TO AVOID "UNDEFINED" ON "APP BLUR SAVE LAST ROUTE" (WITHOUT NAVIGATE ANY SCREEN)
+  let initialState = {
+    type: 'stack',
+    key: 'stack-1',
+    routeNames: ['Home', 'About', 'KnowMore'],
+    routes: [{ name: 'Home' }],
+    //routes: [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }],
+    index: 1,
+    stale: false,
+  };
 
   const runOnceAvailable = useRef(true)
 
@@ -219,18 +247,19 @@ const App = (): ReactElement => {
     } catch (error) { console.log("VV FONT LOAD ERROR", error) }
 
     async function navigationBarToGestureOrViceVersa() {
-      if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {
-        if (Date.now() - parseInt(resDate) < 60000 && resTallBar !== tallBar.current.toString()) {
-          resRoute === "KnowMore" ? navigationRef.dispatch(CommonActions.reset(routes[0])) :
-          resRoute === "About" ? navigationRef.dispatch(CommonActions.reset(routes[1])) :
-          navigationRef.dispatch(CommonActions.reset(routes[2]))
-        } // else "WINDOWS HAS NOT CHANGED."
-      }
+      // if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {
+      //   if (Date.now() - parseInt(resDate) < 60000 && resTallBar !== tallBar.current.toString()) {
+      //     resRoute === "KnowMore" ? navigationRef.dispatch(CommonActions.reset(routes[0])) :
+      //     resRoute === "About" ? navigationRef.dispatch(CommonActions.reset(routes[1])) :
+      //     navigationRef.dispatch(CommonActions.reset(routes[2]))
+      //   } // else "WINDOWS HAS NOT CHANGED."
+      // }
     }
     navigationBarToGestureOrViceVersa()
     .then(() => {
       setTimeout(() => { // ONLY FIRST TIME & WHEN DEVICE WINDOW DIMENSIONS CHANGE
         setAnimation('slide_from_right') // SLIDE SCREEN ANIMATION
+        //setAnimation('none') // SLIDE SCREEN ANIMATION
         BootSplash.hide()
         console.log("runOnceAvailable.current", runOnceAvailable.current)
         runOnceAvailable.current = false

@@ -17,11 +17,16 @@ import { scrollBarSize, iconColor } from '../../utils/constants';
 import { counterI, KnowMoreI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
+import { CommonActions, StackActions } from '@react-navigation/native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 //function KnowMore({ navigation: { navigate }, opw, port }: KnowMoreI): ReactElement {
 const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, aboutUp, switchSide, nextScreen,   }: KnowMoreI): ReactElement => {
+
+    useEffect(() => {
+      console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes)
+    }, [navigation])
 
   //const { height: screenHeight } = Dimensions.get('window');
   //console.log("screenHeight", screenHeight)
@@ -188,8 +193,8 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   useEffect(() => setViewId(findNodeHandle(scrollRef.current)), [])
 
   const scrollHandler = (val: number) => {
-    console.log("VAL ", val)
-    console.log("viewId ", viewId)
+    // console.log("VAL ", val)
+    // console.log("viewId ", viewId)
     
     val > 100 ? setShowButton(true) : setShowButton(false);
     val < 0 && UIManager.dispatchViewManagerCommand(viewId, 0, []);
@@ -282,7 +287,8 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
                   name={'chevron-back-circle-sharp'}
                   size={30}
                   color={iconColor}
-                  onPress={() => navigate('About')}
+                  //onPress={() => navigate('About')}
+                  onPress={() => navigation.goBack()}
                   margin={{ right: 12 }}
                   children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
                 />
@@ -317,7 +323,9 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
                   name={'home'}
                   size={30}
                   color={iconColor}
-                  onPress={() => navigate('Home')}
+                  //onPress={() => navigate('Home')}
+                  //onPress={() => navigation.popToTop()}
+                  onPress={() => navigation.dispatch(StackActions.popToTop())}
                   margin={{ left: 12 }}
                   children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
                 />

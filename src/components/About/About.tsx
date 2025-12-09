@@ -10,9 +10,22 @@ import FastImage from '@d11/react-native-fast-image';
 import { AboutI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
+import { CommonActions, StackActions } from '@react-navigation/native';
 
 //function About({ navigation: { navigate }, vmin }: AboutI): ReactElement {
 const About = ({ navigation, width, height, ins, state, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, showModal, twoScreens, aboutUp, calcLeft, fadeAnim, updateShowModal,  switchSide, nextScreen, fadeIn, fadeOut }: AboutI): ReactElement => {
+
+  let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
+
+  let routes = [
+    { index: 2, routes: allRoutes },
+    { index: 1, routes: allRoutes.slice(0, 2) },
+    { index: 0, routes: allRoutes.slice(0, 1) }
+  ]
+
+  useEffect(() => {
+    console.log("navigationRef ABOUT ROUTES", navigation.getState().routes)
+  }, [navigation])
 
   const { navigate } = navigation
 
@@ -153,7 +166,13 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
               name={'chevron-back-circle-sharp'}
               size={30}
               color={'rgba(0, 0, 0, .7)'}
-              onPress={() => navigate('Home')}
+              //onPress={() => navigate('Home')} // no
+              //onPress={() => navigate('Home')} // no
+              onPress={() => navigation.goBack()} // testing
+              //navigationRef.dispatch(CommonActions.reset(routes[1]))
+              //onPress={() => navigate('Home', { lastRoute: 'About' })} // no
+              //onPress={() => navigation.dispatch(CommonActions.reset(routes[2]))}
+
               margin={{ bottom: 24 }}
               children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
             />

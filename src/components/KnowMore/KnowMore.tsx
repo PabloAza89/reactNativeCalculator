@@ -288,7 +288,8 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
                   size={30}
                   color={iconColor}
                   //onPress={() => navigate('About')}
-                  onPress={() => navigation.goBack()}
+                  //onPress={() => navigation.goBack()}
+                  onPress={() => navigation.dispatch(StackActions.pop())} // GO BACK
                   margin={{ right: 12 }}
                   children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
                 />
@@ -325,7 +326,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
                   color={iconColor}
                   //onPress={() => navigate('Home')}
                   //onPress={() => navigation.popToTop()}
-                  onPress={() => navigation.dispatch(StackActions.popToTop())}
+                  onPress={() => navigation.dispatch(StackActions.popToTop())} // GO DIRECTLY TO HOME
                   margin={{ left: 12 }}
                   children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
                 />

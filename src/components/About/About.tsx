@@ -168,7 +168,8 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
               color={'rgba(0, 0, 0, .7)'}
               //onPress={() => navigate('Home')} // no
               //onPress={() => navigate('Home')} // no
-              onPress={() => navigation.goBack()} // testing
+              //onPress={() => navigation.goBack()} // testing
+              onPress={() => navigation.dispatch(StackActions.pop())} // GO BACK
               //navigationRef.dispatch(CommonActions.reset(routes[1]))
               //onPress={() => navigate('Home', { lastRoute: 'About' })} // no
               //onPress={() => navigation.dispatch(CommonActions.reset(routes[2]))}

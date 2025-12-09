@@ -22,7 +22,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
-import { addListener, startListener, removeListener } from './layoutListener';
+import { addListener, startListener, stopListener } from './layoutListener';
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
 import KnowMore from './src/components/KnowMore/KnowMore';
@@ -33,7 +33,7 @@ type StackAnimationTypes = 'none' | 'slide_from_right'
 
 startListener()
 
-//const NavigatorMapper = (animation: StackAnimationTypes, tallBar: boolean, screens: ReactElement[]) => {
+//const NavigatorMapper = (animation: StackAnimationTypes, tallNav: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]) => {
   return (
     <Stack.Navigator
@@ -54,7 +54,7 @@ const App = (): ReactElement => {
 
   StatusBar.setBackgroundColor('transparent')
 
-  let tallBar = useRef<boolean>(false)
+  let tallNav = useRef<boolean>(false) // tallNavigationBar
 
   const [ layout, setLayout ] = useState({
     "window": {"width": 0, "height": 0},
@@ -64,7 +64,7 @@ const App = (): ReactElement => {
     "maxHorizontalInset": 0,
     "state": "portrait",
     "vmin": 0,
-    "tallBar": "false" // tallNavigationBar
+    "tallNav": "false" // tallNavigationBar
   });
 
   console.log("INSETS ", layout.insets)
@@ -105,7 +105,8 @@ const App = (): ReactElement => {
       saveData("savedInput", input.current.toString())
       saveData("savedSecInput", secInput.current.toString())
       saveData("savedDate", Date.now().toString())
-      saveData("savedTallBar", tallBar.current.toString())
+      console.log("CURRENT VALUEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+      saveData("savedTallNav", tallNav.current.toString())
       let array = navigationRef.getState().routes // INSIDE ANY COMPONENT: navigation.getState().routes
       saveData("savedRoute", array[array.length - 1].name) // SAVE LAST ROUTE ON APP BLUR
       updateShowModal(false)
@@ -223,7 +224,7 @@ const App = (): ReactElement => {
     const resInput = await readData("savedInput") // RESPONSE INPUT
     const resSecInput = await readData("savedSecInput") // RESPONSE INPUT
     const resDate = await readData("savedDate") // RESPONSE DATE
-    const resTallBar = await readData("savedTallBar") // RESPONSE HEIGHT
+    const resTallNav = await readData("savedTallNav") // RESPONSE HEIGHT
     const resRoute = await readData("savedRoute") // RESPONSE ROUTE
 
     typeof resInput === "string" && (input.current = resInput)
@@ -247,8 +248,8 @@ const App = (): ReactElement => {
     } catch (error) { console.log("VV FONT LOAD ERROR", error) }
 
     async function navigationBarToGestureOrViceVersa() {
-      // if (typeof resDate === "string" && typeof resTallBar === "string" && typeof resRoute === "string") {
-      //   if (Date.now() - parseInt(resDate) < 60000 && resTallBar !== tallBar.current.toString()) {
+      // if (typeof resDate === "string" && typeof resTallNav === "string" && typeof resRoute === "string") {
+      //   if (Date.now() - parseInt(resDate) < 60000 && resTallNav !== tallNav.current.toString()) {
       //     resRoute === "KnowMore" ? navigationRef.dispatch(CommonActions.reset(routes[0])) :
       //     resRoute === "About" ? navigationRef.dispatch(CommonActions.reset(routes[1])) :
       //     navigationRef.dispatch(CommonActions.reset(routes[2]))
@@ -270,14 +271,15 @@ const App = (): ReactElement => {
   useEffect(() => {
     console.log("EXEC USE EFFECT")
     let inner = (e: any) => {
-      console.log("callback with new data", e)
+      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", e)
       setLayout(e)
-      tallBar.current = e.tallBar
+      tallNav.current = e.tallNav
+      console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
       if (runOnceAvailable.current) runOnce()
     }
     addListener(inner)
 
-    return () => removeListener.remove();
+    return () => stopListener.remove();
   }, []);
 
   return (

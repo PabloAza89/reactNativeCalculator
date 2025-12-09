@@ -28,9 +28,9 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     console.log("navigationRef HOME ROUTES", navigation.getState().routes)
   }, [navigation])
 
-  useEffect(() => {
-    console.log("FOCUSEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
-  }, [])
+  // useEffect(() => {
+  //   console.log("FOCUSEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+  // }, [])
 
   const ssstate = {
     type: 'stack',

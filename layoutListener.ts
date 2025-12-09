@@ -3,9 +3,9 @@ import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-na
 const { MainActivity } = NativeModules;
 const nativeEvent = new NativeEventEmitter(MainActivity);
 
-export let removeListener: EmitterSubscription
+export let stopListener: EmitterSubscription
 
-export const startListener = () => { removeListener = nativeEvent.addListener('LayoutInfo', e => updateData(e)) }
+export const startListener = () => { stopListener = nativeEvent.addListener('LayoutInfo', e => updateData(e)) }
 
 let storedData: any
 let storedFn: any

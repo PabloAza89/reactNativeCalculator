@@ -279,14 +279,14 @@ class MainActivity: ReactActivity() {
           else (currentWindow["width"]!! / dotsPerInch) / 100
         );
 
-        mainMap.putBoolean("tallBar", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
+        mainMap.putBoolean("tallNav", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
-        Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallBar"))
+        Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallNav"))
 
-        // if (mainMap.getBoolean("tallBar")) window.setNavigationBarColor(Color.parseColor("#FFD700"))
+        // if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#FFD700"))
         // else window.setNavigationBarColor(Color.parseColor("#FF0000"))
 
-        if (mainMap.getBoolean("tallBar")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
+        if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
         else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
         
 

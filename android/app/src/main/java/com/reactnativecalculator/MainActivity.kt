@@ -61,7 +61,6 @@ class MainActivity: ReactActivity() {
   var currentMaxHorizontalInset: Int by Delegates.notNull<Int>()
   var currentMaxVerticalInset: Int by Delegates.notNull<Int>()
   lateinit var rootView: View
-  //private val lock = Any()
   lateinit var currentOrientation: String // UI retrigger
   lateinit var currentState: String // UI retrigger
   lateinit var currentInsets: Rect // UI retrigger
@@ -69,23 +68,13 @@ class MainActivity: ReactActivity() {
   var currentHingeBounds: MutableMap<String, Int> = mutableMapOf() // UI retrigger
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    RNBootSplash.init(this, R.style.Start); // Initialize SplashScreen
-    super.onCreate(null); // super.onCreate(savedInstanceState) // super.onCreate(null) with react-native-screens
-    //super.onCreate(savedInstanceState)
+    RNBootSplash.init(this, R.style.Start); // Init SplashScreen
+    //super.onCreate(null); // null with react-native-screens else savedInstanceState
+    super.onCreate(savedInstanceState); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
     rootView = findViewById<View>(android.R.id.content).rootView
-    //rootView.setNavigationBarColor(this, "#FFD700")
-    //this@MainActivity.window.setNavigationBarColor("#FFD700")
-    //this@MainActivity.window.setNavigationBarColor(Color.parseColor(colorHex))
-    //this@MainActivity.window.setNavigationBarColor(Color.parseColor("#FFD700"))
-    //this@MainActivity.window.setNavigationBarColor(Color.parseColor("#33000000"))
-    //this.window.setNavigationBarColor(Color.parseColor("#33000000"))
-    //window.setNavigationBarColor(Color.parseColor("#33000000"))
-    // window.setNavigationBarColor(Color.parseColor("#FFD700"))
-    // window.setNavigationBarColor(Color.parseColor("#FF0000"))
-    //setNavigationBarColor(this, "#FFD700")
 
     lifecycleScope.launch(Dispatchers.Main) {
       lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -100,7 +89,7 @@ class MainActivity: ReactActivity() {
 
   }
 
-  fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) { //manual: Boolean
+  fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
     Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
     //canUpdate = false // FLAG FOR updateUI()
@@ -249,7 +238,7 @@ class MainActivity: ReactActivity() {
 
       if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
 
-      sendUpdate = true
+      //sendUpdate = true
 
       Log.d("LOG", "PRE SEND-UPDATE VAL: " + sendUpdate)
 
@@ -281,43 +270,29 @@ class MainActivity: ReactActivity() {
 
         mainMap.putBoolean("tallNav", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
-        Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallNav"))
-
-        // if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#FFD700"))
-        // else window.setNavigationBarColor(Color.parseColor("#FF0000"))
+        //Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallNav"))
 
         if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
         else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
-        
-
-        // if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true
-        // else false
-
-        // if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) {
-        //   //true
-        //   this@MainActivity.window.setNavigationBarColor(Color.parseColor("#FFD700"))
-        // } else {
-        //   //false
-        //   this@MainActivity.window.setNavigationBarColor(Color.parseColor("#FF0000"))
-        // }
 
         val currentContext = reactHost.currentReactContext
         if (currentContext == null) {
-
           val listener = object: ReactInstanceEventListener {
             override fun onReactContextInitialized(context: ReactContext) {
-              Log.d("LOG", "111111111111111111 INNER")
+              Log.d("LOG", "tallNav VALUE FROM 1: " + mainMap.getBoolean("tallNav"))
               context.emitDeviceEvent("LayoutInfo", mainMap)
               reactHost.removeReactInstanceEventListener(this)
             }
           }
           reactHost.addReactInstanceEventListener(listener)
-
         } else {
-          Log.d("LOG", "222222222222222222")
-          currentContext.emitDeviceEvent("LayoutInfo", mainMap)
+          Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
+          //currentContext.emitDeviceEvent("LayoutInfo", mainMap) // not working
+          //reactHost.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap) // not working
+          currentContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            ?.emit("LayoutInfo", mainMap)
         }
-
         sendUpdate = false // RESET UPDATE FLAG
       }
       canUpdate = true // FLAG FOR updateUI()

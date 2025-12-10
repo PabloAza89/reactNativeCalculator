@@ -271,10 +271,10 @@ const App = (): ReactElement => {
   useEffect(() => {
     console.log("EXEC USE EFFECT")
     let inner = (e: any) => {
-      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", e)
+      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
       setLayout(e)
       tallNav.current = e.tallNav
-      console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+      //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
       if (runOnceAvailable.current) runOnce()
     }
     addListener(inner)

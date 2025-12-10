@@ -6,4 +6,8 @@ import { name as appName } from './app.json';
 
 //enableScreens();
 
+import { addListener, startListener, stopListener } from './layoutListener';
+
+//startListener()
+
 AppRegistry.registerComponent(appName, () => App);

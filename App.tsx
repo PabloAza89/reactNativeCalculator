@@ -31,7 +31,7 @@ const Stack = createNativeStackNavigator();
 
 type StackAnimationTypes = 'none' | 'slide_from_right'
 
-startListener()
+//startListener()
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallNav: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]) => {
@@ -271,15 +271,16 @@ const App = (): ReactElement => {
   useEffect(() => {
     console.log("EXEC USE EFFECT")
     let inner = (e: any) => {
-      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+      //console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
       setLayout(e)
       tallNav.current = e.tallNav
       //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
       if (runOnceAvailable.current) runOnce()
     }
-    addListener(inner)
+    runOnce()
+    //addListener(inner)
 
-    return () => stopListener.remove();
+    //return () => stopListener.remove();
   }, []);
 
   return (

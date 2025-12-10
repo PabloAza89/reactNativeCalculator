@@ -69,8 +69,8 @@ class MainActivity: ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
-    //super.onCreate(null); // null with react-native-screens else savedInstanceState
-    super.onCreate(savedInstanceState); // null with react-native-screens else savedInstanceState
+    super.onCreate(null); // null with react-native-screens else savedInstanceState
+    //super.onCreate(savedInstanceState); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double

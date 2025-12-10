@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useRef, useEffect, MutableRefObject } from 'react';
 import { ScrollView, StatusBar, View, Animated,
-  useAnimatedValue, Pressable, TouchableHighlight, NativeModules } from 'react-native';
+  useAnimatedValue, Pressable, TouchableHighlight, NativeModules, LayoutChangeEvent } from 'react-native';
 import { s } from './HomeCSS';
 import About from '../About/About';
 import OwnButton from '../OwnButton/OwnButton';
@@ -213,7 +213,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   const PortButtons =
     portButtons.concat(lastButtonPort).map((e, i) =>
       <OwnButton
-        key={i} value={e.value} size={e.size} margin={e.margin}
+        key={i} button={e.button} size={e.size} margin={e.margin}
         fontSize={OPCQH/1.5} handlePress={handlePress} small={e.small}
       />
     );
@@ -221,7 +221,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   const LandButtons =
     landButtons.concat(lastButtonLand).map((e, i) =>
       <OwnButton
-        key={i} value={e.value} size={e.size} margin={e.margin}
+        key={i} button={e.button} size={e.size} margin={e.margin}
         fontSize={OPCQH} handlePress={handlePress} state={state}
       />
     );
@@ -235,11 +235,16 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
     />;
 
+  const OPCQHHandler = (e: LayoutChangeEvent) => {
+    const val = e.nativeEvent.layout.height
+    setOPCQH(val === 0 ? 1 : val / 100)
+  }
+
   const PortCalc =
     <View
       style={[ s.outline, { marginTop: ins.top, marginBottom: ins.bottom } ]}
-      children={
-        <View onLayout={e => setOPCQH(e.nativeEvent.layout.height / 100)} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
+      children={<View onLayout={OPCQHHandler} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
+        
           <View style={[ s.displayContainer, s.displayContainerPort, { height: `${(28.4/3)*2}%`, paddingLeft: vmin * 1, paddingRight: vmin * 1 } ]}>
             <ScrollView
               overScrollMode="never"
@@ -367,7 +372,8 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   useEffect(() => {
     state === 'tabletop' && nextColor(1)
     return () => currIndex.stopAnimation()
-  }, [state])
+  }, [currIndex, state])
+  //}, [state])
 
   // useEffect(() => {
   //   return () => {

@@ -281,68 +281,18 @@ const App = (): ReactElement => {
     })
   }
 
+  const inner = (e: any) => {
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+    setLayout(e)
+    tallNav.current = e.tallNav
+    if (runOnceAvailable.current) runOnce()
+  }
+
   useEffect(() => {
     console.log("EXEC USE EFFECT")
-    // let inner = (e: any) => {
-    //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-    //   setLayout(e)
-    //   tallNav.current = e.tallNav
-    //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-    //   if (runOnceAvailable.current) runOnce()
-    // }
-    // //runOnce()
-    // addListener(inner)
-
-    //return () => stopListener.remove();
-
-
-    // let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
-    //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-    //   setLayout(e)
-    //   tallNav.current = e.tallNav
-    //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-    //   if (runOnceAvailable.current) runOnce()
-    // }) 
-
-  // let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
-  //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-  //   // setLayout(e)
-  //   // tallNav.current = e.tallNav
-  //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-  //   //if (runOnceAvailable.current) runOnce()
-  // }) 
-  if (currentListener) {
-            // // If it hasn't, create it and store the subscription object.
-            // // This ensures the listener is created early (like your original global setup)
-            // // but only *once* during the application's lifespan until explicitly removed.
-            // stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
-            //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-            //   // setLayout(e)
-            //   // tallNav.current = e.tallNav
-            //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-            //   //if (runOnceAvailable.current) runOnce()
-            // })
-            let inner = (e: any) => {
-              console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-              setLayout(e)
-              tallNav.current = e.tallNav
-              //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-              if (runOnceAvailable.current) runOnce()
-            }
-            //runOnce()
-            addCallback(inner)
-        }
-    if (!currentListener) {
-           startListener()
-        }
-
-    //return () => stopListener.remove();
-    return () => {
-      if (currentListener) {
-        stopListener()
-      }
-    }
-
+    if (!currentListener) { startListener(); addCallback(inner) }
+    else addCallback(inner)
+    return () => stopListener()
   }, []);
 
   return (

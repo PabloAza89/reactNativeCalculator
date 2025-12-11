@@ -180,8 +180,9 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   useEffect(() => {
     nextColor(1)
     return () => currIndex.stopAnimation()
-  }, [currIndex])
-  //}, [])
+  }, [])
+  //}, [currIndex])
+  
 
   /// END BACKGROUND ANIMATION ///
 

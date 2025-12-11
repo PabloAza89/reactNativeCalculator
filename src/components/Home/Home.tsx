@@ -104,8 +104,8 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     scrollRefCenter.current?.scrollToEnd({ animated: false })
   }
 
-  const lastButtonPort = { value: "=", parErr: parErr, size: '22.5%', margin: '2%' }
-  const lastButtonLand = { value: "=", parErr: parErr, size: `${92/7}%`, margin: '1%' }
+  const lastButtonPort = { button: "=", parErr: parErr, size: '22.5%', margin: '2%' }
+  const lastButtonLand = { button: "=", parErr: parErr, size: `${92/7}%`, margin: '1%' }
 
   const parsedHorizontalInset = maxHorizontalInset * 2
   const parsedVerticalInset = maxVerticalInset * 2
@@ -131,7 +131,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   // const fadeOut = () => {}
   
 
-  const [ OPCQH, setOPCQH ] = useState(1) // onePercentContainerQueryHeight
+  const [ OPCQH, setOPCQH ] = useState<number>(1) // onePercentContainerQueryHeight
 
   const sharedProps = { width, height, state, ins, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, nextScreen, switchSide, navigation, aboutUp, fadeAnim, fadeIn, fadeOut }
 
@@ -214,7 +214,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     portButtons.concat(lastButtonPort).map((e, i) =>
       <OwnButton
         key={i} button={e.button} size={e.size} margin={e.margin}
-        fontSize={OPCQH/1.5} handlePress={handlePress} small={e.small}
+        fontSize={OPCQH / 1.5} handlePress={handlePress} small={e.small}
       />
     );
 
@@ -235,9 +235,15 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       children={ <SimpleLineIcons name='question' size={40} color='rgba(0, 0, 0, .7)' /> }
     />;
 
-  const OPCQHHandler = (e: LayoutChangeEvent) => {
+  const OPCQHHandler = (e: LayoutChangeEvent, tt?: boolean) => {
     const val = e.nativeEvent.layout.height
-    setOPCQH(val === 0 ? 1 : val / 100)
+    if (val === 0) setOPCQH(1)
+    else if (tt) setOPCQH((val * 4) / 100) // tabletop
+    else setOPCQH(val / 100) // portCalc or landCalc
+    // console.log("VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAl", val)
+    // if (val === 0) {setOPCQH(1); console.log("ENTER HERE 1")}
+    // else if (tt) {setOPCQH((val * 4) / 100);console.log("ENTER HERE 2")} // tabletop
+    // else {setOPCQH(val / 100);console.log("ENTER HERE 3")}// portCalc or landCalc
   }
 
   const PortCalc =
@@ -305,7 +311,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
 
   const LandCalc =
     <View style={[ s.outline, { marginBottom: ins.bottom, marginTop: ins.top, /* marginRight: 100, marginLeft: ins.left */ } ]}>
-      <View onLayout={e => setOPCQH(e.nativeEvent.layout.height / 100)} style={[ s.contour, { margin: 3, aspectRatio: 7/4, width: parsedWidth - 130, maxHeight: parsedHeight - 30 } ]}>
+      <View onLayout={OPCQHHandler} style={[ s.contour, { margin: 3, aspectRatio: 7/4, width: parsedWidth - 130, maxHeight: parsedHeight - 30 } ]}>
         <View
           style={[ // `${(11.14/4)*7}%`
             s.displayContainer,
@@ -372,8 +378,9 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   useEffect(() => {
     state === 'tabletop' && nextColor(1)
     return () => currIndex.stopAnimation()
-  }, [currIndex, state])
-  //}, [state])
+  }, [state])
+  //}, [currIndex, state])
+  
 
   // useEffect(() => {
   //   return () => {
@@ -404,7 +411,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
                 style={s.outline}
                 children={
                   <View
-                    onLayout={e => setOPCQH((e.nativeEvent.layout.height * 4) / 100)}
+                    onLayout={e => OPCQHHandler(e, true)}
                     style={[ s.contour, { aspectRatio: 7/1, width: parsedWidth - 100, maxHeight: parsedHeight - 40 } ]}
                   >
                     <View

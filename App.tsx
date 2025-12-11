@@ -22,7 +22,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
-import { addListener, startListener, stopListener } from './layoutListener';
+//import { addListener, startListener, stopListener } from './layoutListener';
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
 import KnowMore from './src/components/KnowMore/KnowMore';
@@ -31,6 +31,19 @@ const Stack = createNativeStackNavigator();
 
 type StackAnimationTypes = 'none' | 'slide_from_right'
 
+const { MainActivity } = NativeModules;
+const nativeEvent = new NativeEventEmitter(MainActivity);
+
+//let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
+nativeEvent.addListener('LayoutInfo', (e) => {
+  console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+  // setLayout(e)
+  // tallNav.current = e.tallNav
+  //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+  //if (runOnceAvailable.current) runOnce()
+}) 
+
+//startListener()
 //startListener()
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallNav: boolean, screens: ReactElement[]) => {
@@ -270,17 +283,29 @@ const App = (): ReactElement => {
 
   useEffect(() => {
     console.log("EXEC USE EFFECT")
-    let inner = (e: any) => {
-      //console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-      setLayout(e)
-      tallNav.current = e.tallNav
-      //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-      if (runOnceAvailable.current) runOnce()
-    }
-    runOnce()
-    //addListener(inner)
+    // let inner = (e: any) => {
+    //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+    //   setLayout(e)
+    //   tallNav.current = e.tallNav
+    //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+    //   if (runOnceAvailable.current) runOnce()
+    // }
+    // //runOnce()
+    // addListener(inner)
 
     //return () => stopListener.remove();
+
+
+    // let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
+    //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+    //   setLayout(e)
+    //   tallNav.current = e.tallNav
+    //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+    //   if (runOnceAvailable.current) runOnce()
+    // }) 
+
+    //return () => stopListener.remove();
+
   }, []);
 
   return (

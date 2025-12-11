@@ -3,11 +3,6 @@
 import { AppRegistry } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
-
-//enableScreens();
-
-import { addListener, startListener, stopListener } from './layoutListener';
-
-//startListener()
+//import { addListener, startListener, stopListener } from './layoutListener';
 
 AppRegistry.registerComponent(appName, () => App);

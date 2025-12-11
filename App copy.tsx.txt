@@ -22,7 +22,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 //import { StackAnimationTypes, enableScreens } from "react-native-screens";
 //import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
-import { addCallback, startListener, currentListener, stopListener } from './layoutListener';
+//import { addListener, startListener, stopListener } from './layoutListener';
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
 import KnowMore from './src/components/KnowMore/KnowMore';
@@ -31,19 +31,19 @@ const Stack = createNativeStackNavigator();
 
 type StackAnimationTypes = 'none' | 'slide_from_right'
 
-// const { MainActivity } = NativeModules;
-// const nativeEvent = new NativeEventEmitter(MainActivity);
+const { MainActivity } = NativeModules;
+const nativeEvent = new NativeEventEmitter(MainActivity);
 
-// //let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
-// let stopListener: EmitterSubscription | null = nativeEvent.addListener('LayoutInfo', (e) => {
-//   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-//   // setLayout(e)
-//   // tallNav.current = e.tallNav
-//   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-//   //if (runOnceAvailable.current) runOnce()
-// }) 
+//let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
+let stopListener: EmitterSubscription | null = nativeEvent.addListener('LayoutInfo', (e) => {
+  console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+  // setLayout(e)
+  // tallNav.current = e.tallNav
+  //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+  //if (runOnceAvailable.current) runOnce()
+}) 
 
-startListener()
+//startListener()
 //startListener()
 
 //const NavigatorMapper = (animation: StackAnimationTypes, tallNav: boolean, screens: ReactElement[]) => {
@@ -311,35 +311,24 @@ const App = (): ReactElement => {
   //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
   //   //if (runOnceAvailable.current) runOnce()
   // }) 
-  if (currentListener) {
-            // // If it hasn't, create it and store the subscription object.
-            // // This ensures the listener is created early (like your original global setup)
-            // // but only *once* during the application's lifespan until explicitly removed.
-            // stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
-            //   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-            //   // setLayout(e)
-            //   // tallNav.current = e.tallNav
-            //   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-            //   //if (runOnceAvailable.current) runOnce()
-            // })
-            let inner = (e: any) => {
+    if (!stopListener) {
+            // If it hasn't, create it and store the subscription object.
+            // This ensures the listener is created early (like your original global setup)
+            // but only *once* during the application's lifespan until explicitly removed.
+            stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
               console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-              setLayout(e)
-              tallNav.current = e.tallNav
+              // setLayout(e)
+              // tallNav.current = e.tallNav
               //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-              if (runOnceAvailable.current) runOnce()
-            }
-            //runOnce()
-            addCallback(inner)
-        }
-    if (!currentListener) {
-           startListener()
+              //if (runOnceAvailable.current) runOnce()
+            })
         }
 
     //return () => stopListener.remove();
     return () => {
-      if (currentListener) {
-        stopListener()
+      if (stopListener) {
+        stopListener.remove()
+        stopListener = null
       }
     }
 

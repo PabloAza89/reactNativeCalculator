@@ -14,7 +14,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { dimI, navigationI } from './src/interfaces/interfaces';
-import { addCallback, startListener, currentListener, stopListener, stopStoredFn, removeListener } from './layoutListener';
+import { startListener, currentListener, addCallback, stopListener } from './layoutListener';
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
 import KnowMore from './src/components/KnowMore/KnowMore';
@@ -246,28 +246,18 @@ const App = (): ReactElement => {
   }
 
   const callback = (e: any) => {
-    //console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
     console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ALL: ")
     console.log(e)
     setLayout(e)
     tallNav.current = e.tallNav
-    console.log("runOnceAvailable.current", runOnceAvailable.current)
     if (runOnceAvailable.current) runOnce()
   }
 
   useEffect(() => {
     console.log("EXEC USE EFFECT")
-    // if (!currentListener) { stopListener(); startListener(); addCallback(callback); console.log("LISTENER IS ADDED IN UE") }
-    // else {addCallback(callback); console.log("LISTENER WAS ADDED OUTSIDE") } 
-    // removeListener();
-    // stopListener();
-    // if (!currentListener) { removeListener(); startListener(); addCallback(callback); console.log("LISTENER IS ADDED IN UE") }
-    // else {removeListener();addCallback(callback); console.log("LISTENER WAS ADDED OUTSIDE") } 
-    if (!currentListener) { startListener(); console.log("LISTENER IS ADDED IN UE") }
+    if (!currentListener) startListener()
     addCallback(callback)
-    //else {removeListener();addCallback(callback); console.log("LISTENER WAS ADDED OUTSIDE") } 
-    //stopListener(); startListener(); addCallback(callback)
-    return () => {stopListener(); console.log("CLEAN LISTENER CALLED !")}
+    return () => stopListener()
   }, []);
 
   return (

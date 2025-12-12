@@ -70,7 +70,6 @@ class MainActivity: ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState
-    //super.onCreate(savedInstanceState); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
@@ -287,11 +286,7 @@ class MainActivity: ReactActivity() {
           reactHost.addReactInstanceEventListener(listener)
         } else {
           Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
-          //currentContext.emitDeviceEvent("LayoutInfo", mainMap) // not working
-          //reactHost.currentReactContext?.emitDeviceEvent("LayoutInfo", mainMap) // not working
-          currentContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            ?.emit("LayoutInfo", mainMap)
+          currentContext.emitDeviceEvent("LayoutInfo", mainMap)
         }
         sendUpdate = false // RESET UPDATE FLAG
       }

@@ -1,9 +1,3 @@
-//import { NewAppScreen } from '@react-native/new-app-screen';
-//import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-// import {
-//   SafeAreaProvider,
-//   useSafeAreaInsets,
-// } from 'react-native-safe-area-context';
 import React, { ReactElement, useEffect, useState, useRef, useLayoutEffect } from "react";
 import {  CommonActions, NavigationContainer, useNavigationContainerRef, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,10 +13,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-//import { StackAnimationTypes, enableScreens } from "react-native-screens";
-//import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dimI, navigationI } from './src/interfaces/interfaces';
-import { addCallback, startListener, currentListener, stopListener } from './layoutListener';
+import { addCallback, startListener, currentListener, stopListener, stopStoredFn, removeListener } from './layoutListener';
 import Home from './src/components/Home/Home';
 import About from './src/components/About/About';
 import KnowMore from './src/components/KnowMore/KnowMore';
@@ -31,22 +23,8 @@ const Stack = createNativeStackNavigator();
 
 type StackAnimationTypes = 'none' | 'slide_from_right'
 
-// const { MainActivity } = NativeModules;
-// const nativeEvent = new NativeEventEmitter(MainActivity);
-
-// //let stopListener = nativeEvent.addListener('LayoutInfo', (e) => {
-// let stopListener: EmitterSubscription | null = nativeEvent.addListener('LayoutInfo', (e) => {
-//   console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
-//   // setLayout(e)
-//   // tallNav.current = e.tallNav
-//   //console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
-//   //if (runOnceAvailable.current) runOnce()
-// }) 
-
 startListener()
-//startListener()
 
-//const NavigatorMapper = (animation: StackAnimationTypes, tallNav: boolean, screens: ReactElement[]) => {
 const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]) => {
   return (
     <Stack.Navigator
@@ -54,10 +32,8 @@ const NavigatorMapper = (animation: StackAnimationTypes, screens: ReactElement[]
         headerShown: false,
         gestureEnabled: false,
         animation: animation,
-        statusBarStyle: 'dark',
+        statusBarStyle: 'dark'
       }}
-      //children={ screens.map((e: ReactElement) => e) }
-      //children={{...screens}}
       children={screens}
     />
   )
@@ -84,10 +60,6 @@ const App = (): ReactElement => {
   console.log("STATE ", layout.state)
 
   const navigationRef = useNavigationContainerRef();
-
-  // useEffect(() => {
-  //   console.log("navigationRef APP", navigationRef.getState())
-  // }, [navigationRef])
 
   const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
 
@@ -125,18 +97,11 @@ const App = (): ReactElement => {
       updateShowModal(false)
       console.log("savedRoute", array[array.length - 1].name)
     })
-    return () => blur.remove()
+
+    return () => {
+      blur.remove()
+    }
   }, []);
-
-  // useEffect(() => {
-
-  //   BackHandler.addEventListener('hardwareBackPress', () => {
-  //     console.log("BACK HANDLER: ", )
-  //     //return true;
-  //     return false;
-  //   });
-
-  // }, [])
 
   const saveData = async (key: string, value: string) => {
     try { await AsyncStorage.setItem(key, value) }
@@ -273,7 +238,6 @@ const App = (): ReactElement => {
     .then(() => {
       setTimeout(() => { // ONLY FIRST TIME & WHEN DEVICE WINDOW DIMENSIONS CHANGE
         setAnimation('slide_from_right') // SLIDE SCREEN ANIMATION
-        //setAnimation('none') // SLIDE SCREEN ANIMATION
         BootSplash.hide()
         console.log("runOnceAvailable.current", runOnceAvailable.current)
         runOnceAvailable.current = false
@@ -281,18 +245,29 @@ const App = (): ReactElement => {
     })
   }
 
-  const inner = (e: any) => {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+  const callback = (e: any) => {
+    //console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX tallNav", e.tallNav)
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ALL: ")
+    console.log(e)
     setLayout(e)
     tallNav.current = e.tallNav
+    console.log("runOnceAvailable.current", runOnceAvailable.current)
     if (runOnceAvailable.current) runOnce()
   }
 
   useEffect(() => {
     console.log("EXEC USE EFFECT")
-    if (!currentListener) { startListener(); addCallback(inner) }
-    else addCallback(inner)
-    return () => stopListener()
+    // if (!currentListener) { stopListener(); startListener(); addCallback(callback); console.log("LISTENER IS ADDED IN UE") }
+    // else {addCallback(callback); console.log("LISTENER WAS ADDED OUTSIDE") } 
+    // removeListener();
+    // stopListener();
+    // if (!currentListener) { removeListener(); startListener(); addCallback(callback); console.log("LISTENER IS ADDED IN UE") }
+    // else {removeListener();addCallback(callback); console.log("LISTENER WAS ADDED OUTSIDE") } 
+    if (!currentListener) { startListener(); console.log("LISTENER IS ADDED IN UE") }
+    addCallback(callback)
+    //else {removeListener();addCallback(callback); console.log("LISTENER WAS ADDED OUTSIDE") } 
+    //stopListener(); startListener(); addCallback(callback)
+    return () => {stopListener(); console.log("CLEAN LISTENER CALLED !")}
   }, []);
 
   return (

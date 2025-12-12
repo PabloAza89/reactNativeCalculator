@@ -7,11 +7,9 @@ let storedData: any | null
 let storedFn: ((e: any) => void) | null = null;
 export let currentListener: EmitterSubscription | null
 
-export const startListener = () => {
-  currentListener = nativeEvent.addListener('LayoutInfo', newData => {
-    storedData = newData; storedFn && storedFn(newData)
-  })
-}
+export const startListener = () => { currentListener = nativeEvent.addListener('LayoutInfo', newData => {
+  storedData = newData; storedFn && storedFn(newData)
+})}
 
 export const addCallback = (cb: any) => {
   if (storedData) cb(storedData)

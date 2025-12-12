@@ -2,11 +2,8 @@ import { ReactElement } from 'react';
 import { TouchableHighlight } from 'react-native';
 import { Text } from '../../utils/Text';
 import { s } from './OwnButtonCSS';
-//import { Ionicons } from '@expo/vector-icons';
-//import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Adder } from '../../utils/Adder';
-import { OwnButtonI, ComponentI } from '../../interfaces/interfaces';
+import { /* OwnButtonI, ComponentI */ } from '../../interfaces/interfaces';
 
 //export function OwnButton({ scrollEnd, parErr, value, input, setInput, smaller, setParErr, setSecInput, vmin }: OwnButtonI): ReactElement {
 const OwnButton = ({ button, size, margin, fontSize, small, state, handlePress }: any): ReactElement => {

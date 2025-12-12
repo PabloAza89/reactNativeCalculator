@@ -1,9 +1,8 @@
-import React, { ReactElement, useEffect, useState, useRef, useLayoutEffect } from "react";
-import {  CommonActions, NavigationContainer, useNavigationContainerRef, useFocusEffect } from '@react-navigation/native';
+import React, { ReactElement, useEffect, useState, useRef } from "react";
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
-import { Image, AppState, Dimensions, useWindowDimensions, NativeModules, NativeEventEmitter, DeviceEventEmitter,
-  PixelRatio, View, Animated, useAnimatedValue, Pressable, StatusBar, BackHandler, EmitterSubscription } from 'react-native';
+import { Image, AppState, Animated, useAnimatedValue, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from '@d11/react-native-fast-image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -13,11 +12,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { dimI, navigationI } from './src/interfaces/interfaces';
+import { /* dimI, */ navigationI } from './src/interfaces/interfaces';
 import { startListener, currentListener, addCallback, stopListener } from './layoutListener';
-import Home from './src/components/Home/Home';
-import About from './src/components/About/About';
-import KnowMore from './src/components/KnowMore/KnowMore';
 
 const Stack = createNativeStackNavigator();
 
@@ -136,7 +132,7 @@ const App = (): ReactElement => {
   const dynamicImport = (nav: navigationI, module: string) => {
     switch (module) {
       case "Home":
-        //const Home = require('./src/components/Home/Home').default
+        const Home = require('./src/components/Home/Home').default
         return (
           <Home
             {...nav} {...sharedProps} input={input} secInput={secInput}
@@ -145,7 +141,7 @@ const App = (): ReactElement => {
           />
         )
       case "About":
-        //const About = require('./src/components/About/About').default
+        const About = require('./src/components/About/About').default
         return (
           <About
             {...nav} {...sharedProps} showModal={showModal}
@@ -153,7 +149,7 @@ const App = (): ReactElement => {
           />
         )
       case "KnowMore":
-        //const KnowMore = require('./src/components/KnowMore/KnowMore').default
+        const KnowMore = require('./src/components/KnowMore/KnowMore').default
         return <KnowMore {...nav} {...sharedProps} />
     }
   }
@@ -246,15 +242,12 @@ const App = (): ReactElement => {
   }
 
   const callback = (e: any) => {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ALL: ")
-    console.log(e)
     setLayout(e)
     tallNav.current = e.tallNav
     if (runOnceAvailable.current) runOnce()
   }
 
   useEffect(() => {
-    console.log("EXEC USE EFFECT")
     if (!currentListener) startListener()
     addCallback(callback)
     return () => stopListener()

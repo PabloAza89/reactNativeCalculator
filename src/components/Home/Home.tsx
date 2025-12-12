@@ -1,96 +1,27 @@
 import React, { ReactElement, useState, useRef, useEffect, MutableRefObject } from 'react';
-import { ScrollView, StatusBar, View, Animated,
-  useAnimatedValue, Pressable, TouchableHighlight, NativeModules, LayoutChangeEvent } from 'react-native';
+import { ScrollView, View, Animated,
+  useAnimatedValue, Pressable, TouchableHighlight, LayoutChangeEvent } from 'react-native';
 import { s } from './HomeCSS';
 import About from '../About/About';
 import OwnButton from '../OwnButton/OwnButton';
 import KnowMore from '../KnowMore/KnowMore';
-//import { /* createIconSetFromFontello, */ SimpleLineIcons } from '@expo/vector-icons';
-//import { SimpleLineIcons } from '@react-native-vector-icons/simple-line-icons';
-//import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { useFocusEffect } from '@react-navigation/native';
-import { HomeI, counterI, goUpI, ComponentI } from '../../interfaces/interfaces';
+import { HomeI, /* counterI, goUpI, ComponentI */ } from '../../interfaces/interfaces';
 import { Text } from '../../utils/Text';
 import { portButtons, landButtons } from '../../utils/Buttons';
 import { Adder } from '../../utils/Adder';
-//import SystemNavigationBar from 'react-native-system-navigation-bar';
 
-
-
-
-
-const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBounds, 
-  route, maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
+const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBounds,
+  maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
 
   useEffect(() => {
     console.log("navigationRef HOME ROUTES", navigation.getState().routes)
   }, [navigation])
 
-  // useEffect(() => {
-  //   console.log("FOCUSEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
-  // }, [])
-
-  const ssstate = {
-    type: 'stack',
-    key: 'stack-1',
-    routeNames: ['Home', 'Profile', 'Settings'],
-    routes: [
-      { key: 'home-1', name: 'Home' },
-      { key: 'settings-1', name: 'Settings' },
-    ],
-    index: 1,
-    stale: false,
-  };
-
-  // const sstate = {
-  //   type: 'stack',
-  //   key: 'stack-1',
-  //   routeNames: ['Home', 'Profile', 'Settings'],
-  //   routes: [
-  //     { key: 'home-1', name: 'Home', params: { sortBy: 'latest' } },
-  //     { key: 'settings-1', name: 'Settings' },
-  //   ],
-  //   index: 1,
-  //   stale: false,
-  // };
-
-
-
-  // useEffect(() => {
-  //   updateShowModal(false)
-  //   // return () => {
-  //   //   updateShowModal(false)
-  //   // }
-  // },[])
-  //console.log("XXXXXXXXXXXX INPUT", typeof input)
-
-  //const fadeAnim = useAnimatedValue(0);
-  //let fadeAnim: any
-
-  
-  // useEffect(() => {
-  //   console.log("ROUTE", route)
-  // }, [route])
-  // useEffect(() => {
-  //   fadeAnim = useAnimatedValue(0);
-  //   Animated.timing(fadeAnim, { toValue: 0, duration: 0, useNativeDriver: true }).start();
-  // }, [])
-
-  //console.log("XXXXXXXXXXXX height HOME", height)
-  //console.log("XXXXXXXXXXXX hingeBounds", hingeBounds)
-  //console.log("XXXXXXXXXXXX ins", ins)
-
   const { navigate } = navigation
 
   const [ showKnowMore, setShowKnowMore ] = useState(false)
-
-  // useEffect(() => {
-  //   const lastRoute = route.params?.lastRoute
-  //   lastRoute === 'KnowMore' && setShowKnowMore(true)
-  //   lastRoute === 'About' && setShowKnowMore(false)
-  // }, [route])
 
   const [ parErr, setParErr ] = useState(false);
 
@@ -122,14 +53,6 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
 
   const switchSide = () => state === 'tabletop' ? setAboutUp(!aboutUp) : setCalcLeft(!calcLeft)
   const nextScreen = () => state === 'tabletop' ? setShowCalc(true) : setShowKnowMore(!showKnowMore)
-
-  // const fadeAnim = useAnimatedValue(0); // ORIGINAL
-  // const fadeIn = () => Animated.timing(fadeAnim, { toValue: 1, duration: 1000, useNativeDriver: true }).start();
-  // const fadeOut = () => Animated.timing(fadeAnim, { toValue: 0, duration: 1000, useNativeDriver: true }).start();
-
-  // const fadeIn = () => {}
-  // const fadeOut = () => {}
-  
 
   const [ OPCQH, setOPCQH ] = useState<number>(1) // onePercentContainerQueryHeight
 
@@ -240,17 +163,12 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     if (val === 0) setOPCQH(1)
     else if (tt) setOPCQH((val * 4) / 100) // tabletop
     else setOPCQH(val / 100) // portCalc or landCalc
-    // console.log("VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAl", val)
-    // if (val === 0) {setOPCQH(1); console.log("ENTER HERE 1")}
-    // else if (tt) {setOPCQH((val * 4) / 100);console.log("ENTER HERE 2")} // tabletop
-    // else {setOPCQH(val / 100);console.log("ENTER HERE 3")}// portCalc or landCalc
   }
 
   const PortCalc =
     <View
       style={[ s.outline, { marginTop: ins.top, marginBottom: ins.bottom } ]}
       children={<View onLayout={OPCQHHandler} style={[ s.contour, { aspectRatio: 2/3, width: parsedWidth - 30, maxHeight: parsedHeight - 130 } ]}>
-        
           <View style={[ s.displayContainer, s.displayContainerPort, { height: `${(28.4/3)*2}%`, paddingLeft: vmin * 1, paddingRight: vmin * 1 } ]}>
             <ScrollView
               overScrollMode="never"
@@ -358,8 +276,6 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     outputRange: [`rgb(${c[0][0]}, ${c[0][1]}, ${c[0][2]})`, `rgb(${c[1][0]}, ${c[1][1]}, ${c[1][2]})`]
   });
 
-  //let qq = 'rgb(255, 255, 255)'
-
   const updateValues = (num: any) => {
     sC(curr => {
       let copy = [...curr[num]]
@@ -379,20 +295,9 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     state === 'tabletop' && nextColor(1)
     return () => currIndex.stopAnimation()
   }, [state])
-  //}, [currIndex, state])
-  
-
-  // useEffect(() => {
-  //   return () => {
-  //     //updateShowModal(false)
-  //     Animated.timing(fadeAnim, { toValue: 0, duration: 0, useNativeDriver: true }).start();
-  //   }
-  // },[])
 
   return (
     <View style={s.background}>
-      {/* <StatusBar barStyle={'dark-content'} translucent={true} backgroundColor={'transparent'} /> */}
-      {/* { ModalForegroundScreen } */}
       {
         state === 'flat' ?
 

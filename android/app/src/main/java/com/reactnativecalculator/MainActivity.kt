@@ -200,7 +200,7 @@ class MainActivity: ReactActivity() {
       // var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
       // lateinit var newState: String
 
-      // sendUpdate FLAG SETTERS
+      // sendUpdate FLAG SETTERS // TEST ORIGINAL
       if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
       if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
       if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
@@ -229,11 +229,17 @@ class MainActivity: ReactActivity() {
       else currentMaxVerticalInset = currentInsets.bottom
       // END VERTICAL & HORIZONTAL INSET //
 
+      // if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
+      // if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
+      // if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
+      // if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
+      // if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
+
+
+      // BEGIN sendUpdate SETTERS // TEST ORIGINAL
       if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
-
       if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
-
-      //sendUpdate = true
+      // END sendUpdate SETTERS //
 
       Log.d("LOG", "PRE SEND-UPDATE VAL: " + sendUpdate)
 

@@ -91,7 +91,7 @@ class MainActivity: ReactActivity() {
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
     Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
-    //canUpdate = false // FLAG FOR updateUI()
+    //canUpdate = false // FLAG FOR updateUI() execution
 
     // VALUES
     val mainActivity = this@MainActivity
@@ -197,12 +197,8 @@ class MainActivity: ReactActivity() {
       // else currentMaxVerticalInset = currentInsets.bottom
       // // END VERTICAL & HORIZONTAL INSET //
 
-      
-
-      //var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
-      //lateinit var newState: String
-
-
+      // var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
+      // lateinit var newState: String
 
       // sendUpdate FLAG SETTERS
       if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
@@ -309,9 +305,6 @@ class MainActivity: ReactActivity() {
     super.onConfigurationChanged(newConfig)
     
     Log.d("LOG", "CONFIGURATION HAS CHANGED")
-    //updateUI(null) // manual
-    //synchronized(AppLock.lock) {
-    //if (canUpdate) {canUpdate = false;updateUI(null)}
     Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
     if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
   }

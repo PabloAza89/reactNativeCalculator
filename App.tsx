@@ -242,6 +242,8 @@ const App = (): ReactElement => {
   }
 
   const callback = (e: any) => {
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX :")
+    console.log(e)
     setLayout(e)
     tallNav.current = e.tallNav
     if (runOnceAvailable.current) runOnce()

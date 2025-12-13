@@ -67,13 +67,37 @@ class MainActivity: ReactActivity() {
   var currentWindow: MutableMap<String, Int> = mutableMapOf() // UI retrigger
   var currentHingeBounds: MutableMap<String, Int> = mutableMapOf() // UI retrigger
 
+
+  //var lastInsets: WindowInsets? = null
+  var currentInsetsToString: String? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
-    rootView = findViewById<View>(android.R.id.content).rootView
+    rootView = findViewById<View>(android.R.id.content)//.rootView
+
+    rootView.setOnApplyWindowInsetsListener { view, insets ->
+        //doApplyInsets(insets)
+      val newInsets = insets.toString()
+      Log.d("LOG", "lastInsets: " + newInsets)
+      //if (newInsets != currentInsets) {
+      if (!newInsets.equals(currentInsetsToString)) {
+        // Insets geometry is identical, skip layout pass
+        //Log.d("LOG", "ZZZZZ - Insets identical, skipping")
+        //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+        //return
+        if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
+      }
+      currentInsetsToString = newInsets
+        // Important: Return the insets so they can be dispatched to child views
+      insets
+    }
+
+    //rootView.requestApplyInsets()
+
 
     lifecycleScope.launch(Dispatchers.Main) {
       lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -87,6 +111,38 @@ class MainActivity: ReactActivity() {
     }
 
   }
+
+  //var lastInsets: WindowInsets? = null
+
+  fun doApplyInsets(insets: WindowInsets) {
+    // Use the passed-in 'insets' object, which is guaranteed to be current.
+    // val left = insets.systemWindowInsetLeft
+    // val top = insets.systemWindowInsetTop
+    // val right = insets.systemWindowInsetRight
+    // val bottom = min(insets.systemWindowInsetBottom, insets.stableInsetBottom)
+
+    // newInsets = Rect(left, top, right, bottom)
+
+    // // Log the new values (convert to DP if needed, assuming your 'dotsPerInch' is for that conversion)
+    // Log.d("LOG", "INSETS APPLIED left: " + left / dotsPerInch)
+    // Log.d("LOG", "INSETS APPLIED top: " + top / dotsPerInch)
+    // Log.d("LOG", "INSETS APPLIED right: " + right / dotsPerInch)
+    // Log.d("LOG", "INSETS APPLIED bottom: " + bottom / dotsPerInch)
+
+    // You can call your updateUI here, or a simplified version
+    // updateUI(null) 
+    //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+
+    // if (insets == lastInsets) {
+    //     // Insets geometry is identical, skip layout pass
+    //     Log.d("LOG", "ZZZZZ - Insets identical, skipping")
+    //     return 
+    // }
+    // lastInsets = insets
+
+    //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+
+}
 
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
@@ -149,61 +205,29 @@ class MainActivity: ReactActivity() {
           WindowInsets.Type.navigationBars() or
           WindowInsets.Type.captionBar()
         )
-        if (preNewInsets !== null) newInsets = Rect(preNewInsets.left, preNewInsets.top, preNewInsets.right, preNewInsets.bottom)
+        if (preNewInsets != null) newInsets = Rect(preNewInsets.left, preNewInsets.top, preNewInsets.right, preNewInsets.bottom)
       }
       @RequiresApi(Build.VERSION_CODES.M)
       fun getInsetsCompatM(rootView: View): Unit {
         val preNewInsets = rootView.rootWindowInsets
-        if (preNewInsets !== null) newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
+        //if (preNewInsets != null) newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
+        if (preNewInsets != null) {
+          newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
+          Log.d("LOG", "VALUE VALUE VALUE 00 left: " + preNewInsets.systemWindowInsetLeft / dotsPerInch)
+          Log.d("LOG", "VALUE VALUE VALUE 00 top: " + preNewInsets.systemWindowInsetTop / dotsPerInch)
+          Log.d("LOG", "VALUE VALUE VALUE 00 right: " + preNewInsets.systemWindowInsetRight / dotsPerInch)
+          Log.d("LOG", "VALUE VALUE VALUE 00 bottom: " + min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom) / dotsPerInch)
+        }
       }
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
-      else getInsetsCompatM(rootView) // 6 to 10
-      // 5 or older NOT SUPPORTED
-
-      // // BEGIN INSETS //
-      // @RequiresApi(Build.VERSION_CODES.R)
-      // fun getInsetsCompatR(rootView: View): Unit {
-      //   val newInsets =
-      //     rootView.rootWindowInsets?.getInsets(
-      //       WindowInsets.Type.statusBars() or
-      //       WindowInsets.Type.displayCutout() or
-      //       WindowInsets.Type.navigationBars() or
-      //       WindowInsets.Type.captionBar()
-      //     )
-
-      //   if (newInsets !== null) {
-      //     currentInsets = Rect(newInsets.left, newInsets.top, newInsets.right, newInsets.bottom)
-      //     sendUpdate = true
-      //   }
-      // }
-
-      // @RequiresApi(Build.VERSION_CODES.M)
-      // fun getInsetsCompatM(rootView: View): Unit {
-      //   val preInsets = rootView.rootWindowInsets
-      //   if (preInsets !== null) {
-      //     currentInsets = Rect(preInsets.systemWindowInsetLeft, preInsets.systemWindowInsetTop, preInsets.systemWindowInsetRight, min(preInsets.systemWindowInsetBottom, preInsets.stableInsetBottom))
-      //     sendUpdate = true
-      //   }
-      // }
-
-      // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
-      // else getInsetsCompatM(rootView) // 6 to 10
-      // // 5 or older NOT SUPPORTED
-
-      // // BEGIN VERTICAL & HORIZONTAL INSET //
-      // if (currentInsets.left > currentInsets.right) currentMaxHorizontalInset = currentInsets.left
-      // else currentMaxHorizontalInset = currentInsets.right
-      // if (currentInsets.top > currentInsets.bottom) currentMaxVerticalInset = currentInsets.top
-      // else currentMaxVerticalInset = currentInsets.bottom
-      // // END VERTICAL & HORIZONTAL INSET //
-
-      // var newHingeBounds: MutableMap<String, Int> = mutableMapOf()
-      // lateinit var newState: String
+      else getInsetsCompatM(rootView) // 7 to 10
+      //else getInsetsCompatM(findViewById<View>(android.R.id.content).rootView) // 7 to 10
+      //else getInsetsCompatM(rootView) // 7 to 10
+      // 6 or older NOT SUPPORTED
 
       // sendUpdate FLAG SETTERS // TEST ORIGINAL
       if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
-      if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
-      if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
+      // sendUpdate FLAG SETTERS // TEST ORIGINAL
 
       if (foldingFeature != null) { // DEVICE IS FOLDABLE
         newHingeBounds = mutableMapOf(
@@ -222,6 +246,13 @@ class MainActivity: ReactActivity() {
         newHingeBounds = mutableMapOf("left" to 0, "top" to 0, "right" to 0, "bottom" to 0)
       }
 
+      // BEGIN sendUpdate SETTERS //
+      if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
+      if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
+      if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
+      if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
+      // END sendUpdate SETTERS //
+
       // BEGIN VERTICAL & HORIZONTAL INSET //
       if (currentInsets.left > currentInsets.right) currentMaxHorizontalInset = currentInsets.left
       else currentMaxHorizontalInset = currentInsets.right
@@ -229,19 +260,9 @@ class MainActivity: ReactActivity() {
       else currentMaxVerticalInset = currentInsets.bottom
       // END VERTICAL & HORIZONTAL INSET //
 
-      // if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
-      // if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
-      // if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
-      // if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
-      // if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
-
-
-      // BEGIN sendUpdate SETTERS // TEST ORIGINAL
-      if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
-      if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
-      // END sendUpdate SETTERS //
-
       Log.d("LOG", "PRE SEND-UPDATE VAL: " + sendUpdate)
+
+      sendUpdate = true // TEST
 
       if (sendUpdate) {
         Log.d("LOG", "SEND-UPDATE CALLED")
@@ -276,18 +297,32 @@ class MainActivity: ReactActivity() {
         if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
         else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
 
+        Log.d("LOG", "VALUE VALUE VALUE 0 ALL: " + mainMap.getMap("insets"))
+        // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
+        // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
+        // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
+        // Log.d("LOG", "VALUE VALUE VALUE 1 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
+
         val currentContext = reactHost.currentReactContext
         if (currentContext == null) {
           val listener = object: ReactInstanceEventListener {
             override fun onReactContextInitialized(context: ReactContext) {
-              Log.d("LOG", "tallNav VALUE FROM 1: " + mainMap.getBoolean("tallNav"))
+              //Log.d("LOG", "tallNav VALUE FROM 1: " + mainMap.getBoolean("tallNav"))
+              // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
+              // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
+              // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
+              // Log.d("LOG", "VALUE VALUE VALUE 1 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
               context.emitDeviceEvent("LayoutInfo", mainMap)
               reactHost.removeReactInstanceEventListener(this)
             }
           }
           reactHost.addReactInstanceEventListener(listener)
         } else {
-          Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
+          //Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
+          // Log.d("LOG", "VALUE VALUE VALUE 2 left: " + mainMap.getMap("insets")?.getBoolean("left"))
+          // Log.d("LOG", "VALUE VALUE VALUE 2 top: " + mainMap.getMap("insets")?.getBoolean("top"))
+          // Log.d("LOG", "VALUE VALUE VALUE 2 right: " + mainMap.getMap("insets")?.getBoolean("right"))
+          // Log.d("LOG", "VALUE VALUE VALUE 2 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
           currentContext.emitDeviceEvent("LayoutInfo", mainMap)
         }
         sendUpdate = false // RESET UPDATE FLAG
@@ -307,13 +342,13 @@ class MainActivity: ReactActivity() {
     }
   }
 
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
+  // override fun onConfigurationChanged(newConfig: Configuration) {
+  //   super.onConfigurationChanged(newConfig)
     
-    Log.d("LOG", "CONFIGURATION HAS CHANGED")
-    Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
-    if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
-  }
+  //   Log.d("LOG", "CONFIGURATION HAS CHANGED")
+  //   Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
+  //   if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
+  // }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 

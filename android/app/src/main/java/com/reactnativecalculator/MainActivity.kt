@@ -53,6 +53,8 @@ import kotlin.random.Random
 
 import android.graphics.Color
 
+import androidx.core.view.ViewCompat
+
 class MainActivity: ReactActivity() {
 
   var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
@@ -60,7 +62,9 @@ class MainActivity: ReactActivity() {
   var dotsPerInch: Double by Delegates.notNull<Double>()
   var currentMaxHorizontalInset: Int by Delegates.notNull<Int>()
   var currentMaxVerticalInset: Int by Delegates.notNull<Int>()
-  lateinit var rootView: View
+  //lateinit var rootView: View
+  lateinit var decorView: View
+  lateinit var ccontentView: View
   lateinit var currentOrientation: String // UI retrigger
   lateinit var currentState: String // UI retrigger
   lateinit var currentInsets: Rect // UI retrigger
@@ -77,16 +81,33 @@ class MainActivity: ReactActivity() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
-    rootView = findViewById<View>(android.R.id.content)//.rootView
+    //rootView = findViewById<View>(android.R.id.content).rootView // no work ?
+    //rootView = findViewById<View>(android.R.id.content) // work
 
-    rootView.setOnApplyWindowInsetsListener { view, insets ->
+    ccontentView = findViewById<View>(android.R.id.content)
+    decorView = ccontentView.rootView // no work ?
+    
+
+    //ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+    //rootView.setOnApplyWindowInsetsListener { view, insets ->
+    ccontentView.setOnApplyWindowInsetsListener { view, insets ->
+    //decorView.setOnApplyWindowInsetsListener { view, insets ->
         //doApplyInsets(insets)
       val newInsets = insets.toString()
-      Log.d("LOG", "lastInsets: " + newInsets)
+      //Log.d("LOG", "lastInsets: " + newInsets)
       //if (newInsets != currentInsets) {
+      //Log.d("LOG", "lastInsets outer: " + newInsets)
+      // val one = insets.systemWindowInsets
+      // val two = one//.toString()
+      //Log.d("LOG", "lastInsets outer: " + insets.systemWindowInsets)
+      Log.d("LOG", "lastInsets outer: " + insets)
+      // Log.d("LOG", "xx AAAAAAAAAAAAAAAAAAAAAAAAA: " + insets.systemWindowInsetBottom)
+      // Log.d("LOG", "xx BBBBBBBBBBBBBBBBBBBBBBBBB: " + insets.stableInsetBottom)
+      //Log.d("LOG", "lastInsets outer: " + insets.systemWindowInsets.toString())
       if (!newInsets.equals(currentInsetsToString)) {
-        // Insets geometry is identical, skip layout pass
-        //Log.d("LOG", "ZZZZZ - Insets identical, skipping")
+        /////// Insets geometry its identical, skip layout pass
+        Log.d("LOG", "lastInsets inner: " + newInsets)
+        // Insets geometry its not identical
         //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
         //return
         if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
@@ -212,6 +233,8 @@ class MainActivity: ReactActivity() {
         val preNewInsets = rootView.rootWindowInsets
         //if (preNewInsets != null) newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
         if (preNewInsets != null) {
+          Log.d("LOG", "AAAAAAAAAAAAAAAAAAAAAAAAA: " + preNewInsets.systemWindowInsetBottom)
+          Log.d("LOG", "BBBBBBBBBBBBBBBBBBBBBBBBB: " + preNewInsets.stableInsetBottom)
           newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
           Log.d("LOG", "VALUE VALUE VALUE 00 left: " + preNewInsets.systemWindowInsetLeft / dotsPerInch)
           Log.d("LOG", "VALUE VALUE VALUE 00 top: " + preNewInsets.systemWindowInsetTop / dotsPerInch)
@@ -219,10 +242,12 @@ class MainActivity: ReactActivity() {
           Log.d("LOG", "VALUE VALUE VALUE 00 bottom: " + min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom) / dotsPerInch)
         }
       }
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
-      else getInsetsCompatM(rootView) // 7 to 10
-      //else getInsetsCompatM(findViewById<View>(android.R.id.content).rootView) // 7 to 10
-      //else getInsetsCompatM(rootView) // 7 to 10
+      // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest.. // 30 to "36"
+      // else getInsetsCompatM(rootView) // 7 to 10 // 24 to 29
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(decorView) // 11 to newest.. // 30 to "36"
+      else getInsetsCompatM(decorView) // 7 to 10 // 24 to 29
+      //else getInsetsCompatM(findViewById<View>(android.R.id.content).rootView) // 7 to 10 // 24 to 29
+      //else getInsetsCompatM(rootView) // 7 to 10 // 24 to 29
       // 6 or older NOT SUPPORTED
 
       // sendUpdate FLAG SETTERS // TEST ORIGINAL
@@ -297,6 +322,12 @@ class MainActivity: ReactActivity() {
         if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
         else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
 
+        // if (mainMap.getBoolean("tallNav")) this@MainActivity.window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
+        // else this@MainActivity.window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
+
+        // if (mainMap.getBoolean("tallNav")) contentView.window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
+        // else contentView.window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
+
         Log.d("LOG", "VALUE VALUE VALUE 0 ALL: " + mainMap.getMap("insets"))
         // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
         // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
@@ -342,13 +373,18 @@ class MainActivity: ReactActivity() {
     }
   }
 
-  // override fun onConfigurationChanged(newConfig: Configuration) {
-  //   super.onConfigurationChanged(newConfig)
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
     
-  //   Log.d("LOG", "CONFIGURATION HAS CHANGED")
-  //   Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
-  //   if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
-  // }
+    // Log.d("LOG", "CONFIGURATION HAS CHANGED")
+    // Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
+    // if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
+    //rootView.requestApplyInsets()
+    //decorView.requestApplyInsets()    
+    ccontentView.requestApplyInsets()    
+    //ViewCompat.requestApplyInsets(rootView)
+    //if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
+  }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"
 

@@ -63,8 +63,8 @@ class MainActivity: ReactActivity() {
   var currentMaxHorizontalInset: Int by Delegates.notNull<Int>()
   var currentMaxVerticalInset: Int by Delegates.notNull<Int>()
   //lateinit var rootView: View
-  lateinit var decorView: View
-  lateinit var ccontentView: View
+  lateinit var decorViewRef: View
+  lateinit var contentViewRef: View
   lateinit var currentOrientation: String // UI retrigger
   lateinit var currentState: String // UI retrigger
   lateinit var currentInsets: Rect // UI retrigger
@@ -73,7 +73,13 @@ class MainActivity: ReactActivity() {
 
 
   //var lastInsets: WindowInsets? = null
-  var currentInsetsToString: String? = null
+  //var currentInsetsToString: String? = null
+  //var currentInsetsRef: String? = null
+  var currentInsetsRef: Rect? = null
+  //var currentOrientationRef: String? = null
+  var currentOrientationRef: Int? = null
+  //lateinit var currentInsetsRef: Rect // UI retrigger
+  var testCurrentOrientation: Int? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
@@ -84,40 +90,53 @@ class MainActivity: ReactActivity() {
     //rootView = findViewById<View>(android.R.id.content).rootView // no work ?
     //rootView = findViewById<View>(android.R.id.content) // work
 
-    ccontentView = findViewById<View>(android.R.id.content)
-    decorView = ccontentView.rootView // no work ?
+    contentViewRef = findViewById<View>(android.R.id.content)
+    decorViewRef = contentViewRef.rootView
     
 
     //ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
     //rootView.setOnApplyWindowInsetsListener { view, insets ->
-    ccontentView.setOnApplyWindowInsetsListener { view, insets ->
+    contentViewRef.setOnApplyWindowInsetsListener { view, insets ->
     //decorView.setOnApplyWindowInsetsListener { view, insets ->
-        //doApplyInsets(insets)
-      val newInsets = insets.toString()
-      //Log.d("LOG", "lastInsets: " + newInsets)
-      //if (newInsets != currentInsets) {
-      //Log.d("LOG", "lastInsets outer: " + newInsets)
-      // val one = insets.systemWindowInsets
-      // val two = one//.toString()
-      //Log.d("LOG", "lastInsets outer: " + insets.systemWindowInsets)
+
+      //val newInsets = insets.toString()
+      val decorView = view.rootView.rootWindowInsets // decorView
+      var newInsetsRef: Rect? = null
+      //val newOrientationRef = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
+      val newOrientationRef = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
+
       Log.d("LOG", "lastInsets outer: " + insets)
-      // Log.d("LOG", "xx AAAAAAAAAAAAAAAAAAAAAAAAA: " + insets.systemWindowInsetBottom)
-      // Log.d("LOG", "xx BBBBBBBBBBBBBBBBBBBBBBBBB: " + insets.stableInsetBottom)
-      //Log.d("LOG", "lastInsets outer: " + insets.systemWindowInsets.toString())
-      if (!newInsets.equals(currentInsetsToString)) {
-        /////// Insets geometry its identical, skip layout pass
-        Log.d("LOG", "lastInsets inner: " + newInsets)
-        // Insets geometry its not identical
-        //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
-        //return
-        if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
+
+      if (decorView !== null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // 11 to newest.. ~ 30 to "36"
+          val ins = decorView.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+          newInsetsRef = Rect(ins.left, ins.top, ins.right, ins.bottom)
+        } else { // 7 to 10 ~ 24 to 29
+          newInsetsRef = Rect(decorView.systemWindowInsetLeft, decorView.systemWindowInsetTop, decorView.systemWindowInsetRight, min(decorView.systemWindowInsetBottom, decorView.stableInsetBottom))
+        }
+
+        Log.d("LOG", "lastInsets inner: " + newInsetsRef)
+
+        //if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP
+        if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP
+        currentInsetsRef = newInsetsRef
+        currentOrientationRef = newOrientationRef
       }
-      currentInsetsToString = newInsets
-        // Important: Return the insets so they can be dispatched to child views
+
+      // if (decorViewInner !== null) {
+      //   val newInsetsRef = Rect(decorViewInner.systemWindowInsetLeft, decorViewInner.systemWindowInsetTop, decorViewInner.systemWindowInsetRight, min(decorViewInner.systemWindowInsetBottom, decorViewInner.stableInsetBottom))
+      //   Log.d("LOG", "lastInsets outer: " + newInsetsRef)
+      //   if (!newInsetsRef.equals(currentInsetsRef)) {
+      //     Log.d("LOG", "lastInsets inner: " + newInsetsRef)
+      //     if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
+      //   }
+      //   currentInsetsRef = newInsetsRef
+      // }
+
       insets
     }
 
-    //rootView.requestApplyInsets()
+    contentViewRef.requestApplyInsets()
 
 
     lifecycleScope.launch(Dispatchers.Main) {
@@ -212,7 +231,8 @@ class MainActivity: ReactActivity() {
 
       // NEW VALUES //
       val foldingFeature = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
-      val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
+      //val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
+      val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) "landscape" else "portrait"
       val newWindow = mutableMapOf("width" to windowBounds.width(), "height" to windowBounds.height())
 
 
@@ -220,12 +240,7 @@ class MainActivity: ReactActivity() {
       // BEGIN INSETS //
       @RequiresApi(Build.VERSION_CODES.R)
       fun getInsetsCompatR(rootView: View): Unit {
-        val preNewInsets = rootView.rootWindowInsets?.getInsets(
-          WindowInsets.Type.statusBars() or
-          WindowInsets.Type.displayCutout() or
-          WindowInsets.Type.navigationBars() or
-          WindowInsets.Type.captionBar()
-        )
+        val preNewInsets = rootView.rootWindowInsets?.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
         if (preNewInsets != null) newInsets = Rect(preNewInsets.left, preNewInsets.top, preNewInsets.right, preNewInsets.bottom)
       }
       @RequiresApi(Build.VERSION_CODES.M)
@@ -233,19 +248,19 @@ class MainActivity: ReactActivity() {
         val preNewInsets = rootView.rootWindowInsets
         //if (preNewInsets != null) newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
         if (preNewInsets != null) {
-          Log.d("LOG", "AAAAAAAAAAAAAAAAAAAAAAAAA: " + preNewInsets.systemWindowInsetBottom)
-          Log.d("LOG", "BBBBBBBBBBBBBBBBBBBBBBBBB: " + preNewInsets.stableInsetBottom)
+          // Log.d("LOG", "AAAAAAAAAAAAAAAAAAAAAAAAA: " + preNewInsets.systemWindowInsetBottom)
+          // Log.d("LOG", "BBBBBBBBBBBBBBBBBBBBBBBBB: " + preNewInsets.stableInsetBottom)
           newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
-          Log.d("LOG", "VALUE VALUE VALUE 00 left: " + preNewInsets.systemWindowInsetLeft / dotsPerInch)
-          Log.d("LOG", "VALUE VALUE VALUE 00 top: " + preNewInsets.systemWindowInsetTop / dotsPerInch)
-          Log.d("LOG", "VALUE VALUE VALUE 00 right: " + preNewInsets.systemWindowInsetRight / dotsPerInch)
-          Log.d("LOG", "VALUE VALUE VALUE 00 bottom: " + min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom) / dotsPerInch)
+          // Log.d("LOG", "VALUE VALUE VALUE 00 left: " + preNewInsets.systemWindowInsetLeft / dotsPerInch)
+          // Log.d("LOG", "VALUE VALUE VALUE 00 top: " + preNewInsets.systemWindowInsetTop / dotsPerInch)
+          // Log.d("LOG", "VALUE VALUE VALUE 00 right: " + preNewInsets.systemWindowInsetRight / dotsPerInch)
+          // Log.d("LOG", "VALUE VALUE VALUE 00 bottom: " + min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom) / dotsPerInch)
         }
       }
       // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest.. // 30 to "36"
       // else getInsetsCompatM(rootView) // 7 to 10 // 24 to 29
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(decorView) // 11 to newest.. // 30 to "36"
-      else getInsetsCompatM(decorView) // 7 to 10 // 24 to 29
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(decorViewRef) // 11 to newest.. // 30 to "36"
+      else getInsetsCompatM(decorViewRef) // 7 to 10 // 24 to 29
       //else getInsetsCompatM(findViewById<View>(android.R.id.content).rootView) // 7 to 10 // 24 to 29
       //else getInsetsCompatM(rootView) // 7 to 10 // 24 to 29
       // 6 or older NOT SUPPORTED
@@ -376,12 +391,30 @@ class MainActivity: ReactActivity() {
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     
-    // Log.d("LOG", "CONFIGURATION HAS CHANGED")
+    Log.d("LOG", "CONFIGURATION HAS CHANGED")
+
+    // if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+    //   // landscape config
+    //   testCurrentOrientation = Configuration.ORIENTATION_LANDSCAPE
+    // } else {
+    //   // else is portrait
+    //   testCurrentOrientation = Configuration.ORIENTATION_PORTRAIT
+    //   }
+    // }
+
+    // when (newConfig.orientation) {
+    //   Configuration.ORIENTATION_PORTRAIT -> {
+    //     testCurrentOrientation = Configuration.ORIENTATION_PORTRAIT
+    //   }
+    //   Configuration.ORIENTATION_LANDSCAPE -> {
+    //     testCurrentOrientation = Configuration.ORIENTATION_LANDSCAPE
+    //   }
+    // }
     // Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
     // if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
     //rootView.requestApplyInsets()
-    //decorView.requestApplyInsets()    
-    ccontentView.requestApplyInsets()    
+    //decorView.requestApplyInsets()
+    contentViewRef.requestApplyInsets()
     //ViewCompat.requestApplyInsets(rootView)
     //if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
   }

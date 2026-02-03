@@ -11,7 +11,7 @@
 <ul>
   <summary>
     React Native Calculator is a Android App that works like Google search built-in calculator.<br />
-    The App will be available soon on Google Play.
+    The App will be available soon on a free, open-source, App Store.
   </summary>
 </ul>
 <div id="user-content-toc" align="left">
@@ -19,7 +19,7 @@
     <h3 style="display: inline-block">○ Where can I test the App ?</h3>
   </ul>
 </div>
-<ul><summary>On Google Play soon</summary></ul>
+<ul><summary>On a free, open-source, App Store soon</summary></ul>
 <div id="user-content-toc" align="left">
   <ul>
     <h3 style="display: inline-block">○ What's implemented on ?</h3>

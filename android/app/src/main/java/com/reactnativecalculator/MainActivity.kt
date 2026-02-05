@@ -76,8 +76,8 @@ class MainActivity: ReactActivity() {
   //var currentInsetsToString: String? = null
   //var currentInsetsRef: String? = null
   var currentInsetsRef: Rect? = null
-  //var currentOrientationRef: String? = null
-  var currentOrientationRef: Int? = null
+  var currentOrientationRef: String? = null
+  //var currentOrientationRef: Int? = null
   //lateinit var currentInsetsRef: Rect // UI retrigger
   var testCurrentOrientation: Int? = null
 
@@ -108,7 +108,7 @@ class MainActivity: ReactActivity() {
       Log.d("LOG", "lastInsets outer: " + insets)
 
       if (decorView !== null) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // 11 to newest.. ~ 30 to "36"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // 11 to newest.. ~ 30 to 36..
           val ins = decorView.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
           newInsetsRef = Rect(ins.left, ins.top, ins.right, ins.bottom)
         } else { // 7 to 10 ~ 24 to 29
@@ -119,6 +119,7 @@ class MainActivity: ReactActivity() {
 
         //if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP //
         if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP
+        //canUpdate = false; updateUI(null)
         currentInsetsRef = newInsetsRef
         currentOrientationRef = newOrientationRef
       }

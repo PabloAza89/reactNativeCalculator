@@ -308,7 +308,7 @@ class MainActivity: ReactActivity() {
 
       Log.d("LOG", "PRE SEND-UPDATE VAL: " + sendUpdate)
 
-      sendUpdate = true // TEST
+      //sendUpdate = true // TEST
 
       if (sendUpdate) {
         Log.d("LOG", "SEND-UPDATE CALLED")
@@ -353,30 +353,36 @@ class MainActivity: ReactActivity() {
         // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
         // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
         // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
-        // Log.d("LOG", "VALUE VALUE VALUE 1 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
+        // Log.d("LOG", "VALUE VALUE VALUE 1bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
 
-        val currentContext = reactHost.currentReactContext
-        if (currentContext == null) {
-          val listener = object: ReactInstanceEventListener {
-            override fun onReactContextInitialized(context: ReactContext) {
-              //Log.d("LOG", "tallNav VALUE FROM 1: " + mainMap.getBoolean("tallNav"))
-              // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
-              // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
-              // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
-              // Log.d("LOG", "VALUE VALUE VALUE 1 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
-              context.emitDeviceEvent("LayoutInfo", mainMap)
-              reactHost.removeReactInstanceEventListener(this)
+        if (userLaunched) { // ONLY SEND UPDATED IF APP IS USER-LAUNCHED
+
+          val currentContext = reactHost.currentReactContext
+          if (currentContext == null) {
+            val listener = object: ReactInstanceEventListener {
+              override fun onReactContextInitialized(context: ReactContext) {
+                //Log.d("LOG", "tallNav VALUE FROM 1: " + mainMap.getBoolean("tallNav"))
+                // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
+                // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
+                // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
+                // Log.d("LOG", "VALUE VALUE VALUE 1 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
+                context.emitDeviceEvent("LayoutInfo", mainMap)
+                reactHost.removeReactInstanceEventListener(this)
+              }
             }
+            reactHost.addReactInstanceEventListener(listener)
+          } else {
+            //Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
+            // Log.d("LOG", "VALUE VALUE VALUE 2 left: " + mainMap.getMap("insets")?.getBoolean("left"))
+            // Log.d("LOG", "VALUE VALUE VALUE 2 top: " + mainMap.getMap("insets")?.getBoolean("top"))
+            // Log.d("LOG", "VALUE VALUE VALUE 2 right: " + mainMap.getMap("insets")?.getBoolean("right"))
+            // Log.d("LOG", "VALUE VALUE VALUE 2 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
+            currentContext.emitDeviceEvent("LayoutInfo", mainMap)
           }
-          reactHost.addReactInstanceEventListener(listener)
-        } else {
-          //Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
-          // Log.d("LOG", "VALUE VALUE VALUE 2 left: " + mainMap.getMap("insets")?.getBoolean("left"))
-          // Log.d("LOG", "VALUE VALUE VALUE 2 top: " + mainMap.getMap("insets")?.getBoolean("top"))
-          // Log.d("LOG", "VALUE VALUE VALUE 2 right: " + mainMap.getMap("insets")?.getBoolean("right"))
-          // Log.d("LOG", "VALUE VALUE VALUE 2 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
-          currentContext.emitDeviceEvent("LayoutInfo", mainMap)
-        }
+
+        } else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
+
+        
         sendUpdate = false // RESET UPDATE FLAG
       }
       canUpdate = true // FLAG FOR updateUI()

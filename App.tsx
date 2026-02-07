@@ -70,7 +70,7 @@ const App = (): ReactElement => {
   //   { index: 0, routes: allRoutes.slice(0, 1) } // Home // index is the same
   // ]
 
-  const retrieveIS = (str: string) => { // createInitialState
+  const retrieveInitialState = (str: string) => {
     const idx = routes.findIndex((i: any) => i.name === str)
     return { index: idx, routes: routes.slice(0, idx+1) }
     //console.log(qq.findIndex(i => i.name === 'About')) 
@@ -252,9 +252,9 @@ const App = (): ReactElement => {
 
         if (Date.now() - parseInt(resDate, 10) < 60000 && resTallNav !== tallNav.current.toString()) {
           console.log("33333333333333333333333333333333333333333")
-          //navigationRef.reset(retrieveIS(resRoute))
+          navigationRef.reset(retrieveInitialState(resRoute))
           //navigationRef.reset({ index: 1, routes: [{ name: 'Home' }, { name: 'About' }] })
-          navigationRef.dispatch(CommonActions.reset({ index: 1, routes: [{ name: 'Home' }, { name: 'About' }] }))
+          //navigationRef.dispatch(CommonActions.reset({ index: 1, routes: [{ name: 'Home' }, { name: 'About' }] }))
           //navigationRef.reset(testFunc[resRoute]())
           // resRoute === "KnowMore" ? navigationRef.reset(routes[0]) :
           // resRoute === "About" ? navigationRef.reset(routes[1]) :

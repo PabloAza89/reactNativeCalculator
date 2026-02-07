@@ -85,7 +85,7 @@ class MainActivity: ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     //Log.d("LOG", "BUNDLE BUNDLE BUNDLE BUNDLE BUNDLE: " + savedInstanceState)
-    if (savedInstanceState == null) userLaunched = true else userLaunched = false
+    if (savedInstanceState == null) userLaunched = true else userLaunched = false // FLAG FOR PREVENT SEND EVENTS IF APP WAS SYSTEM-LAUNCHED (RECREATED)
     Log.d("LOG", "USER LAUNCHED: " + userLaunched)
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState

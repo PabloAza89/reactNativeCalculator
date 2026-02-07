@@ -81,7 +81,12 @@ class MainActivity: ReactActivity() {
   //lateinit var currentInsetsRef: Rect // UI retrigger
   var testCurrentOrientation: Int? = null
 
+  var userLaunched: Boolean = true // when onCreate is called due 3-Button to Gesture (or vice-versa), don't send events to TS side.
+
   override fun onCreate(savedInstanceState: Bundle?) {
+    //Log.d("LOG", "BUNDLE BUNDLE BUNDLE BUNDLE BUNDLE: " + savedInstanceState)
+    if (savedInstanceState == null) userLaunched = true else userLaunched = false
+    Log.d("LOG", "USER LAUNCHED: " + userLaunched)
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)

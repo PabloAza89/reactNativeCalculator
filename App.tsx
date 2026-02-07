@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState, useRef } from "react";
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef, CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BootSplash from "react-native-bootsplash";
 import { Image, AppState, Animated, useAnimatedValue, StatusBar } from 'react-native';
@@ -14,6 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { /* dimI, */ navigationI } from './src/interfaces/interfaces';
 import { startListener, currentListener, addCallback, stopListener } from './layoutListener';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -57,15 +58,26 @@ const App = (): ReactElement => {
 
   const navigationRef = useNavigationContainerRef();
 
+  //console.log("A VER", navigationRef.current)
+
   const [ animation, setAnimation ] = useState<StackAnimationTypes>('none'); // NO INITIAL SCREEN ANIMATION
 
-  let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
+  let routes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
 
-  let routes = [
-    { index: 2, routes: allRoutes }, // KnowMore
-    { index: 1, routes: allRoutes.slice(0, 2) }, // About
-    { index: 0, routes: allRoutes.slice(0, 1) } // Home
-  ]
+  // let routes = [
+  //   { index: 2, routes: allRoutes }, // KnowMore
+  //   { index: 1, routes: allRoutes.slice(0, 2) }, // About
+  //   { index: 0, routes: allRoutes.slice(0, 1) } // Home // index is the same
+  // ]
+
+  const retrieveIS = (str: string) => { // createInitialState
+    const idx = routes.findIndex((i: any) => i.name === str)
+    return { index: idx, routes: routes.slice(0, idx+1) }
+    //console.log(qq.findIndex(i => i.name === 'About')) 
+    //'x': (str) => { return parseFloat(a) * parseFloat(b) }
+  };
+
+  //opOne[firOp](toDo[index - 1], toDo[index + 1])
 
   const input = useRef(""); // MAIN DISPLAY (CENTER)
   const secInput = useRef(""); // SECONDARY DISPLAY (UPPER)
@@ -85,13 +97,13 @@ const App = (): ReactElement => {
       console.log("APP COMP APP BLURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
       saveData("savedInput", input.current.toString())
       saveData("savedSecInput", secInput.current.toString())
-      saveData("savedDate", Date.now().toString())
-      console.log("CURRENT VALUEEEEEEEEEEEEEEEEEEEEE", tallNav.current)
+      saveData("savedDate", Date.now().toString())      
       saveData("savedTallNav", tallNav.current.toString())
       let array = navigationRef.getState().routes // INSIDE ANY COMPONENT: navigation.getState().routes
       saveData("savedRoute", array[array.length - 1].name) // SAVE LAST ROUTE ON APP BLUR
       updateShowModal(false)
-      console.log("savedRoute", array[array.length - 1].name)
+      console.log("SAVED ROUTE xxxxxxxxxxxx", array[array.length - 1].name)
+      console.log("SAVED TALLBAR xxxxxxxxxx", tallNav.current)
     })
 
     return () => {
@@ -185,7 +197,9 @@ const App = (): ReactElement => {
     type: 'stack',
     key: 'stack-1',
     routeNames: ['Home', 'About', 'KnowMore'],
+    //routes: [{ name: 'Home' }],
     routes: [{ name: 'Home' }],
+    //routes: [{ name: 'Home' }, { name: 'About' }],
     //routes: [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }],
     index: 1,
     stale: false,
@@ -221,6 +235,8 @@ const App = (): ReactElement => {
       ])
     } catch (error) { console.log("VV FONT LOAD ERROR", error) }
 
+    console.log("111111111111111111111111111111111111111111111")
+
     async function navigationBarToGestureOrViceVersa() {
       // if (typeof resDate === "string" && typeof resTallNav === "string" && typeof resRoute === "string") {
       //   if (Date.now() - parseInt(resDate) < 60000 && resTallNav !== tallNav.current.toString()) {
@@ -229,6 +245,22 @@ const App = (): ReactElement => {
       //     navigationRef.dispatch(CommonActions.reset(routes[2]))
       //   } // else "WINDOWS HAS NOT CHANGED."
       // }
+      if (typeof resDate === "string" && typeof resTallNav === "string" && typeof resRoute === "string") {
+        console.log("222222222222222222222222222222222222222222222")
+        console.log("PRIMERO: ", Date.now() - parseInt(resDate, 10) < 60000)
+        console.log("SEGUNDO: ", resTallNav !== tallNav.current.toString())
+
+        if (Date.now() - parseInt(resDate, 10) < 60000 && resTallNav !== tallNav.current.toString()) {
+          console.log("33333333333333333333333333333333333333333")
+          //navigationRef.reset(retrieveIS(resRoute))
+          //navigationRef.reset({ index: 1, routes: [{ name: 'Home' }, { name: 'About' }] })
+          navigationRef.dispatch(CommonActions.reset({ index: 1, routes: [{ name: 'Home' }, { name: 'About' }] }))
+          //navigationRef.reset(testFunc[resRoute]())
+          // resRoute === "KnowMore" ? navigationRef.reset(routes[0]) :
+          // resRoute === "About" ? navigationRef.reset(routes[1]) :
+          // navigationRef.reset(routes[2])
+        } // else "WINDOWS HAS NOT CHANGED."
+      }
     }
     navigationBarToGestureOrViceVersa()
     .then(() => {
@@ -242,8 +274,9 @@ const App = (): ReactElement => {
   }
 
   const callback = (e: any) => {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX :")
-    console.log(e)
+    console.log("UPDATE INFO FROM NATIVE SIDE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX :")
+    console.log("TALLNAV: ", e.tallNav)
+    //console.log(e)
     setLayout(e)
     tallNav.current = e.tallNav
     if (runOnceAvailable.current) runOnce()

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useCallback } from 'react';
 import { View, Linking, Animated, Pressable } from 'react-native';
 import { Text } from '../../utils/Text';
 import { s } from './AboutCSS';
@@ -10,7 +10,7 @@ import FastImage from '@d11/react-native-fast-image';
 import { AboutI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
-import { CommonActions, StackActions } from '@react-navigation/native';
+import { CommonActions, StackActions, useFocusEffect } from '@react-navigation/native';
 
 //function About({ navigation: { navigate }, vmin }: AboutI): ReactElement {
 const About = ({ navigation, width, height, ins, state, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, showModal, twoScreens, aboutUp, calcLeft, fadeAnim, updateShowModal,  switchSide, nextScreen, fadeIn, fadeOut }: AboutI): ReactElement => {
@@ -23,9 +23,17 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
     { index: 0, routes: allRoutes.slice(0, 1) }
   ]
 
-  useEffect(() => {
-    console.log("navigationRef ABOUT ROUTES", navigation.getState().routes)
-  }, [navigation])
+  // useEffect(() => {
+  //   console.log("navigationRef ABOUT ROUTES", navigation.getState().routes)
+  // }, [navigation])
+
+  useFocusEffect(
+    useCallback(() => {
+      //console.log('About screen is now visible!');
+      console.log("navigationRef ABOUT ROUTES", navigation.getState().routes)
+
+    }, [])
+  );
 
   const { navigate } = navigation
 

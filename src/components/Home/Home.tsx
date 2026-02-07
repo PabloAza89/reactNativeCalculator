@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useEffect, MutableRefObject } from 'react';
+import React, { ReactElement, useState, useRef, useEffect, MutableRefObject, useCallback } from 'react';
 import { ScrollView, View, Animated,
   useAnimatedValue, Pressable, TouchableHighlight, LayoutChangeEvent } from 'react-native';
 import { s } from './HomeCSS';
@@ -10,14 +10,27 @@ import { HomeI, /* counterI, goUpI, ComponentI */ } from '../../interfaces/inter
 import { Text } from '../../utils/Text';
 import { portButtons, landButtons } from '../../utils/Buttons';
 import { Adder } from '../../utils/Adder';
+import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 
 const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBounds,
   maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
 //function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
 
-  useEffect(() => {
-    console.log("navigationRef HOME ROUTES", navigation.getState().routes)
-  }, [navigation])
+  // useEffect(() => {
+  //   //console.log("navigationRef HOME ROUTES", navigation.getState().routes)
+  // }, [navigation])
+  //}, [isFocused])
+  
+  useFocusEffect(
+    useCallback(() => {
+      //console.log('About screen is now visible!');
+      console.log("navigationRef HOME ROUTES", navigation.getState().routes)
+
+    }, [])
+  );
+
+  //const isFocused = useIsFocused();
+  //console.log("HERE 111", isFocused)
 
   const { navigate } = navigation
 

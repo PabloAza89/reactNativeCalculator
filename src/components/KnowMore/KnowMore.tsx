@@ -1,4 +1,4 @@
-import { ReactElement, useState, useEffect, useRef } from 'react';
+import { ReactElement, useState, useEffect, useRef, useCallback } from 'react';
 import {
   View, StatusBar, ScrollView, Pressable, InteractionManager, ActivityIndicator,
   NativeSyntheticEvent, NativeScrollEvent, Animated, useAnimatedValue,
@@ -17,16 +17,23 @@ import { scrollBarSize, iconColor } from '../../utils/constants';
 import { counterI, KnowMoreI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
-import { CommonActions, StackActions } from '@react-navigation/native';
+import { CommonActions, StackActions, useFocusEffect } from '@react-navigation/native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 //function KnowMore({ navigation: { navigate }, opw, port }: KnowMoreI): ReactElement {
 const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, aboutUp, switchSide, nextScreen,   }: KnowMoreI): ReactElement => {
 
-    useEffect(() => {
+  // useEffect(() => {
+  //   console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes)
+  // }, [navigation])
+
+  useFocusEffect(
+    useCallback(() => {
+      //console.log('About screen is now visible!');
       console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes)
-    }, [navigation])
+    }, [])
+  );
 
   //const { height: screenHeight } = Dimensions.get('window');
   //console.log("screenHeight", screenHeight)

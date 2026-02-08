@@ -6,7 +6,7 @@ import About from '../About/About';
 import OwnButton from '../OwnButton/OwnButton';
 import KnowMore from '../KnowMore/KnowMore';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { HomeI } from '../../interfaces/interfaces';
+import { HomeI, /* counterI, goUpI, ComponentI */ } from '../../interfaces/interfaces';
 import { Text } from '../../utils/Text';
 import { portButtons, landButtons } from '../../utils/Buttons';
 import { Adder } from '../../utils/Adder';
@@ -14,16 +14,31 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBounds,
   maxVerticalInset, maxHorizontalInset, vmin, showModal, fadeAnim, updateShowModal, update, fadeIn, fadeOut }: HomeI): ReactElement => {
+//function Home({ navigation: { navigate }, vmin, port, input, secInput, setInput, setSecInput, state }: HomeI): ReactElement {
 
+  // useEffect(() => {
+  //   //console.log("navigationRef HOME ROUTES", navigation.getState().routes)
+  // }, [navigation])
+  //}, [isFocused])
+  
   useFocusEffect(
-    useCallback(() => console.log("navigationRef HOME ROUTES", navigation.getState().routes), []) // eslint-disable-line react-hooks/exhaustive-deps
+    useCallback(() => {
+      //console.log('About screen is now visible!');
+      console.log("navigationRef HOME ROUTES", navigation.getState().routes)
+
+    }, [])
   );
+
+  //const isFocused = useIsFocused();
+  //console.log("HERE 111", isFocused)
 
   const { navigate } = navigation
 
   const [ showKnowMore, setShowKnowMore ] = useState(false)
 
   const [ parErr, setParErr ] = useState(false);
+
+  //useEffect(() => scrollEnd(), [input.current]) // ????
 
   const scrollRefUpper = useRef<ScrollView>(null);
   const scrollRefCenter = useRef<ScrollView>(null);
@@ -57,6 +72,12 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   const sharedProps = { width, height, state, ins, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, nextScreen, switchSide, navigation, aboutUp, fadeAnim, fadeIn, fadeOut }
 
   const AboutScreen = <About {...sharedProps} showModal={showModal} updateShowModal={updateShowModal} calcLeft={calcLeft} twoScreens />;
+  //const KnowMoreScreen = <KnowMore {...{...sharedProps, height: currentHeight}} twoScreens />
+  // function KnowMoreScreen(currentHeight: any) {
+  //   return <KnowMore {...{...sharedProps, height: currentHeight}} twoScreens />
+  // } 
+  
+  //const KnowMoreScreen = (currentHeight: any) => <KnowMore {...{...sharedProps, height: currentHeight}} twoScreens />
 
   /// -----------> BEGIN PRE-CALC & CALC (Adder) <----------- ///
 
@@ -226,7 +247,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
     </>;
 
   const LandCalc =
-    <View style={[ s.outline, { marginBottom: ins.bottom, marginTop: ins.top } ]}>
+    <View style={[ s.outline, { marginBottom: ins.bottom, marginTop: ins.top, /* marginRight: 100, marginLeft: ins.left */ } ]}>
       <View onLayout={OPCQHHandler} style={[ s.contour, { margin: 3, aspectRatio: 7/4, width: parsedWidth - 130, maxHeight: parsedHeight - 30 } ]}>
         <View
           style={[ // `${(11.14/4)*7}%`
@@ -254,16 +275,16 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
 
   const ModalForegroundHome =
     <Animated.View
-      style={[ s.modalForegroundHome, { opacity: fadeAnim, pointerEvents: showModal ? 'auto' : 'none' } ]}
+      style={[ s.modalForegroundHome, { /* backgroundColor: 'orange', */opacity: fadeAnim, pointerEvents: showModal ? 'auto' : 'none' } ]}
       children={
         <Pressable
-          style={[ s.modalForegroundHomePressable, { paddingTop: ins.top, paddingBottom: ins.bottom } ]}
+          style={[ s.modalForegroundHomePressable, { /* backgroundColor: 'yellow', */ paddingTop: ins.top, paddingBottom: ins.bottom } ]}
           onPress={() => {console.log('CLICKED Home');updateShowModal(false)}}
         />
       }
     />
 
-  useEffect(() => showModal ? fadeIn() : fadeOut(), [showModal]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => showModal ? fadeIn() : fadeOut(), [showModal])
 
   let currIndex = useAnimatedValue(0);
 
@@ -292,7 +313,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
   useEffect(() => {
     state === 'tabletop' && nextColor(1)
     return () => currIndex.stopAnimation()
-  }, [state]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state])
 
   return (
     <View style={s.background}>
@@ -305,7 +326,7 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
 
         <View style={s.tabletopContainer}>
           <View /* UPPER SIDE */
-            style={[ s.upperScreenTabletop, { height: hingeBounds.top, width: hingeBounds.right } ]}
+            style={[ s.upperScreenTabletop, { height: hingeBounds.top, width: hingeBounds.right /* paddingRight: ins.right */ } ]}
           >
 
             {
@@ -323,15 +344,16 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
                     />
                     <View
                       style={[ s.questionContainer, { width: '100%', height: 42, bottom: -55 } ]}
-                      children={ ButtonAbout }
+                      children={ /* state !== 'book' && */ ButtonAbout }
                     />
                   </View>
                 }
               />
             }
 
+            {/* { ModalForegroundScreen } */}
             { ModalForegroundHome }
-            { !showCalc && (aboutUp ? AboutScreen : <KnowMore {...{...sharedProps, height: hingeBounds.top}} twoScreens />) }
+            { !showCalc && (aboutUp ? AboutScreen : (KnowMoreScreen(hingeBounds.top))) }
 
           </View>
           <Animated.View /* LOWER SIDE */
@@ -351,8 +373,9 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
               />
             }
 
+            {/* { ModalForegroundScreen } */}
             { ModalForegroundHome }
-            { !showCalc && ( aboutUp ? <KnowMore {...{...sharedProps, height: height - hingeBounds.bottom}} twoScreens /> : AboutScreen ) }
+            { !showCalc && ( aboutUp ? KnowMoreScreen(height - hingeBounds.bottom) : AboutScreen ) }
 
           </Animated.View>
         </View> :
@@ -361,12 +384,14 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
 
         <View style={s.bookContainer} /* BOOK */>
           <View style={[ s.eachSideBook, { width: hingeBounds.left - ins.left } ]} /* LEFT SIDE */ >
+            {/* { calcLeft && ModalForegroundScreen } */}
             { ModalForegroundHome }
-            { calcLeft ? PortCalc : ( showKnowMore ? <KnowMore {...{...sharedProps, height: height}} twoScreens /> : AboutScreen ) }
+            { calcLeft ? PortCalc : ( showKnowMore ? KnowMoreScreen(height) : AboutScreen ) }
           </View>
           <View style={[ s.eachSideBook, { left: hingeBounds.right - hingeBounds.left, width: width - hingeBounds.right - ins.right } ]} /* RIGHT SIDE */ >
+            {/* { !calcLeft && ModalForegroundScreen } */}
             { ModalForegroundHome }
-            { calcLeft ? ( showKnowMore ? <KnowMore {...{...sharedProps, height: height}} twoScreens /> : AboutScreen ) : PortCalc }
+            { calcLeft ? ( showKnowMore ? KnowMoreScreen(height) : AboutScreen ) : PortCalc }
           </View>
         </View> :
 

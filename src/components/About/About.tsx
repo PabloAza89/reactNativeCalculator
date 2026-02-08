@@ -7,16 +7,15 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage from '@d11/react-native-fast-image';
-import { AboutI, ComponentI } from '../../interfaces/interfaces';
+import { AboutI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
-import { CommonActions, StackActions, useFocusEffect } from '@react-navigation/native';
+import { StackActions, useFocusEffect } from '@react-navigation/native';
 
-//function About({ navigation: { navigate }, vmin }: AboutI): ReactElement {
 const About = ({ navigation, width, height, ins, state, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, showModal, twoScreens, aboutUp, calcLeft, fadeAnim, updateShowModal,  switchSide, nextScreen, fadeIn, fadeOut }: AboutI): ReactElement => {
 
   useFocusEffect(
-    useCallback(() => console.log("navigationRef ABOUT ROUTES", navigation.getState().routes), [])
+    useCallback(() => console.log("navigationRef ABOUT ROUTES", navigation.getState().routes), []) // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const { navigate } = navigation
@@ -112,87 +111,76 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
           right: ins.right,
           bottom: (state === 'tabletop' && aboutUp) ? 0 : ins.bottom,
         }}
-        //contentContainerStyle={s.cswContentContainerStyle}
         contentContainerStyle={{
               alignItems: 'center',
               marginTop: 'auto',
               marginBottom: 'auto',
               paddingTop: (state === 'tabletop' && aboutUp) ? ins.top : (state === 'tabletop' && !aboutUp) ? ins.top : parsedMaxVerticalInset,
               paddingBottom: (state === 'tabletop' && aboutUp) ? ins.top : (state === 'tabletop' && !aboutUp) ? ins.bottom + 24 : parsedMaxVerticalInset,
-              //paddingBottom: parsedMaxVerticalInset*0 + 24,
           }}
         style={[s.customScrollView, { zIndex: 2 }]}
       >
-     
-          <Text
-            style={[ s.title ]}
-            children={'This App is developed by\nJuan Pablo Azambuyo'}
+        <Text
+          style={[ s.title ]}
+          children={'This App is developed by\nJuan Pablo Azambuyo'}
+        />
+        <View style={s.imageWrapper}>
+          <FastImage
+            style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 /* 50% */ }}
+            source={ require('../../images/profile.png') }
+            resizeMode={FastImage.resizeMode.contain}
           />
-          <View style={s.imageWrapper}>
-            <FastImage
-              style={{ width: vmin * 30, height: vmin * 30, borderRadius: (vmin * 30) / 2 /* 50% */ }}
-              source={ require('../../images/profile.png') }
-              resizeMode={FastImage.resizeMode.contain}
-            />
-            <CustomButton
-              type={AntDesign}
-              name={'linkedin-square'}
-              size={40}
-              color={'rgba(0, 0, 0, .7)'}
-              onPress={() => updateShowModal(true)}
-              style={{ position: 'absolute', top: ((vmin * 30) / 2) - 20, right: (((parsedWidth / 2) - ((vmin * 30) / 2)) / -2) - 20 }}
-            />
-          </View>
+          <CustomButton
+            type={AntDesign}
+            name={'linkedin-square'}
+            size={40}
+            color={'rgba(0, 0, 0, .7)'}
+            onPress={() => updateShowModal(true)}
+            style={{ position: 'absolute', top: ((vmin * 30) / 2) - 20, right: (((parsedWidth / 2) - ((vmin * 30) / 2)) / -2) - 20 }}
+          />
+        </View>
 
-          {
-            twoScreens ?
-            <CustomButton
-              type={MaterialCommunityIcons.Button}
-              name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
-              size={30}
-              color={'rgba(0, 0, 0, .7)'}
-              onPress={() => switchSide()}
-              margin={{ bottom: 24 }}
-              children={ <Text style={[ s.textInButton, s.twoLines ]} children={'SWITCH\nSCREENS'} /> }
-            /> :
-            <CustomButton
-              type={Ionicons.Button}
-              name={'chevron-back-circle-sharp'}
-              size={30}
-              color={'rgba(0, 0, 0, .7)'}
-              //onPress={() => navigate('Home')} // no
-              //onPress={() => navigate('Home')} // no
-              //onPress={() => navigation.goBack()} // testing
-              onPress={() => navigation.dispatch(StackActions.pop())} // GO BACK
-              //navigationRef.dispatch(CommonActions.reset(routes[1]))
-              //onPress={() => navigate('Home', { lastRoute: 'About' })} // no
-              //onPress={() => navigation.dispatch(CommonActions.reset(routes[2]))}
-
-              margin={{ bottom: 24 }}
-              children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
-            />
-          }
-          {
-            twoScreens ?
-            <CustomButton
-              type={Ionicons.Button}
-              name={ state === 'tabletop' ? 'calculator-sharp' : 'alert-circle' }
-              size={30}
-              color={'rgba(0, 0, 0, .7)'}
-              onPress={() => nextScreen()}
-              children={ <Text style={[ s.textInButton, s.oneLine ]} children={ state === 'tabletop' ? 'HOME' : 'HOW DOES IT WORK ?' } /> }
-            /> :
-            <CustomButton
-              type={Ionicons.Button}
-              name={'chevron-back-circle-sharp'}
-              size={30}
-              color={'rgba(0, 0, 0, .7)'}
-              onPress={() => navigate('KnowMore')}
-              iconStyle={s.buttonAndIconLower}
-              children={ <Text style={[ s.textInButton, s.oneLine, { transform: [{ rotate: '180deg' }] } ]} children={'HOW DOES IT WORK ?'} /> }
-            />
-          }
-        
+        {
+          twoScreens ?
+          <CustomButton
+            type={MaterialCommunityIcons.Button}
+            name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
+            size={30}
+            color={'rgba(0, 0, 0, .7)'}
+            onPress={() => switchSide()}
+            margin={{ bottom: 24 }}
+            children={ <Text style={[ s.textInButton, s.twoLines ]} children={'SWITCH\nSCREENS'} /> }
+          /> :
+          <CustomButton
+            type={Ionicons.Button}
+            name={'chevron-back-circle-sharp'}
+            size={30}
+            color={'rgba(0, 0, 0, .7)'}
+            onPress={() => navigation.dispatch(StackActions.pop())} // GO BACK
+            margin={{ bottom: 24 }}
+            children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
+          />
+        }
+        {
+          twoScreens ?
+          <CustomButton
+            type={Ionicons.Button}
+            name={ state === 'tabletop' ? 'calculator-sharp' : 'alert-circle' }
+            size={30}
+            color={'rgba(0, 0, 0, .7)'}
+            onPress={() => nextScreen()}
+            children={ <Text style={[ s.textInButton, s.oneLine ]} children={ state === 'tabletop' ? 'HOME' : 'HOW DOES IT WORK ?' } /> }
+          /> :
+          <CustomButton
+            type={Ionicons.Button}
+            name={'chevron-back-circle-sharp'}
+            size={30}
+            color={'rgba(0, 0, 0, .7)'}
+            onPress={() => navigate('KnowMore')}
+            iconStyle={s.buttonAndIconLower}
+            children={ <Text style={[ s.textInButton, s.oneLine, { transform: [{ rotate: '180deg' }] } ]} children={'HOW DOES IT WORK ?'} /> }
+          />
+        }
       </CustomScrollView>
     </View>
   );

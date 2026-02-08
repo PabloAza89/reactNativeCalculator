@@ -1,5 +1,5 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { SetStateAction, Dispatch, MutableRefObject } from 'react';
+import { SetStateAction, Dispatch, MutableRefObject, RefObject } from 'react';
 import { Animated, ViewProps, ViewStyle } from 'react-native';
 
 export interface counterI {
@@ -18,20 +18,17 @@ export interface navigationI {
 }
 
 export interface HomeI extends navigationI {
-  input: MutableRefObject<string>,
-  secInput: MutableRefObject<string>,
+  input: RefObject<string>,
+  secInput: RefObject<string>,
   width: number,
   height: number,
   ins: Insets,
   state: string,
   hingeBounds: Insets,
-  //route: NavigationProp<ParamListBase>, // ???!??!  
-  route: any, // ???!??!  
   maxVerticalInset: number,
   maxHorizontalInset: number,
   vmin: number,
-  showModal: boolean, // aA?!??!
-  //fadeAnim: AnimatedI,
+  showModal: boolean,
   fadeAnim: Animated.Value,
   updateShowModal: (arg0: boolean) => void,
   update: Dispatch<SetStateAction<object>>

@@ -105,19 +105,20 @@ const Home = ({ navigation, input, secInput, width, height, ins, state, hingeBou
       ([" x ", " / "," + "," - ","("].includes(iC.slice(-3)) &&
         ["X", "/","+","-",")","."].includes(kP)) || // STOP IF ATTEMPT + AND + (REPEATED OPERATORS)
       iC.slice(-1) === ")" && kP === "." || // STOP IF ATTEMPT ).
-      (iC.slice(-1) === "." && isNaN(parseInt(kP))) || // STOP IF ATTEMPT .. or .( or .x
-      (!isNaN(parseInt(iC[iC.length - 1])) && !isNaN(parseInt(iC[iC.length - 2])) &&
-      iC[iC.length - 3] === "." && !isNaN(parseInt(iC[iC.length - 4])) &&
-      (!isNaN(parseInt(kP)) || kP === ".")) || // STOP IF ATTEMPT 3.999 or 3.77. (floating point number > 2)
-      (kP === "." && !isNaN(parseInt(iC[iC.length - 1])) && iC[iC.length - 2] === "." &&
-        !isNaN(parseInt(iC[iC.length - 3]))) || // STOP IF ATTEMPT 3.9.
+      (iC.slice(-1) === "(" && ["/", ".","+","-","X",")"].includes(kP)) || // STOP IF ATTEMPT (). or (. or (+
+      (iC.slice(-1) === "." && isNaN(parseInt(kP, 10))) || // STOP IF ATTEMPT .. or .( or .x
+      (!isNaN(parseInt(iC[iC.length - 1], 10)) && !isNaN(parseInt(iC[iC.length - 2], 10)) &&
+      iC[iC.length - 3] === "." && !isNaN(parseInt(iC[iC.length - 4], 10)) &&
+      (!isNaN(parseInt(kP, 10)) || kP === ".")) || // STOP IF ATTEMPT 3.999 or 3.77. (floating point number > 2)
+      (kP === "." && !isNaN(parseInt(iC[iC.length - 1], 10)) && iC[iC.length - 2] === "." &&
+        !isNaN(parseInt(iC[iC.length - 3], 10))) || // STOP IF ATTEMPT 3.9.
       (iC.slice(-1) === ")" && kP === "(") || // STOP IF ATTEMPT )(
-      (iC.slice(-1) === ")" && (!isNaN(parseInt(kP)) || kP === "N")) || // STOP IF ATTEMPT )9 or )N
-      (["(", "N"].includes(kP) && !isNaN(parseInt(iC.slice(-1)))) || // STOP IF ATTEMPT 9( or 9N
+      (iC.slice(-1) === ")" && (!isNaN(parseInt(kP, 10)) || kP === "N")) || // STOP IF ATTEMPT )9 or )N
+      (["(", "N"].includes(kP) && !isNaN(parseInt(iC.slice(-1), 10))) || // STOP IF ATTEMPT 9( or 9N
       (iC.slice(-1) === "N" && ["X", "/", "+", "-", ".", "(", ")", "N"].includes(kP)) || // N = negative value // STOP IF ATTEMPT N+
       (kP === "=" && ([" x ", " / ", " + ", " - "].includes(iC.slice(-3)) ||
         ["(", "N"].includes(iC.slice(-1)) || iC.length === 0)) || // STOP IF ATTEMPT N= or += or ""
-      (iC.slice(-8) === "Infinity" && (["(", "N", "."].includes(kP) || !isNaN(parseInt(kP)))) // STOP IF ATTEMPT Infinity( or InfinityN or Infinity9 or Infinity.
+      (iC.slice(-8) === "Infinity" && (["(", "N", "."].includes(kP) || !isNaN(parseInt(kP, 10)))) // STOP IF ATTEMPT Infinity( or InfinityN or Infinity9 or Infinity.
     ) { scrollEnd(); return }
 
     if (

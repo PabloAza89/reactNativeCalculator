@@ -1,59 +1,53 @@
 package com.reactnativecalculator
 
-import com.facebook.react.ReactActivity
-import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
-import com.facebook.react.defaults.DefaultReactActivityDelegate
-
-import android.os.Bundle
-import com.zoontek.rnbootsplash.RNBootSplash
-import com.reactnativecalculator.R
-import androidx.core.view.WindowCompat
-import kotlinx.coroutines.Dispatchers
-import kotlin.properties.Delegates
-import android.view.View
+import android.app.Activity
+import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Rect
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.WindowInsets
+
+import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.Lifecycle
-import androidx.window.layout.WindowInfoTracker
-import android.util.Log
-import kotlinx.coroutines.launch
-import android.os.Build
-import kotlinx.coroutines.Job
-import androidx.window.layout.WindowLayoutInfo
-import com.facebook.react.bridge.Arguments
-import androidx.window.layout.WindowMetricsCalculator
 import androidx.window.layout.FoldingFeature
-import android.content.res.Configuration
-import androidx.annotation.RequiresApi
-import android.view.WindowInsets
-import kotlin.math.min
-import com.facebook.react.bridge.ReactContext
-import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.facebook.react.turbomodule.core.interfaces.TurboModule
+import androidx.window.layout.WindowInfoTracker
+import androidx.window.layout.WindowLayoutInfo
+import androidx.window.layout.WindowMetricsCalculator
 
-import com.facebook.react.ReactInstanceEventListener
-
-import com.facebook.react.ReactPackage
-import com.facebook.react.uimanager.ReactShadowNode
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.uimanager.ViewManager
-
-import android.app.Activity
-
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.NativeModule
-
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
+import com.facebook.react.defaults.DefaultReactActivityDelegate
+import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.facebook.react.ReactActivity
+import com.facebook.react.ReactActivityDelegate
+import com.facebook.react.ReactInstanceEventListener
+import com.facebook.react.ReactPackage
 import com.facebook.react.ReactRootView
+import com.facebook.react.turbomodule.core.interfaces.TurboModule
+import com.facebook.react.uimanager.ReactShadowNode
+import com.facebook.react.uimanager.ViewManager
+import com.reactnativecalculator.R
+import com.zoontek.rnbootsplash.RNBootSplash
 
+import kotlin.math.min
+import kotlin.properties.Delegates
 import kotlin.random.Random
-
-import android.graphics.Color
-
-import androidx.core.view.ViewCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity: ReactActivity() {
 
@@ -62,7 +56,6 @@ class MainActivity: ReactActivity() {
   var dotsPerInch: Double by Delegates.notNull<Double>()
   var currentMaxHorizontalInset: Int by Delegates.notNull<Int>()
   var currentMaxVerticalInset: Int by Delegates.notNull<Int>()
-  //lateinit var rootView: View
   lateinit var decorViewRef: View
   lateinit var contentViewRef: View
   lateinit var currentOrientation: String // UI retrigger
@@ -129,38 +122,6 @@ class MainActivity: ReactActivity() {
 
   }
 
-  //var lastInsets: WindowInsets? = null
-
-  fun doApplyInsets(insets: WindowInsets) {
-    // Use the passed-in 'insets' object, which is guaranteed to be current.
-    // val left = insets.systemWindowInsetLeft
-    // val top = insets.systemWindowInsetTop
-    // val right = insets.systemWindowInsetRight
-    // val bottom = min(insets.systemWindowInsetBottom, insets.stableInsetBottom)
-
-    // newInsets = Rect(left, top, right, bottom)
-
-    // // Log the new values (convert to DP if needed, assuming your 'dotsPerInch' is for that conversion)
-    // Log.d("LOG", "INSETS APPLIED left: " + left / dotsPerInch)
-    // Log.d("LOG", "INSETS APPLIED top: " + top / dotsPerInch)
-    // Log.d("LOG", "INSETS APPLIED right: " + right / dotsPerInch)
-    // Log.d("LOG", "INSETS APPLIED bottom: " + bottom / dotsPerInch)
-
-    // You can call your updateUI here, or a simplified version
-    // updateUI(null) 
-    //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
-
-    // if (insets == lastInsets) {
-    //     // Insets geometry is identical, skip layout pass
-    //     Log.d("LOG", "ZZZZZ - Insets identical, skipping")
-    //     return 
-    // }
-    // lastInsets = insets
-
-    //Log.d("LOG", "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
-
-}
-
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
     Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
@@ -223,23 +184,13 @@ class MainActivity: ReactActivity() {
       @RequiresApi(Build.VERSION_CODES.M)
       fun getInsetsCompatM(rootView: View): Unit {
         val preNewInsets = rootView.rootWindowInsets
-        //if (preNewInsets != null) newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
         if (preNewInsets != null) {
-          // Log.d("LOG", "AAAAAAAAAAAAAAAAAAAAAAAAA: " + preNewInsets.systemWindowInsetBottom)
-          // Log.d("LOG", "BBBBBBBBBBBBBBBBBBBBBBBBB: " + preNewInsets.stableInsetBottom)
           newInsets = Rect(preNewInsets.systemWindowInsetLeft, preNewInsets.systemWindowInsetTop, preNewInsets.systemWindowInsetRight, min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom))
-          // Log.d("LOG", "VALUE VALUE VALUE 00 left: " + preNewInsets.systemWindowInsetLeft / dotsPerInch)
-          // Log.d("LOG", "VALUE VALUE VALUE 00 top: " + preNewInsets.systemWindowInsetTop / dotsPerInch)
-          // Log.d("LOG", "VALUE VALUE VALUE 00 right: " + preNewInsets.systemWindowInsetRight / dotsPerInch)
-          // Log.d("LOG", "VALUE VALUE VALUE 00 bottom: " + min(preNewInsets.systemWindowInsetBottom, preNewInsets.stableInsetBottom) / dotsPerInch)
         }
       }
-      // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest.. // 30 to "36"
-      // else getInsetsCompatM(rootView) // 7 to 10 // 24 to 29
+
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(decorViewRef) // 11 to newest.. // 30 to "36"
       else getInsetsCompatM(decorViewRef) // 7 to 10 // 24 to 29
-      //else getInsetsCompatM(findViewById<View>(android.R.id.content).rootView) // 7 to 10 // 24 to 29
-      //else getInsetsCompatM(rootView) // 7 to 10 // 24 to 29
       // 6 or older NOT SUPPORTED
 
       // sendUpdate FLAG SETTERS // TEST ORIGINAL
@@ -309,22 +260,10 @@ class MainActivity: ReactActivity() {
 
         mainMap.putBoolean("tallNav", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
-        //Log.d("LOG", "VALUE VALUE VALUE: " + mainMap.getBoolean("tallNav"))
-
         if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
         else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
 
-        // if (mainMap.getBoolean("tallNav")) this@MainActivity.window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
-        // else this@MainActivity.window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
-
-        // if (mainMap.getBoolean("tallNav")) contentView.window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
-        // else contentView.window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
-
         Log.d("LOG", "VALUE VALUE VALUE 0 ALL: " + mainMap.getMap("insets"))
-        // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
-        // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
-        // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
-        // Log.d("LOG", "VALUE VALUE VALUE 1bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
 
         if (userLaunched) { // ONLY SEND UPDATED IF APP IS USER-LAUNCHED
 
@@ -332,28 +271,17 @@ class MainActivity: ReactActivity() {
           if (currentContext == null) {
             val listener = object: ReactInstanceEventListener {
               override fun onReactContextInitialized(context: ReactContext) {
-                //Log.d("LOG", "tallNav VALUE FROM 1: " + mainMap.getBoolean("tallNav"))
-                // Log.d("LOG", "VALUE VALUE VALUE 1 left: " + mainMap.getMap("insets")?.getBoolean("left"))
-                // Log.d("LOG", "VALUE VALUE VALUE 1 top: " + mainMap.getMap("insets")?.getBoolean("top"))
-                // Log.d("LOG", "VALUE VALUE VALUE 1 right: " + mainMap.getMap("insets")?.getBoolean("right"))
-                // Log.d("LOG", "VALUE VALUE VALUE 1 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
                 context.emitDeviceEvent("LayoutInfo", mainMap)
                 reactHost.removeReactInstanceEventListener(this)
               }
             }
             reactHost.addReactInstanceEventListener(listener)
           } else {
-            //Log.d("LOG", "tallNav VALUE FROM 2: " + mainMap.getBoolean("tallNav"))
-            // Log.d("LOG", "VALUE VALUE VALUE 2 left: " + mainMap.getMap("insets")?.getBoolean("left"))
-            // Log.d("LOG", "VALUE VALUE VALUE 2 top: " + mainMap.getMap("insets")?.getBoolean("top"))
-            // Log.d("LOG", "VALUE VALUE VALUE 2 right: " + mainMap.getMap("insets")?.getBoolean("right"))
-            // Log.d("LOG", "VALUE VALUE VALUE 2 bottom: " + mainMap.getMap("insets")?.getBoolean("bottom"))
             currentContext.emitDeviceEvent("LayoutInfo", mainMap)
           }
 
         } else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
 
-        
         sendUpdate = false // RESET UPDATE FLAG
       }
       canUpdate = true // FLAG FOR updateUI()
@@ -373,33 +301,8 @@ class MainActivity: ReactActivity() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    
     Log.d("LOG", "CONFIGURATION HAS CHANGED")
-
-    // if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-    //   // landscape config
-    //   testCurrentOrientation = Configuration.ORIENTATION_LANDSCAPE
-    // } else {
-    //   // else is portrait
-    //   testCurrentOrientation = Configuration.ORIENTATION_PORTRAIT
-    //   }
-    // }
-
-    // when (newConfig.orientation) {
-    //   Configuration.ORIENTATION_PORTRAIT -> {
-    //     testCurrentOrientation = Configuration.ORIENTATION_PORTRAIT
-    //   }
-    //   Configuration.ORIENTATION_LANDSCAPE -> {
-    //     testCurrentOrientation = Configuration.ORIENTATION_LANDSCAPE
-    //   }
-    // }
-    // Log.d("LOG", "AppLock.canUpdate oCC " + canUpdate)
-    // if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
-    //rootView.requestApplyInsets()
-    //decorView.requestApplyInsets()
     contentViewRef.requestApplyInsets()
-    //ViewCompat.requestApplyInsets(rootView)
-    //if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
   }
 
   override fun getMainComponentName(): String = "reactNativeCalculator"

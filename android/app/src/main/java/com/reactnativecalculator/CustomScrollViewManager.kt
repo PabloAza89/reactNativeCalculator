@@ -1,22 +1,22 @@
 package com.reactnativecalculator
 
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.views.scroll.ReactScrollView
-import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.ViewGroupManager
-import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.ReadableArray
-
-import android.util.Log
-import android.view.View
-import android.os.Build
-import android.graphics.drawable.LayerDrawable
-import android.util.TypedValue
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.os.Build
+import android.util.Log
+import android.util.TypedValue
+import android.view.View
 
 import androidx.core.content.ContextCompat
+
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewGroupManager
+import com.facebook.react.views.scroll.ReactScrollView
 
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -51,7 +51,7 @@ class CustomScrollViewManager(reactContext: ReactApplicationContext) : ViewGroup
     val layerDrawable = ContextCompat.getDrawable(view.context, R.drawable.thumb) as LayerDrawable
     layerDrawable.setLayerInset(0, dpToPx(map.getDouble("left")), dpToPx(map.getDouble("top")), dpToPx(map.getDouble("right")), dpToPx(map.getDouble("bottom")))
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { view.setVerticalScrollbarThumbDrawable(layerDrawable) } // 10 = setVerticalScrollbarThumbDrawable
-    else { setReflectionScrollbarThumbDrawable(view, layerDrawable) } // reflection
+    else { setReflectionScrollbarThumbDrawable(view, layerDrawable) } // REFLECTION
     view.scrollBy(0, 1) // RE-RENDER HELPER
     view.scrollBy(0, -1) // RE-RENDER HELPER
   }

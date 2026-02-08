@@ -7,11 +7,6 @@ export const s = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  linearGradient: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%'
-  },
   title: {
     //backgroundColor: 'green', // DEV
     fontWeight: '500',
@@ -19,23 +14,16 @@ export const s = StyleSheet.create({
     textAlign: 'center',
     //color: 'red'
     color: 'rgba(0, 0, 0, .54)',
-    marginBottom: 24, // THIS
+    marginBottom: 24
   },
   imageWrapper: {
     display: 'flex',
     position: 'relative',
     //backgroundColor: 'lightcoral', // DEV
-    //marginTop: 24, // THIS
-    //marginBottom: 24, // THIS
-    //paddingTop: 20,
     marginBottom: 24, // THIS
-  },
-  iconStyle: {
-    position: 'absolute'
   },
   modalForegroundAbout: {
     //backgroundColor: 'yellow', // DEV
-    //backgroundColor: 'rgba(0, 0, 0, 0.4)',
     display: 'flex',
     position: 'absolute',
     zIndex: 1000001,
@@ -86,19 +74,6 @@ export const s = StyleSheet.create({
     textAlignVertical: 'center',
     includeFontPadding: false,
   },
-  textInButtonUpper: {
-    color: 'white',
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 15,
-    //marginLeft: -6,
-    //marginRight: 2,
-    //height: 30,
-    textAlign: 'center',
-    //textAlignVertical: 'center',
-    //includeFontPadding: false
-    //paddingBottom: 40,
-  },
   textInButton: {
     color: 'white',
     fontWeight: '600',
@@ -113,34 +88,6 @@ export const s = StyleSheet.create({
   twoLines: {
     lineHeight: 16,
     height: 32,
-  },
-  textInButtonLower: {
-    color: 'white',
-    //color: 'red',
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 15,
-    //marginRight: 4,
-    //marginLeft: -4,
-    transform: [{ rotate: '180deg' }],
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    //includeFontPadding: false,
-    //justifyContent: 'flex-start',
-    //alignItems: 'baseline'
-    //alignItems: 'flex-start'
-    //textAlign: 'center',
-    //margin: 4,
-    //height: 30,
-    //marginBottom: 50
-  },
-  space12: {
-    width: 12,
-    height: 12,
-  },
-  space24: {
-    width: 24,
-    height: 24,
   },
   customScrollView: {
     width: '100%',

@@ -15,24 +15,8 @@ import { CommonActions, StackActions, useFocusEffect } from '@react-navigation/n
 //function About({ navigation: { navigate }, vmin }: AboutI): ReactElement {
 const About = ({ navigation, width, height, ins, state, hingeBounds, maxVerticalInset, maxHorizontalInset, vmin, showModal, twoScreens, aboutUp, calcLeft, fadeAnim, updateShowModal,  switchSide, nextScreen, fadeIn, fadeOut }: AboutI): ReactElement => {
 
-  let allRoutes = [{ name: 'Home' }, { name: 'About' }, { name: 'KnowMore' }]
-
-  let routes = [
-    { index: 2, routes: allRoutes },
-    { index: 1, routes: allRoutes.slice(0, 2) },
-    { index: 0, routes: allRoutes.slice(0, 1) }
-  ]
-
-  // useEffect(() => {
-  //   console.log("navigationRef ABOUT ROUTES", navigation.getState().routes)
-  // }, [navigation])
-
   useFocusEffect(
-    useCallback(() => {
-      //console.log('About screen is now visible!');
-      console.log("navigationRef ABOUT ROUTES", navigation.getState().routes)
-
-    }, [])
+    useCallback(() => console.log("navigationRef ABOUT ROUTES", navigation.getState().routes), [])
   );
 
   const { navigate } = navigation

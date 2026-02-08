@@ -70,47 +70,31 @@ class MainActivity: ReactActivity() {
   lateinit var currentInsets: Rect // UI retrigger
   var currentWindow: MutableMap<String, Int> = mutableMapOf() // UI retrigger
   var currentHingeBounds: MutableMap<String, Int> = mutableMapOf() // UI retrigger
-
-
-  //var lastInsets: WindowInsets? = null
-  //var currentInsetsToString: String? = null
-  //var currentInsetsRef: String? = null
   var currentInsetsRef: Rect? = null
   var currentOrientationRef: String? = null
-  //var currentOrientationRef: Int? = null
-  //lateinit var currentInsetsRef: Rect // UI retrigger
   var testCurrentOrientation: Int? = null
 
   var userLaunched: Boolean = true // when onCreate is called due 3-Button to Gesture (or vice-versa), don't send events to TS side.
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    //Log.d("LOG", "BUNDLE BUNDLE BUNDLE BUNDLE BUNDLE: " + savedInstanceState)
-    if (savedInstanceState == null) userLaunched = true else userLaunched = false // FLAG FOR PREVENT SEND EVENTS IF APP WAS SYSTEM-LAUNCHED (RECREATED)
+    //if (savedInstanceState == null) userLaunched = true else userLaunched = false // FLAG FOR PREVENT SEND EVENTS IF APP WAS SYSTEM-LAUNCHED (RECREATED)
     Log.d("LOG", "USER LAUNCHED: " + userLaunched)
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
-    //rootView = findViewById<View>(android.R.id.content).rootView // no work ?
-    //rootView = findViewById<View>(android.R.id.content) // work
 
     contentViewRef = findViewById<View>(android.R.id.content)
     decorViewRef = contentViewRef.rootView
-    
 
-    //ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
-    //rootView.setOnApplyWindowInsetsListener { view, insets ->
     contentViewRef.setOnApplyWindowInsetsListener { view, insets ->
-    //decorView.setOnApplyWindowInsetsListener { view, insets ->
 
-      //val newInsets = insets.toString()
       val decorView = view.rootView.rootWindowInsets // decorView
       var newInsetsRef: Rect? = null
-      //val newOrientationRef = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
       val newOrientationRef = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
 
-      Log.d("LOG", "lastInsets outer: " + insets)
+      //Log.d("LOG", "lastInsets outer: " + insets)
 
       if (decorView !== null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // 11 to newest.. ~ 30 to 36..
@@ -120,25 +104,12 @@ class MainActivity: ReactActivity() {
           newInsetsRef = Rect(decorView.systemWindowInsetLeft, decorView.systemWindowInsetTop, decorView.systemWindowInsetRight, min(decorView.systemWindowInsetBottom, decorView.stableInsetBottom))
         }
 
-        Log.d("LOG", "lastInsets inner: " + newInsetsRef)
+        //Log.d("LOG", "lastInsets inner: " + newInsetsRef)
 
-        //if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP //
         if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP
-        //canUpdate = false; updateUI(null)
         currentInsetsRef = newInsetsRef
         currentOrientationRef = newOrientationRef
       }
-
-      // if (decorViewInner !== null) {
-      //   val newInsetsRef = Rect(decorViewInner.systemWindowInsetLeft, decorViewInner.systemWindowInsetTop, decorViewInner.systemWindowInsetRight, min(decorViewInner.systemWindowInsetBottom, decorViewInner.stableInsetBottom))
-      //   Log.d("LOG", "lastInsets outer: " + newInsetsRef)
-      //   if (!newInsetsRef.equals(currentInsetsRef)) {
-      //     Log.d("LOG", "lastInsets inner: " + newInsetsRef)
-      //     if (canUpdate) {canUpdate = false;updateUI(null)} // BLOCK 1st FLAG ASAP
-      //   }
-      //   currentInsetsRef = newInsetsRef
-      // }
-
       insets
     }
 

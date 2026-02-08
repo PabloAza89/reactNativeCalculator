@@ -2,7 +2,7 @@ import { ReactElement, useState, useEffect, useRef, useCallback } from 'react';
 import {
   View, StatusBar, ScrollView, Pressable, InteractionManager, ActivityIndicator,
   NativeSyntheticEvent, NativeScrollEvent, Animated, useAnimatedValue,
-  UIManager, findNodeHandle, Platform, Dimensions
+  UIManager, findNodeHandle
 } from 'react-native';
 import { s } from './KnowMoreCSS';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -17,35 +17,22 @@ import { scrollBarSize, iconColor } from '../../utils/constants';
 import { counterI, KnowMoreI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
-import { CommonActions, StackActions, useFocusEffect } from '@react-navigation/native';
+import { StackActions, useFocusEffect } from '@react-navigation/native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 //function KnowMore({ navigation: { navigate }, opw, port }: KnowMoreI): ReactElement {
 const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, aboutUp, switchSide, nextScreen,   }: KnowMoreI): ReactElement => {
 
-  // useEffect(() => {
-  //   console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes)
-  // }, [navigation])
-
   useFocusEffect(
-    useCallback(() => {
-      //console.log('About screen is now visible!');
-      console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes)
-    }, [])
+    useCallback(() => console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes), []) // eslint-disable-line react-hooks/exhaustive-deps
   );
-
-  //const { height: screenHeight } = Dimensions.get('window');
-  //console.log("screenHeight", screenHeight)
-  // console.log("XXXXXXXXXXXX height KNOWMORE", height)
-  // console.log("XXXXXXXXXXXX ins", ins)
-
 
   const { navigate } = navigation;
 
   useEffect(() => {
     (navigation.getState().routes.at(-1)?.name === 'KnowMore' && (state === 'tabletop' || state === 'book')) && navigate('Home', { lastRoute: 'KnowMore' })
-  }, [state])
+  }, [state]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const goUp = () => UIManager.dispatchViewManagerCommand(viewId, 0, [])
 
@@ -139,12 +126,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
 
   const [ loaded, setLoaded ] = useState(false)
 
-  // useEffect(() => {
-  //   const interactionPromise = InteractionManager.runAfterInteractions(() =>  setLoaded(true));
-  //   return () => interactionPromise.cancel();
-  // }, []);
-
-  useEffect(() => { setTimeout(() => setLoaded(true), 0) }, []); // Former: InteractionManager.runAfterInteractions()
+  useEffect(() => { setTimeout(() => setLoaded(true), 0) }, []);
 
   const [ showButton, setShowButton ] = useState(false)
 
@@ -153,8 +135,6 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   const parsedInsTop = ins.top === 0 ? 1 : ins.top // PREVENT NaN WHEN RENDER (on native side)
   const parsedHeight = height === 0 ? 1 : height // PREVENT NaN WHEN RENDER (on native side)
   const topByHeight = ins.top / parsedHeight
-  //console.log("parsedHeight", parsedHeight)
-  //console.log("topByHeight", topByHeight)
 
   let currIndex = useAnimatedValue(0);
 
@@ -166,8 +146,6 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   });
 
   const linearGradientColors = [ 'rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)' ]
-
-  //console.log(`Android: ${Platform.Version}, ins.bottom: ${ins.bottom}`)
 
   const updateValues = (num: any) => {
     sC(curr => {
@@ -187,9 +165,7 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   useEffect(() => {
     nextColor(1)
     return () => currIndex.stopAnimation()
-  }, [])
-  //}, [currIndex])
-  
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   /// END BACKGROUND ANIMATION ///
 
@@ -202,9 +178,6 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   useEffect(() => setViewId(findNodeHandle(scrollRef.current)), [])
 
   const scrollHandler = (val: number) => {
-    // console.log("VAL ", val)
-    // console.log("viewId ", viewId)
-    
     val > 100 ? setShowButton(true) : setShowButton(false);
     val < 0 && UIManager.dispatchViewManagerCommand(viewId, 0, []);
   }

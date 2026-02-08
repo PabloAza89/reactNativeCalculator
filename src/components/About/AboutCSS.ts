@@ -12,35 +12,6 @@ export const s = StyleSheet.create({
     height: '100%',
     width: '100%'
   },
-  customScrollView: {
-    //backgroundColor: 'red', // DEV
-    width: '100%', // THIS
-    height: '100%', // THIS
-    //flexGrow: 1,
-    //height: '100%',
-    //flex: 1,
-    //height: '100%', // NEW
-    backgroundColor: 'red',
-    
-  },
-  scrollViewInner: {
-    //flex: 1,
-    //display: 'flex',
-    //flexDirection: 'column',
-    //backgroundColor: 'red', // DEV
-    //flexGrow: 1, //THIS
-    //height: '100%',
-    //width: '100%', //THIS
-    //justifyContent: 'center', //THIS
-    //alignContent: 'center', //no
-    // alignContent: 'space-around', //no
-    //alignContent: 'space-between', //no
-    //alignSelf: 'center', //no
-    //justifyContent: 'center',
-    //alignItems: 'center', //THIS
-    //alignSelf: 'center', // ???
-    //width: 400
-  },
   title: {
     //backgroundColor: 'green', // DEV
     fontWeight: '500',
@@ -171,8 +142,9 @@ export const s = StyleSheet.create({
     width: 24,
     height: 24,
   },
-  cswStyle: {
+  customScrollView: {
     width: '100%',
+    height: '100%',
   },
   cswContentContainerStyle: {
     //backgroundColor: 'red', // DEV

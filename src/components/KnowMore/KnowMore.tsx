@@ -192,23 +192,14 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
   //   2     ————————————   GRADIENT + OPACITY
   //   1     —————————————— ANIMATED COLORS + GRADIENT
 
-  // console.log("ins.left", ins.left)
-  // console.log("ins.top", ins.top)
-  // console.log("ins.right", ins.right)
-  // console.log("ins.bottom", ins.bottom)
-
-  return (// testing paddingBottom: ins.bottom
-    <View style={[s.mainContainer, { /* flex: 1 */ }]}>
-
+  return (
+    <View style={[ s.mainContainer ]}>
       {
         !(state === 'tabletop' && aboutUp) && // STATUS BAR
         <LinearGradient
           colors={linearGradientColors}
           style={[ s.linearGradient, { zIndex: 4, height: ins.top } ]}
-          //start={[ 0, state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop ]}
-          //start={[ 0, height / parsedInsTop ]}
           start={{ x: 0, y: height / parsedInsTop }}
-          //end={[ 1, 0 ]}
           end={{ x: 1, y: 0 }}
         />
       }
@@ -216,18 +207,14 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
       <LinearGradient
         colors={linearGradientColors} // BODY
         style={[ s.linearGradient, { zIndex: 2 },  (state === 'tabletop' && aboutUp) ? { height: 0, top: 0 } : { height: height - (ins.top*1), top: ins.top } ]}
-        //start={[ 0, 1 - topByHeight ]}
         start={{ x: 0, y: 1 - topByHeight }}
-        //end={[ 1, topByHeight * -1 ]}
         end={{ x: 1, y: topByHeight * -1 }}
       />
 
       <AnimatedLinearGradient
         colors={linearGradientColors} // ENTIRE WINDOW
         style={[ s.animatedLinearGradient, { backgroundColor: currentColor } ]}
-        //start={[ 0, 1 ]} // [ XfromLeft, YfromTop ]
         start={{ x: 0, y: 1 }}
-        //end={[ 1, 0 ]}   // [ XfromLeft, YfromTop ]
         end={{ x: 1, y: 0 }}
       />
 

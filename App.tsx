@@ -89,7 +89,6 @@ const App = (): ReactElement => {
       console.log("SAVED ROUTE xxxxxxxxxxxx", array[array.length - 1].name)
       console.log("SAVED TALLBAR xxxxxxxxxx", tallNav.current)
     })
-
     return () => blur.remove()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

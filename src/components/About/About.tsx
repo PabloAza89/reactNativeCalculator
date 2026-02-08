@@ -23,13 +23,15 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
 
   useEffect(() => {
     (navigation.getState().routes.at(-1)?.name === 'About' && (state === 'tabletop' || state === 'book')) && navigate('Home', { lastRoute: 'About' })
-  }, [state])
+  }, [state]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => showModal ? fadeIn() : fadeOut(), [showModal])
+  useEffect(() => showModal ? fadeIn() : fadeOut(), [showModal]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const parsedInsTop = ins.top === 0 ? 1 : ins.top // PREVENT NaN WHEN RENDER (on native side)
   const parsedMaxHorizontalInset = maxHorizontalInset * 2
   const parsedMaxVerticalInset = maxVerticalInset > 24 ? maxVerticalInset : 24
+  console.log("maxVerticalInset", maxVerticalInset)
+  console.log("ins", ins)
   const parsedWidth =
     state === 'book' && calcLeft ? width - hingeBounds.right - ins.right - parsedMaxHorizontalInset :
     state === 'book' && !calcLeft ? hingeBounds.left - ins.left - parsedMaxHorizontalInset :
@@ -40,7 +42,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
 
   const linearGradientColors = [ 'rgb(18, 56, 117)', 'yellow' ]
 
-  useEffect(() => { return () => updateShowModal(false) }, []); // ON LEAVE COMPONENT
+  useEffect(() => { return () => updateShowModal(false) }, []); /* ON LEAVE COMPONENT */ // eslint-disable-line react-hooks/exhaustive-deps
 
   // ****** ↓↓↓ BACKGROUND SCHEME ↓↓↓ ******
   // zIndex
@@ -87,17 +89,18 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
           />
         }
       />
-
-      <LinearGradient // STATUS BAR
-        colors={linearGradientColors}
-        style={[ s.statusBarGradient, { height: ins.top } ]}
-        start={{ x: 0, y: state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop }}
-        end={{ x: 1, y: 0 }}
-      />
+      { (state === 'tabletop' && aboutUp) &&
+        <LinearGradient // STATUS BAR
+          colors={linearGradientColors}
+          style={[ s.statusBarGradient, { height: ins.top } ]}
+          start={{ x: 0, y: state === 'tabletop' ?  hingeBounds.top / parsedInsTop : height / parsedInsTop }}
+          end={{ x: 1, y: 0 }}
+        />
+      }
 
       <LinearGradient  // BACKGROUND
         colors={linearGradientColors}
-        style={[ s.bodyGradient, { top: ins.top } ]}
+        style={[ s.bodyGradient, { top: !(state === 'tabletop' && aboutUp) ? 0 : ins.top } ]}
         start={{ x: 0, y: 1 - topByHeight }}
         end={{ x: 1, y: topByHeight * -1 }}
       />
@@ -109,19 +112,18 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
           right: ins.right,
           bottom: (state === 'tabletop' && aboutUp) ? 0 : ins.bottom,
         }}
-        style={[s.cswStyle, { zIndex: 2 }]}
-        contentContainerStyle={s.cswContentContainerStyle}
-      >
-        <View
-          collapsable={false}
-          style={{
+        //contentContainerStyle={s.cswContentContainerStyle}
+        contentContainerStyle={{
               alignItems: 'center',
               marginTop: 'auto',
               marginBottom: 'auto',
-              paddingTop: parsedMaxVerticalInset,
-              paddingBottom: parsedMaxVerticalInset,
+              paddingTop: (state === 'tabletop' && aboutUp) ? ins.top : (state === 'tabletop' && !aboutUp) ? ins.top : parsedMaxVerticalInset,
+              paddingBottom: (state === 'tabletop' && aboutUp) ? ins.top : (state === 'tabletop' && !aboutUp) ? ins.bottom + 24 : parsedMaxVerticalInset,
+              //paddingBottom: parsedMaxVerticalInset*0 + 24,
           }}
-        >
+        style={[s.customScrollView, { zIndex: 2 }]}
+      >
+     
           <Text
             style={[ s.title ]}
             children={'This App is developed by\nJuan Pablo Azambuyo'}
@@ -190,7 +192,7 @@ const About = ({ navigation, width, height, ins, state, hingeBounds, maxVertical
               children={ <Text style={[ s.textInButton, s.oneLine, { transform: [{ rotate: '180deg' }] } ]} children={'HOW DOES IT WORK ?'} /> }
             />
           }
-        </View>
+        
       </CustomScrollView>
     </View>
   );

@@ -1,8 +1,7 @@
 import { ReactElement, useState, useEffect, useRef, useCallback } from 'react';
 import {
-  View, ScrollView, Pressable, ActivityIndicator,
-  NativeSyntheticEvent, NativeScrollEvent, Animated, useAnimatedValue,
-  UIManager, findNodeHandle
+  View, ScrollView, Pressable, ActivityIndicator, NativeSyntheticEvent,
+  NativeScrollEvent, Animated, useAnimatedValue, UIManager, findNodeHandle
 } from 'react-native';
 import { s } from './KnowMoreCSS';
 import Entypo from 'react-native-vector-icons/Entypo';

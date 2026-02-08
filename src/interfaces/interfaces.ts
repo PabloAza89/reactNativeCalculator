@@ -1,16 +1,12 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { SetStateAction, Dispatch, RefObject } from 'react';
-import { Animated, ViewStyle } from 'react-native';
+import { Animated } from 'react-native';
 
-export interface counterI {
-  [index: string]: number
-}
-
-export interface dimI {
-  screenHeight: number,
-  screenWidth: number,
-  windowHeight: number,
-  windowWidth: number
+interface Insets {
+  left: number,
+  top: number,
+  right: number,
+  bottom: number,
 }
 
 export interface navigationI {
@@ -67,71 +63,30 @@ export interface KnowMoreI extends navigationI {
   nextScreen: () => void,
 }
 
-interface Insets {
-  left: number,
-  top: number,
-  right: number,
-  bottom: number,
-}
-
-type AnimatedI = Animated.WithAnimatedValue<ViewStyle>
-
-interface innerRoutesI {
-  name: string
-}
-
-interface routesI {
-  index: number,
-  routes: Array<innerRoutesI>
-}
-
-export interface ComponentI {
-  navigation: NavigationProp<ParamListBase>
-  vmin: number,
-  width: number,
-  height: number,
-  showModal?: boolean,
-  updateShowModal?: () => void,
-  state: string,
-  twoScreens: boolean,
-  switchSide: () => void,
-  nextScreen: () => void,
-  aboutUp: boolean,
-  ins: Insets,
-  hingeBounds: Insets,
-  calcLeft?: boolean,
-  maxVerticalInset: number,
-  maxHorizontalInset: number,
-  fadeAnim: AnimatedI,
-  fadeIn: () => void,
-  fadeOut: () => void,
-  input?: RefObject<string>,
-  secInput?: RefObject<string>,
-  routes?: Array<routesI>,
-  update?: Dispatch<SetStateAction<object>>
-  route?: NavigationProp<ParamListBase>
-}
-
-export interface AdderI {  
+export interface AdderI {
   scrollEnd(): void,
   input: RefObject<string>,
   secInput: RefObject<string>,
   setParErr: Dispatch<SetStateAction<boolean>>
 }
 
-export interface OwnButtonI extends AdderI {
-  vmin: number,
-  parErr: boolean | undefined,
-  smaller: boolean | undefined,
-  value: string
+export interface OwnButtonI {
+  button: string,
+  size: string,
+  margin: string,
+  fontSize: number,
+  small?: boolean,
+  state?: string,
+  handlePress: (x: string) => void
 };
 
-export interface goUpI {
-  "0": boolean,
-  "1": boolean,
-  "2": boolean
+export interface operationI {
+  [key: string] : (a: string, b: string) => number
 }
 
-export interface operationI {
-  [key: string] : (a: string, b: string) => number,
+export interface buttonsI {
+  button: string,
+  size: string,
+  margin: string,
+  small?: boolean,
 }

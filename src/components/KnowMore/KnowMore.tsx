@@ -1,6 +1,6 @@
 import { ReactElement, useState, useEffect, useRef, useCallback } from 'react';
 import {
-  View, StatusBar, ScrollView, Pressable, InteractionManager, ActivityIndicator,
+  View, ScrollView, Pressable, ActivityIndicator,
   NativeSyntheticEvent, NativeScrollEvent, Animated, useAnimatedValue,
   UIManager, findNodeHandle
 } from 'react-native';
@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text } from '../../utils/Text';
-import { scrollBarSize, iconColor } from '../../utils/constants';
+import { iconColor } from '../../utils/constants';
 import { counterI, KnowMoreI, goUpI, ComponentI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';

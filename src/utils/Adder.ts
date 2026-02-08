@@ -1,7 +1,6 @@
 import { AdderI, operationI } from '../interfaces/interfaces';
 
-//export const Adder = ({ scrollEnd, input, setInput, setSecInput, setParErr }: AdderI) => {
-export const Adder = ({ scrollEnd, input, /* setInput, setSecInput, */ secInput, setParErr }: any) => {
+export const Adder = ({ scrollEnd, input, secInput, setParErr }: AdderI) => {
 
   let init: string[] = input.current.replace(/ /g,'').split("") // OK
 
@@ -154,8 +153,8 @@ export const Adder = ({ scrollEnd, input, /* setInput, setSecInput, */ secInput,
       parsed.splice(openPar, 0, toDo[0])
       updateParenthesis()
       if (openPar === -1 && closePar !== -1) { // STOP IF INNER PARENTHESIS ARE BAD POSITIONED
-        setParErr(true); scrollEnd(); return
         //console.log("ERROR PARENTHESIS")
+        setParErr(true); scrollEnd(); return
       }
       updateOperators()
       index = 1
@@ -203,9 +202,6 @@ export const Adder = ({ scrollEnd, input, /* setInput, setSecInput, */ secInput,
   else result = parseFloat(parseFloat(prevMinus.join("")).toExponential(9 - spacesAfterE.length)).toString().split("")
 
   if (prefix === "-") result?.splice(0,0,"N") // NEGATIVE PARSER
-
-  // setSecInput(input)
-  // setInput(result?.join(""))
 
   secInput.current = input.current
   input.current = result?.join("")

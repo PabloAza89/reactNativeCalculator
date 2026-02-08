@@ -14,15 +14,14 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text } from '../../utils/Text';
 import { iconColor } from '../../utils/constants';
-import { counterI, KnowMoreI, goUpI, ComponentI } from '../../interfaces/interfaces';
+import { KnowMoreI } from '../../interfaces/interfaces';
 import CustomScrollView from '../CustomScrollView/CustomScrollView';
 import CustomButton from '../CustomButton/CustomButton';
 import { StackActions, useFocusEffect } from '@react-navigation/native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
-//function KnowMore({ navigation: { navigate }, opw, port }: KnowMoreI): ReactElement {
-const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, aboutUp, switchSide, nextScreen,   }: KnowMoreI): ReactElement => {
+const KnowMore = ({ navigation, height, ins, state, twoScreens, aboutUp, switchSide, nextScreen }: KnowMoreI): ReactElement => {
 
   useFocusEffect(
     useCallback(() => console.log("navigationRef KNOWMORE ROUTES", navigation.getState().routes), []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -235,80 +234,70 @@ const KnowMore = ({ navigation, /* opw, */ height, ins, state, twoScreens, about
           paddingRight: ins.right,
           paddingBottom: (state === 'tabletop' && !aboutUp) ? 0 : ins.bottom * 1
         }}
-        style={[ s.customScrollView, {}]}
+        style={[ s.customScrollView ]}
       >
-        
-            <View style={[ s.buttonContainer, { marginTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 0 : 7 } ]}>
+        <View style={[ s.buttonContainer, { marginTop: ins.top === 0 || (state === 'tabletop' && aboutUp) ? 0 : 7 } ]}>
 
-              {
-                twoScreens ?
-                <CustomButton
-                  type={MaterialCommunityIcons.Button}
-                  name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
-                  size={30}
-                  color={iconColor}
-                  onPress={() => switchSide()}
-                  margin={{ right: 12 }}
-                  children={ <Text style={[ s.textInButton, s.twoLines ]} children={'SWITCH\nSCREENS'} /> }
-                /> :
-                <CustomButton
-                  type={Ionicons.Button}
-                  name={'chevron-back-circle-sharp'}
-                  size={30}
-                  color={iconColor}
-                  //onPress={() => navigate('About')}
-                  //onPress={() => navigation.goBack()}
-                  onPress={() => navigation.dispatch(StackActions.pop())} // GO BACK
-                  margin={{ right: 12 }}
-                  children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
-                />
-              }
+          {
+            twoScreens ?
+            <CustomButton
+              type={MaterialCommunityIcons.Button}
+              name={ state === 'tabletop' ? 'swap-vertical-bold' : 'swap-horizontal-bold' }
+              size={30}
+              color={iconColor}
+              onPress={() => switchSide()}
+              margin={{ right: 12 }}
+              children={ <Text style={[ s.textInButton, s.twoLines ]} children={'SWITCH\nSCREENS'} /> }
+            /> :
+            <CustomButton
+              type={Ionicons.Button}
+              name={'chevron-back-circle-sharp'}
+              size={30}
+              color={iconColor}
+              onPress={() => navigation.dispatch(StackActions.pop())} // GO BACK
+              margin={{ right: 12 }}
+              children={ <Text style={[ s.textInButton, s.oneLine ]} children={'BACK'} /> }
+            />
+          }
 
-              {/* <View style={s.space} /> */}
+          {
+            twoScreens && state === 'tabletop' ?
+            <CustomButton
+              type={Ionicons.Button}
+              name={'calculator-sharp'}
+              size={30}
+              color={iconColor}
+              onPress={() => nextScreen()}
+              margin={{ left: 12 }}
+              children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
+            /> :
+            twoScreens ?
+            <CustomButton
+              type={SimpleLineIcons.Button}
+              name={'question'}
+              size={25}
+              color={iconColor}
+              onPress={() => nextScreen()}
+              margin={{ left: 12 }}
+              children={ <Text style={[ s.textInButton, s.oneLine ]} children={'ABOUT'} /> }
+            /> :
+            <CustomButton
+              type={Ionicons.Button}
+              name={'home'}
+              size={30}
+              color={iconColor}
+              onPress={() => navigation.dispatch(StackActions.popToTop())} // GO DIRECTLY TO HOME
+              margin={{ left: 12 }}
+              children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
+            />
+          }
 
-              {
-                twoScreens && state === 'tabletop' ?
-                <CustomButton
-                  type={Ionicons.Button}
-                  name={'calculator-sharp'}
-                  size={30}
-                  color={iconColor}
-                  onPress={() => nextScreen()}
-                  margin={{ left: 12 }}
-                  //style={{ height: 30, backgroundColor: 'red' }}
-                  children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
-                /> :
-                twoScreens ?
-                <CustomButton
-                  type={SimpleLineIcons.Button}
-                  name={'question'}
-                  size={25}
-                  color={iconColor}
-                  onPress={() => nextScreen()}
-                  margin={{ left: 12 }}
-                  children={ <Text style={[ s.textInButton, s.oneLine ]} children={'ABOUT'} /> }
-                /> :
-                <CustomButton
-                  type={Ionicons.Button}
-                  name={'home'}
-                  size={30}
-                  color={iconColor}
-                  //onPress={() => navigate('Home')}
-                  //onPress={() => navigation.popToTop()}
-                  onPress={() => navigation.dispatch(StackActions.popToTop())} // GO DIRECTLY TO HOME
-                  margin={{ left: 12 }}
-                  children={ <Text style={[ s.textInButton, s.oneLine ]} children={'HOME'} /> }
-                />
-              }
+        </View>
 
-            </View>
+        <Text style={s.centerText} children={'Welcome to my very first\nAndroid App: A Classic Calculator !'} />
+        <Text style={s.leftText} children={'Below I will give you some tips if you have any doubt:'} />
 
-            <Text style={s.centerText} children={'Welcome to my very first\nAndroid App: A Classic Calculator !'} />
-            <Text style={s.leftText} children={'Below I will give you some tips if you have any doubt:'} />
-
-            { loaded ? lazyLoad.map(e => e) : <ActivityIndicator size="large" color="#2196F3" /> }
-
-        
+        { loaded ? lazyLoad.map(e => e) : <ActivityIndicator size="large" color="#2196F3" /> }
       </CustomScrollView>
 
       {

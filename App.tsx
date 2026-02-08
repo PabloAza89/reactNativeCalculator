@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { /* dimI, */ navigationI } from './src/interfaces/interfaces';
+import { navigationI } from './src/interfaces/interfaces';
 import { startListener, currentListener, addCallback, stopListener } from './layoutListener';
 
 const Stack = createNativeStackNavigator();
@@ -227,7 +227,7 @@ const App = (): ReactElement => {
     if (!currentListener) startListener()
     addCallback(callback)
     return () => stopListener()
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <NavigationContainer

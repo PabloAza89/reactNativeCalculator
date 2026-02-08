@@ -1,6 +1,6 @@
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { SetStateAction, Dispatch, MutableRefObject, RefObject } from 'react';
-import { Animated, ViewProps, ViewStyle } from 'react-native';
+import { SetStateAction, Dispatch, RefObject } from 'react';
+import { Animated, ViewStyle } from 'react-native';
 
 export interface counterI {
   [index: string]: number
@@ -45,7 +45,7 @@ export interface AboutI extends navigationI {
   maxVerticalInset: number,
   maxHorizontalInset: number,
   vmin: number,
-  showModal: boolean, // aA?!??!
+  showModal: boolean,
   twoScreens: boolean,
   aboutUp: boolean,
   calcLeft: boolean,
@@ -58,7 +58,6 @@ export interface AboutI extends navigationI {
 }
 
 export interface KnowMoreI extends navigationI {
-  //width: number,
   height: number,
   ins: Insets,
   state: string,
@@ -66,11 +65,6 @@ export interface KnowMoreI extends navigationI {
   aboutUp: boolean,
   switchSide: () => void,
   nextScreen: () => void,
-
-  // fadeIn: () => void,
-  // fadeOut: () => void,
-  // opw: number,
-  // port: boolean
 }
 
 interface Insets {
@@ -79,10 +73,6 @@ interface Insets {
   right: number,
   bottom: number,
 }
-
-// export interface Props extends Animated.AnimatedProps<ViewProps> {
-//   // Custom props
-// }
 
 type AnimatedI = Animated.WithAnimatedValue<ViewStyle>
 
@@ -115,22 +105,18 @@ export interface ComponentI {
   fadeAnim: AnimatedI,
   fadeIn: () => void,
   fadeOut: () => void,
-  input?: MutableRefObject<string>,
-  secInput?: MutableRefObject<string>,
+  input?: RefObject<string>,
+  secInput?: RefObject<string>,
   routes?: Array<routesI>,
   update?: Dispatch<SetStateAction<object>>
-  route?: NavigationProp<ParamListBase>,
-
-
-
+  route?: NavigationProp<ParamListBase>
 }
 
-export interface AdderI {
-  input: string,
+export interface AdderI {  
   scrollEnd(): void,
-  setParErr: Dispatch<SetStateAction<boolean>>,
-  setInput: Dispatch<SetStateAction<string>>,
-  setSecInput: Dispatch<SetStateAction<string>>
+  input: RefObject<string>,
+  secInput: RefObject<string>,
+  setParErr: Dispatch<SetStateAction<boolean>>
 }
 
 export interface OwnButtonI extends AdderI {

@@ -111,7 +111,6 @@ class MainActivity: ReactActivity() {
 
     contentViewRef.requestApplyInsets()
 
-
     lifecycleScope.launch(Dispatchers.Main) {
       lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
         WindowInfoTracker.getOrCreate(mainActivity)
@@ -122,7 +121,6 @@ class MainActivity: ReactActivity() {
           }
       }
     }
-
   }
 
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
@@ -233,62 +231,62 @@ class MainActivity: ReactActivity() {
 
       Log.d("LOG", "PRE DATAISNEW VAL: " + dataIsNew)
 
-      //dataIsNew = true // TEST
+      if (userLaunched) { // ONLY SEND UPDATE IF APP WAS USER-LAUNCHED
+        if (dataIsNew) {
+          Log.d("LOG", "DATAISNEW CALLED INNER")
+          mainMap.putMap("hingeBounds", Arguments.createMap().apply {
+            putDouble("left", currentHingeBounds["left"]!! / dotsPerInch)
+            putDouble("top", currentHingeBounds["top"]!! / dotsPerInch)
+            putDouble("right", currentHingeBounds["right"]!! / dotsPerInch)
+            putDouble("bottom", currentHingeBounds["bottom"]!! / dotsPerInch)
+          });
+          mainMap.putString("state", currentState); // flat, tabletop..
+          mainMap.putMap("window", Arguments.createMap().apply {
+            putDouble("width", currentWindow["width"]!! / dotsPerInch)
+            putDouble("height", currentWindow["height"]!! / dotsPerInch)
+          });
+          mainMap.putMap("insets", Arguments.createMap().apply {
+            putDouble("left", currentInsets.left / dotsPerInch)
+            putDouble("top", currentInsets.top / dotsPerInch)
+            putDouble("right", currentInsets.right / dotsPerInch)
+            putDouble("bottom", currentInsets.bottom / dotsPerInch)
+          });
+          mainMap.putDouble("maxHorizontalInset", currentMaxHorizontalInset / dotsPerInch)
+          mainMap.putDouble("maxVerticalInset", currentMaxVerticalInset / dotsPerInch)
+          mainMap.putDouble("vmin",
+            if (currentWindow["width"]!! > currentWindow["height"]!!) (currentWindow["height"]!! / dotsPerInch) / 100
+            else (currentWindow["width"]!! / dotsPerInch) / 100
+          );
 
-      if (dataIsNew) {
-        Log.d("LOG", "DATAISNEW CALLED INNER")
-        mainMap.putMap("hingeBounds", Arguments.createMap().apply {
-          putDouble("left", currentHingeBounds["left"]!! / dotsPerInch)
-          putDouble("top", currentHingeBounds["top"]!! / dotsPerInch)
-          putDouble("right", currentHingeBounds["right"]!! / dotsPerInch)
-          putDouble("bottom", currentHingeBounds["bottom"]!! / dotsPerInch)
-        });
-        mainMap.putString("state", currentState); // flat, tabletop..
-        mainMap.putMap("window", Arguments.createMap().apply {
-          putDouble("width", currentWindow["width"]!! / dotsPerInch)
-          putDouble("height", currentWindow["height"]!! / dotsPerInch)
-        });
-        mainMap.putMap("insets", Arguments.createMap().apply {
-          putDouble("left", currentInsets.left / dotsPerInch)
-          putDouble("top", currentInsets.top / dotsPerInch)
-          putDouble("right", currentInsets.right / dotsPerInch)
-          putDouble("bottom", currentInsets.bottom / dotsPerInch)
-        });
-        mainMap.putDouble("maxHorizontalInset", currentMaxHorizontalInset / dotsPerInch)
-        mainMap.putDouble("maxVerticalInset", currentMaxVerticalInset / dotsPerInch)
-        mainMap.putDouble("vmin",
-          if (currentWindow["width"]!! > currentWindow["height"]!!) (currentWindow["height"]!! / dotsPerInch) / 100
-          else (currentWindow["width"]!! / dotsPerInch) / 100
-        );
+          mainMap.putBoolean("tallNav", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
 
-        mainMap.putBoolean("tallNav", if (currentInsets.left / dotsPerInch > 47 || currentInsets.right / dotsPerInch > 47 || currentInsets.bottom / dotsPerInch > 47) true else false);
+          if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
+          else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
 
-        if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
-        else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
+          Log.d("LOG", "VALUE VALUE VALUE 0 ALL: " + mainMap.getMap("insets"))
 
-        Log.d("LOG", "VALUE VALUE VALUE 0 ALL: " + mainMap.getMap("insets"))
+          //if (userLaunched) { // ONLY SEND UPDATE IF APP WAS USER-LAUNCHED
 
-        if (userLaunched) { // ONLY SEND UPDATED IF APP IS USER-LAUNCHED
-
-          val currentContext = reactHost.currentReactContext
-          if (currentContext == null) {
-            val listener = object: ReactInstanceEventListener {
-              override fun onReactContextInitialized(context: ReactContext) {
-                context.emitDeviceEvent("LayoutInfo", mainMap)
-                reactHost.removeReactInstanceEventListener(this)
+            val currentContext = reactHost.currentReactContext
+            if (currentContext == null) {
+              val listener = object: ReactInstanceEventListener {
+                override fun onReactContextInitialized(context: ReactContext) {
+                  context.emitDeviceEvent("LayoutInfo", mainMap)
+                  reactHost.removeReactInstanceEventListener(this)
+                }
               }
+              reactHost.addReactInstanceEventListener(listener)
+            } else {
+              currentContext.emitDeviceEvent("LayoutInfo", mainMap)
             }
-            reactHost.addReactInstanceEventListener(listener)
-          } else {
-            currentContext.emitDeviceEvent("LayoutInfo", mainMap)
-          }
 
-        } else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
+          //} else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
 
-        dataIsNew = false // RESET DATAISNEW FLAG
-      }
+          dataIsNew = false // RESET DATAISNEW FLAG
+        }
+      } else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
       available = true // FLAG FOR updateUI()
-    } // END OF updateUI()
+    } // END OF updateUI() FUNCTION
 
     if (incomingWindowLayoutInfo != null) getOrHandleWindowLayoutInfo(incomingWindowLayoutInfo, false) // AUTO FOLDING FEATURE INFO
     else {

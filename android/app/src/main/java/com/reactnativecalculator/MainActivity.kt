@@ -51,8 +51,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity: ReactActivity() {
 
-  var canUpdate: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE)
-  var sendUpdate: Boolean = false
+  var available: Boolean = true // 1st FLAG (MANUAL or AUTO UPDATE) BLOCK
+  var dataIsNew: Boolean = false // IF CURRENT DATA HAS CHANGED, EVENT CAN BE EMITTED
   var dotsPerInch: Double by Delegates.notNull<Double>()
   var currentMaxHorizontalInset: Int by Delegates.notNull<Int>()
   var currentMaxVerticalInset: Int by Delegates.notNull<Int>()
@@ -70,12 +70,15 @@ class MainActivity: ReactActivity() {
   var userLaunched: Boolean = true // when onCreate is called due 3-Button to Gesture (or vice-versa), don't send events to TS side.
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    //if (savedInstanceState == null) userLaunched = true else userLaunched = false // FLAG FOR PREVENT SEND EVENTS IF APP WAS SYSTEM-LAUNCHED (RECREATED)
+    if (savedInstanceState == null) userLaunched = true else userLaunched = false // FLAG FOR PREVENT SEND EVENTS IF APP WAS SYSTEM-LAUNCHED (RECREATED)
     Log.d("LOG", "USER LAUNCHED: " + userLaunched)
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
+
+    //Log.d("LOG", "REFERRER: " + mainActivity.referrer)
+
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
 
     contentViewRef = findViewById<View>(android.R.id.content)
@@ -99,7 +102,7 @@ class MainActivity: ReactActivity() {
 
         //Log.d("LOG", "lastInsets inner: " + newInsetsRef)
 
-        if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && canUpdate) { canUpdate = false; updateUI(null) } // BLOCK 1st FLAG ASAP
+        if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && available) { available = false; updateUI(null) } // BLOCK 1st FLAG ASAP
         currentInsetsRef = newInsetsRef
         currentOrientationRef = newOrientationRef
       }
@@ -114,8 +117,8 @@ class MainActivity: ReactActivity() {
         WindowInfoTracker.getOrCreate(mainActivity)
           .windowLayoutInfo(mainActivity)
           .collect { newLayoutInfo ->
-            Log.d("LOG", "AppLock.canUpdate auto " + canUpdate)
-            if (canUpdate) {canUpdate = false;updateUI(newLayoutInfo)} // BLOCK 1st FLAG ASAP
+            Log.d("LOG", "AppLock.available auto " + available)
+            if (available) { available = false; updateUI(newLayoutInfo) } // BLOCK 1st FLAG ASAP
           }
       }
     }
@@ -125,7 +128,7 @@ class MainActivity: ReactActivity() {
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
     Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
-    //canUpdate = false // FLAG FOR updateUI() execution
+    //available = false // FLAG FOR updateUI() execution
 
     // VALUES
     val mainActivity = this@MainActivity
@@ -193,9 +196,9 @@ class MainActivity: ReactActivity() {
       else getInsetsCompatM(decorViewRef) // 7 to 10 // 24 to 29
       // 6 or older NOT SUPPORTED
 
-      // sendUpdate FLAG SETTERS // TEST ORIGINAL
-      if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; sendUpdate = true }
-      // sendUpdate FLAG SETTERS // TEST ORIGINAL
+      // dataIsNew FLAG SETTERS // TEST ORIGINAL
+      if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; dataIsNew = true }
+      // dataIsNew FLAG SETTERS // TEST ORIGINAL
 
       if (foldingFeature != null) { // DEVICE IS FOLDABLE
         newHingeBounds = mutableMapOf(
@@ -214,12 +217,12 @@ class MainActivity: ReactActivity() {
         newHingeBounds = mutableMapOf("left" to 0, "top" to 0, "right" to 0, "bottom" to 0)
       }
 
-      // BEGIN sendUpdate SETTERS //
-      if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; sendUpdate = true }
-      if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; sendUpdate = true }
-      if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; sendUpdate = true }
-      if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; sendUpdate = true }
-      // END sendUpdate SETTERS //
+      // BEGIN dataIsNew SETTERS //
+      if (!::currentState.isInitialized || !currentState.equals(newState)) { currentState = newState; dataIsNew = true }
+      if (currentHingeBounds.isEmpty() || !currentHingeBounds.equals(newHingeBounds)) { currentHingeBounds = newHingeBounds; dataIsNew = true }
+      if (currentWindow.isEmpty() || !currentWindow.equals(newWindow)) { currentWindow = newWindow; dataIsNew = true }
+      if (!::currentInsets.isInitialized || !currentInsets.equals(newInsets)) { currentInsets = newInsets; dataIsNew = true }
+      // END dataIsNew SETTERS //
 
       // BEGIN VERTICAL & HORIZONTAL INSET //
       if (currentInsets.left > currentInsets.right) currentMaxHorizontalInset = currentInsets.left
@@ -228,12 +231,12 @@ class MainActivity: ReactActivity() {
       else currentMaxVerticalInset = currentInsets.bottom
       // END VERTICAL & HORIZONTAL INSET //
 
-      Log.d("LOG", "PRE SEND-UPDATE VAL: " + sendUpdate)
+      Log.d("LOG", "PRE DATAISNEW VAL: " + dataIsNew)
 
-      //sendUpdate = true // TEST
+      //dataIsNew = true // TEST
 
-      if (sendUpdate) {
-        Log.d("LOG", "SEND-UPDATE CALLED")
+      if (dataIsNew) {
+        Log.d("LOG", "DATAISNEW CALLED INNER")
         mainMap.putMap("hingeBounds", Arguments.createMap().apply {
           putDouble("left", currentHingeBounds["left"]!! / dotsPerInch)
           putDouble("top", currentHingeBounds["top"]!! / dotsPerInch)
@@ -282,9 +285,9 @@ class MainActivity: ReactActivity() {
 
         } else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
 
-        sendUpdate = false // RESET UPDATE FLAG
+        dataIsNew = false // RESET DATAISNEW FLAG
       }
-      canUpdate = true // FLAG FOR updateUI()
+      available = true // FLAG FOR updateUI()
     } // END OF updateUI()
 
     if (incomingWindowLayoutInfo != null) getOrHandleWindowLayoutInfo(incomingWindowLayoutInfo, false) // AUTO FOLDING FEATURE INFO

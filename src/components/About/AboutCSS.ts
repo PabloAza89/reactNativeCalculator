@@ -93,11 +93,6 @@ export const s = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  cswContentContainerStyle: {
-    //backgroundColor: 'red', // DEV
-    flexGrow: 1,
-    alignItems: 'center',
-  },
   buttonAndIconLower: {
     transform: [{ rotate: '180deg' }],
   },

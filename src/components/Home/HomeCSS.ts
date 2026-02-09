@@ -81,11 +81,6 @@ export const s = StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
     height: '100%',
-    //alignSelf: 'center'
-    //alignItems: 'center'
-    //overflow: 'hidden'
-    //overflow: 'scroll'
-    //overflow: 'visible'
   },
   upperScreenTabletop: {
     backgroundColor: 'lightblue', // DEV

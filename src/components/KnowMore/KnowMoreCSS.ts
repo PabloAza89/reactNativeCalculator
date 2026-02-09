@@ -87,10 +87,6 @@ export const s = StyleSheet.create({
     lineHeight: 16,
     height: 32,
   },
-  space: {
-    width: 24,
-    height: 24
-  },
   buttonContainer: {
     //backgroundColor: 'green', // DEV
     flexDirection: 'row'
@@ -137,10 +133,6 @@ export const s = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white'
-  },
-  background: {
-    //backgroundColor: 'red', // DEV
-    alignItems: 'center',
   },
   customScrollView: {
     zIndex: 3,

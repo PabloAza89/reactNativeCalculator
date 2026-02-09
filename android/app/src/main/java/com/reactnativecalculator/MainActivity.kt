@@ -76,11 +76,7 @@ class MainActivity: ReactActivity() {
     super.onCreate(null); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val mainActivity = this@MainActivity
-
-    //Log.d("LOG", "REFERRER: " + mainActivity.referrer)
-
     dotsPerInch = mainActivity.resources.displayMetrics.density.toDouble() // Float --> Double
-
     contentViewRef = findViewById<View>(android.R.id.content)
     decorViewRef = contentViewRef.rootView
 
@@ -90,8 +86,6 @@ class MainActivity: ReactActivity() {
       var newInsetsRef: Rect? = null
       val newOrientationRef = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
 
-      //Log.d("LOG", "lastInsets outer: " + insets)
-
       if (decorView !== null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // 11 to newest.. ~ 30 to 36..
           val ins = decorView.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
@@ -99,8 +93,6 @@ class MainActivity: ReactActivity() {
         } else { // 7 to 10 ~ 24 to 29
           newInsetsRef = Rect(decorView.systemWindowInsetLeft, decorView.systemWindowInsetTop, decorView.systemWindowInsetRight, min(decorView.systemWindowInsetBottom, decorView.stableInsetBottom))
         }
-
-        //Log.d("LOG", "lastInsets inner: " + newInsetsRef)
 
         if ((!newInsetsRef.equals(currentInsetsRef) || !newOrientationRef.equals(currentOrientationRef)) && available) { available = false; updateUI(null) } // BLOCK 1st FLAG ASAP
         currentInsetsRef = newInsetsRef
@@ -126,7 +118,6 @@ class MainActivity: ReactActivity() {
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
     Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
     Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
-    //available = false // FLAG FOR updateUI() execution
 
     // VALUES
     val mainActivity = this@MainActivity
@@ -138,32 +129,6 @@ class MainActivity: ReactActivity() {
     lateinit var newInsets: Rect
     val windowBounds = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(mainActivity).bounds
 
-    // val newOrientation = mainActivity.resources.configuration.orientation
-    // if (newOrientation == Configuration.ORIENTATION_PORTRAIT) { currentOrientation = "portrait" }
-    // else { currentOrientation = "landscape" }
-
-    // // BEGIN INSETS //
-    // @RequiresApi(Build.VERSION_CODES.R)
-    // fun getInsetsCompatR(rootView: View): Unit {
-    //   val preNewInsets = rootView.rootWindowInsets?.getInsets(
-    //     WindowInsets.Type.statusBars() or
-    //     WindowInsets.Type.displayCutout() or
-    //     WindowInsets.Type.navigationBars() or
-    //     WindowInsets.Type.captionBar()
-    //   )
-    //   if (preNewInsets !== null) newInsets = Rect(preNewInsets.left, preNewInsets.top, preNewInsets.right, preNewInsets.bottom)
-    // }
-    // @RequiresApi(Build.VERSION_CODES.M)
-    // fun getInsetsCompatM(rootView: View): Unit {
-    //   val ppreNewInsets = rootView.rootWindowInsets
-    //   if (ppreNewInsets !== null) newInsets = Rect(ppreNewInsets.systemWindowInsetLeft, ppreNewInsets.systemWindowInsetTop, ppreNewInsets.systemWindowInsetRight, min(ppreNewInsets.systemWindowInsetBottom, ppreNewInsets.stableInsetBottom))
-    // }
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(rootView) // 11 to newest..
-    // else getInsetsCompatM(rootView) // 6 to 10
-    // // 5 or older NOT SUPPORTED
-
-    // END INSETS //
-
     fun getOrHandleWindowLayoutInfo(windowLayoutInfo: WindowLayoutInfo, manualJob: Boolean) { // get or handle WindowLayoutInfo
       Log.d("LOG", "DATA: " + windowLayoutInfo + ", MANUAL JOB: " + manualJob)
       if (manualJob) job?.cancel(); // CANCEL CURRENT, IF ANY, JOB
@@ -173,8 +138,6 @@ class MainActivity: ReactActivity() {
       //val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
       val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) "landscape" else "portrait"
       val newWindow = mutableMapOf("width" to windowBounds.width(), "height" to windowBounds.height())
-
-
 
       // BEGIN INSETS //
       @RequiresApi(Build.VERSION_CODES.R)
@@ -192,7 +155,7 @@ class MainActivity: ReactActivity() {
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) getInsetsCompatR(decorViewRef) // 11 to newest.. // 30 to "36"
       else getInsetsCompatM(decorViewRef) // 7 to 10 // 24 to 29
-      // 6 or older NOT SUPPORTED
+      // END INSETS // 6 or older NOT SUPPORTED
 
       // dataIsNew FLAG SETTERS // TEST ORIGINAL
       if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; dataIsNew = true }

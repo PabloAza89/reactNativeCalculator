@@ -68,17 +68,11 @@ const App = (): ReactElement => {
   const [ _, update ] = useState({}); // DUMMY USESTATE FOR DISPLAY UPDATE
 
   // API: Home:      Overview:                        StatusBar:
-  // 36   background active                           active
-  // 34   background active                           active
-  // 31   background active                           active
-  // 30   background background                       active
-  // 29   background background                       active
-  // 28   background background                       active
-  // 26   background background                       active
-  // 23   active     background (1st) / active (next) active
+  // 31   background active                           active     // Also API: 34 35 36
+  // 24   background background                       active     // Also API: 26 28 29 30 // in 24 blur = active THEN change = background
+  // 23   active     background (1st) / active (next) active (UNSUPPORTED API)
   useEffect(() => {
     const blur = AppState.addEventListener('blur', () => { // ON APP BLUR
-      console.log("APP COMP APP BLURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
       saveData("savedInput", input.current.toString())
       saveData("savedSecInput", secInput.current.toString())
       saveData("savedDate", Date.now().toString())
@@ -86,10 +80,8 @@ const App = (): ReactElement => {
       let array = navigationRef.getState().routes // INSIDE ANY COMPONENT: navigation.getState().routes
       saveData("savedRoute", array[array.length - 1].name) // SAVE LAST ROUTE ON APP BLUR
       updateShowModal(false)
-      console.log("SAVED ROUTE xxxxxxxxxxxx", array[array.length - 1].name)
-      console.log("SAVED TALLBAR xxxxxxxxxx", tallNav.current)
     })
-    return () => blur.remove()
+    return () => {blur.remove();}
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const saveData = async (key: string, value: string) => {
@@ -171,7 +163,6 @@ const App = (): ReactElement => {
   const runOnceAvailable = useRef(true)
 
   const runOnce = async () => {
-    console.log("EXEC RUN ONCE")
     const resInput = await readData("savedInput") // RESPONSE INPUT
     const resSecInput = await readData("savedSecInput") // RESPONSE INPUT
     const resDate = await readData("savedDate") // RESPONSE DATE
@@ -179,8 +170,6 @@ const App = (): ReactElement => {
     const resRoute = await readData("savedRoute") // RESPONSE ROUTE
     typeof resInput === "string" && (input.current = resInput)
     typeof resSecInput === "string" && (secInput.current = resSecInput)
-
-    console.log("RESTORED ROUTE: ", resRoute)
 
     try {
       await Promise.all([
@@ -195,7 +184,7 @@ const App = (): ReactElement => {
         MaterialIcons.loadFont(),
         SimpleLineIcons.loadFont(),
       ])
-    } catch (error) { console.log("VV FONT LOAD ERROR", error) }
+    } catch (error) { }
 
     async function navigationBarToGestureOrViceVersa() {
       if (typeof resDate === "string" && typeof resTallNav === "string" && typeof resRoute === "string") {
@@ -215,9 +204,6 @@ const App = (): ReactElement => {
   }
 
   const callback = (e: any) => {
-    console.log("UPDATE INFO FROM NATIVE SIDE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX :")
-    console.log("TALLNAV: ", e.tallNav)
-    //console.log(e)
     setLayout(e)
     tallNav.current = e.tallNav
     if (runOnceAvailable.current) runOnce()

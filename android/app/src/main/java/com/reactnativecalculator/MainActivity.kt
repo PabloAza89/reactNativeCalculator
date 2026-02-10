@@ -71,7 +71,6 @@ class MainActivity: ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     if (savedInstanceState == null) userLaunched = true else userLaunched = false // FLAG FOR PREVENT SEND EVENTS IF APP WAS SYSTEM-LAUNCHED (RECREATED)
-    Log.d("LOG", "USER LAUNCHED: " + userLaunched)
     RNBootSplash.init(this, R.style.Start); // Init SplashScreen
     super.onCreate(null); // null with react-native-screens else savedInstanceState
     WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -108,7 +107,6 @@ class MainActivity: ReactActivity() {
         WindowInfoTracker.getOrCreate(mainActivity)
           .windowLayoutInfo(mainActivity)
           .collect { newLayoutInfo ->
-            Log.d("LOG", "AppLock.available auto " + available)
             if (available) { available = false; updateUI(newLayoutInfo) } // BLOCK 1st FLAG ASAP
           }
       }
@@ -116,8 +114,6 @@ class MainActivity: ReactActivity() {
   }
 
   fun updateUI(incomingWindowLayoutInfo: WindowLayoutInfo?) {
-    Log.d("LOG", "incomingWindowLayoutInfo: " + incomingWindowLayoutInfo)
-    Log.d("LOG", "currentInsets: " + ::currentInsets.isInitialized)
 
     // VALUES
     val mainActivity = this@MainActivity
@@ -135,7 +131,6 @@ class MainActivity: ReactActivity() {
 
       // NEW VALUES //
       val foldingFeature = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
-      //val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
       val newOrientation = if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) "landscape" else "portrait"
       val newWindow = mutableMapOf("width" to windowBounds.width(), "height" to windowBounds.height())
 
@@ -157,9 +152,9 @@ class MainActivity: ReactActivity() {
       else getInsetsCompatM(decorViewRef) // 7 to 10 // 24 to 29
       // END INSETS // 6 or older NOT SUPPORTED
 
-      // dataIsNew FLAG SETTERS // TEST ORIGINAL
+      // BEGIN dataIsNew SETTER for ORIENTATION //
       if (!::currentOrientation.isInitialized || !currentOrientation.equals(newOrientation)) { currentOrientation = newOrientation; dataIsNew = true }
-      // dataIsNew FLAG SETTERS // TEST ORIGINAL
+      // END dataIsNew SETTER for ORIENTATION //
 
       if (foldingFeature != null) { // DEVICE IS FOLDABLE
         newHingeBounds = mutableMapOf(
@@ -192,11 +187,8 @@ class MainActivity: ReactActivity() {
       else currentMaxVerticalInset = currentInsets.bottom
       // END VERTICAL & HORIZONTAL INSET //
 
-      Log.d("LOG", "PRE DATAISNEW VAL: " + dataIsNew)
-
       if (userLaunched) { // ONLY SEND UPDATE IF APP WAS USER-LAUNCHED
         if (dataIsNew) {
-          Log.d("LOG", "DATAISNEW CALLED INNER")
           mainMap.putMap("hingeBounds", Arguments.createMap().apply {
             putDouble("left", currentHingeBounds["left"]!! / dotsPerInch)
             putDouble("top", currentHingeBounds["top"]!! / dotsPerInch)
@@ -226,24 +218,18 @@ class MainActivity: ReactActivity() {
           if (mainMap.getBoolean("tallNav")) window.setNavigationBarColor(Color.parseColor("#33000000")) // light-gray
           else window.setNavigationBarColor(Color.parseColor("#00000000")) // transparent black
 
-          Log.d("LOG", "VALUE VALUE VALUE 0 ALL: " + mainMap.getMap("insets"))
-
-          //if (userLaunched) { // ONLY SEND UPDATE IF APP WAS USER-LAUNCHED
-
-            val currentContext = reactHost.currentReactContext
-            if (currentContext == null) {
-              val listener = object: ReactInstanceEventListener {
-                override fun onReactContextInitialized(context: ReactContext) {
-                  context.emitDeviceEvent("LayoutInfo", mainMap)
-                  reactHost.removeReactInstanceEventListener(this)
-                }
+          val currentContext = reactHost.currentReactContext
+          if (currentContext == null) {
+            val listener = object: ReactInstanceEventListener {
+              override fun onReactContextInitialized(context: ReactContext) {
+                context.emitDeviceEvent("LayoutInfo", mainMap)
+                reactHost.removeReactInstanceEventListener(this)
               }
-              reactHost.addReactInstanceEventListener(listener)
-            } else {
-              currentContext.emitDeviceEvent("LayoutInfo", mainMap)
             }
-
-          //} else userLaunched = true // APP WAS SYSTEM-LANCHED, THEN RESET FLAG FOR SEND EVENTS AS USUAL
+            reactHost.addReactInstanceEventListener(listener)
+          } else {
+            currentContext.emitDeviceEvent("LayoutInfo", mainMap)
+          }
 
           dataIsNew = false // RESET DATAISNEW FLAG
         }
@@ -253,7 +239,6 @@ class MainActivity: ReactActivity() {
 
     if (incomingWindowLayoutInfo != null) getOrHandleWindowLayoutInfo(incomingWindowLayoutInfo, false) // AUTO FOLDING FEATURE INFO
     else {
-    Log.d("LOG", "LAUNCHED MANUAL JOB")
       job?.cancel(); // CANCEL PREVIOUS, IF ANY, JOB
       job = lifecycleScope.launch { // MANUAL FOLDING FEATURE INFO
         WindowInfoTracker.getOrCreate(mainActivity)
@@ -265,7 +250,6 @@ class MainActivity: ReactActivity() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    Log.d("LOG", "CONFIGURATION HAS CHANGED")
     contentViewRef.requestApplyInsets()
   }
 
